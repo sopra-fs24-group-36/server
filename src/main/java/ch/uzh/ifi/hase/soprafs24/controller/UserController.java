@@ -27,6 +27,7 @@ public class UserController {
     this.userService = userService;
   }
 
+  /*
   @GetMapping("/users")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
@@ -54,4 +55,5 @@ public class UserController {
     // convert internal representation of user back to API
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
+   */
 }
