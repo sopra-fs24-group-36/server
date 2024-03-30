@@ -34,43 +34,49 @@ public class UserServiceIntegrationTest {
     userRepository.deleteAll();
   }
 
+    //test the creatUser method
   @Test
   public void createUser_validInputs_success() {
-    // given
-    assertNull(userRepository.findByUsername("testUsername"));
+      // given
+      assertNull(userRepository.findByUsername("username"));
 
-    User testUser = new User();
-    testUser.setName("testName");
-    testUser.setUsername("testUsername");
+      User testUser = new User();
+      testUser.setPassword("password");
+      testUser.setUsername("username");
+      testUser.setEmail("email.email@email.com");
 
-    // when
-    User createdUser = userService.createUser(testUser);
+      // when
+      User createdUser = userService.createUser(testUser);
 
-    // then
-    assertEquals(testUser.getId(), createdUser.getId());
-    assertEquals(testUser.getName(), createdUser.getName());
-    assertEquals(testUser.getUsername(), createdUser.getUsername());
-    assertNotNull(createdUser.getToken());
-    assertEquals(UserStatus.OFFLINE, createdUser.getStatus());
+      // then
+      assertEquals(testUser.getId(), createdUser.getId());
+      assertEquals(testUser.getEmail(), createdUser.getEmail());
+      assertEquals(testUser.getUsername(), createdUser.getUsername());
+      assertNotNull(createdUser.getToken());
+      assertEquals(UserStatus.ONLINE, createdUser.getStatus());
   }
 
   @Test
   public void createUser_duplicateUsername_throwsException() {
-    assertNull(userRepository.findByUsername("testUsername"));
+      assertNull(userRepository.findByUsername("testUsername"));
 
-    User testUser = new User();
-    testUser.setName("testName");
-    testUser.setUsername("testUsername");
-    User createdUser = userService.createUser(testUser);
+      User testUser = new User();
+      testUser.setPassword("password");
+      testUser.setUsername("username");
+      testUser.setEmail("email.email@email.com");
+      User createdUser = userService.createUser(testUser);
 
-    // attempt to create second user with same username
-    User testUser2 = new User();
+      // attempt to create second user with same username
+      User testUser2 = new User();
 
-    // change the name but forget about the username
-    testUser2.setName("testName2");
-    testUser2.setUsername("testUsername");
+      // change the email but forget about the username
+      testUser2.setPassword("password");
+      testUser2.setUsername("username");
+      testUser2.setEmail("email2.email2@email2.com");
 
-    // check that an error is thrown
-    assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser2));
-  }
+      // check that an error is thrown
+      assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser2));
+    }
+
+
 }

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -19,26 +21,65 @@ public class UserRepositoryIntegrationTest {
   @Autowired
   private UserRepository userRepository;
 
+
+  // test findByUsername //
   @Test
-  public void findByName_success() {
-    // given
-    User user = new User();
-    user.setName("Firstname Lastname");
-    user.setUsername("firstname@lastname");
-    user.setStatus(UserStatus.OFFLINE);
-    user.setToken("1");
+  public void findByUsername_success() {
+      // given
+      User user = new User();
+      user.setPassword("password");
+      user.setUsername("username");
+      user.setStatus(UserStatus.ONLINE);
+      user.setToken("1");
+      user.setEmail("email.email@email.com");
+      Date creationDate = new Date();
+      user.setCreationDate(creationDate);
 
-    entityManager.persist(user);
-    entityManager.flush();
 
-    // when
-    User found = userRepository.findByName(user.getName());
+      entityManager.persist(user);
+      entityManager.flush();
 
-    // then
-    assertNotNull(found.getId());
-    assertEquals(found.getName(), user.getName());
-    assertEquals(found.getUsername(), user.getUsername());
-    assertEquals(found.getToken(), user.getToken());
-    assertEquals(found.getStatus(), user.getStatus());
-  }
+      // when
+      User found = userRepository.findByUsername(user.getUsername());
+
+      // then
+      assertNotNull(found.getId());
+      assertEquals(found.getUsername(), user.getUsername());
+      assertEquals(found.getToken(), user.getToken());
+      assertEquals(found.getStatus(), user.getStatus());
+      assertEquals(found.getPassword(), user.getPassword());
+      assertEquals(found.getEmail(), user.getEmail());
+      assertNotNull(found.getCreationDate());
+    }
+
+
+    // test findByEmail //
+    @Test
+    public void findByEmail_success() {
+        // given
+        User user = new User();
+        user.setPassword("password");
+        user.setUsername("username");
+        user.setStatus(UserStatus.ONLINE);
+        user.setToken("1");
+        user.setEmail("email.email@email.com");
+        Date creationDate = new Date();
+        user.setCreationDate(creationDate);
+
+
+        entityManager.persist(user);
+        entityManager.flush();
+
+        // when
+        User found = userRepository.findByEmail(user.getEmail());
+
+        // then
+        assertNotNull(found.getId());
+        assertEquals(found.getUsername(), user.getUsername());
+        assertEquals(found.getToken(), user.getToken());
+        assertEquals(found.getStatus(), user.getStatus());
+        assertEquals(found.getPassword(), user.getPassword());
+        assertEquals(found.getEmail(), user.getEmail());
+        assertNotNull(found.getCreationDate());
+    }
 }
