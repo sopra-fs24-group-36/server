@@ -42,6 +42,8 @@ public class UserServiceIntegrationTest {
     User testUser = new User();
     testUser.setName("testName");
     testUser.setUsername("testUsername");
+    testUser.setEmail("user.users@gmail.com");
+    testUser.setPassword("password");
 
     // when
     User createdUser = userService.createUser(testUser);
