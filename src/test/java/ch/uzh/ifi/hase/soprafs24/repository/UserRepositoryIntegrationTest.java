@@ -24,7 +24,7 @@ public class UserRepositoryIntegrationTest {
 
   // test findByUsername //
   @Test
-  public void findByName_success() {
+  public void findByUsername_success() {
       // given
       User user = new User();
       user.setPassword("password");
