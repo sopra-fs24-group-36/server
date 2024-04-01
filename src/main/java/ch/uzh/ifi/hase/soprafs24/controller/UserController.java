@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class UserController {
     this.userService = userService;
   }
 
+  // add user
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
@@ -35,5 +37,28 @@ public class UserController {
 
     return DTOMapper.INSTANCE.convertEntityToUserDTO(createdUser);
   }
+
+
+    // log in user: set status to ONLINE
+    @PostMapping("/users/login")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserDTO logInUser(@RequestBody UserPostDTO userPostDTO) {
+
+        User userCredentials = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+
+        User user = userService.logIn(userCredentials);
+
+        return DTOMapper.INSTANCE.convertEntityToUserDTO(user);
+    }
+
+
+    // log out user: set Status to OFFLINE
+    @PostMapping("/users/logout/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void logOutUser(@PathVariable Long userId) {
+
+        userService.logOut(userId);
+    }
 
 }

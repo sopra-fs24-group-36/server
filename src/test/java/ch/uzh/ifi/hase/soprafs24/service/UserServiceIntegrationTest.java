@@ -34,7 +34,9 @@ public class UserServiceIntegrationTest {
     userRepository.deleteAll();
   }
 
-    //test the creatUser method
+
+
+    //  test the createUser method  //
   @Test
   public void createUser_validInputs_success() {
       // given
@@ -78,5 +80,13 @@ public class UserServiceIntegrationTest {
       assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser2));
     }
 
+
+    //  test logIn method  //
+
+
+
+
+
+    //  test logOut method //
 
 }
