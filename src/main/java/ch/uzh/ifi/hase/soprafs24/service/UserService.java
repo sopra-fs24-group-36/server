@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.slf4j.Logger;
@@ -16,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -77,6 +77,11 @@ public class UserService {
       userRepository.flush();
 
       log.debug("Logged out User: {}", user);
+    }
+
+
+    public void saveCookbook (User user, Cookbook cookbook) {
+        user.setCookbook(cookbook);
     }
 
 

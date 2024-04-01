@@ -53,6 +53,10 @@ public class User implements Serializable {
     @Column(nullable = false, unique = true)
     private String token;
 
+    //save the personal cookbook id to the user
+    @OneToOne
+    private Cookbook cookbook;
+
 
 
 
@@ -123,5 +127,9 @@ public class User implements Serializable {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public Cookbook getCookbook() {return cookbook; }
+
+    public void setCookbook(Cookbook cookbook) {this.cookbook = cookbook; }
 
 }
