@@ -20,4 +20,5 @@
 
 
 ### Marko
-
+- 04.04, Marko, #34, added the setup for the Recipe Database (Recipe Entity, Repository, Service, ...)
+- 05.04, Marko, #47, added the same setup for the Group Database (Group Entity, Repository, Service, ...)
