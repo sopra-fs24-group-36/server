@@ -1,20 +1,11 @@
-package ch.uzh.ifi.hase.soprafs24.entity;
+package ch.uzh.ifi.hase.soprafs24.rest.dto;
 
-import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
-
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 
-@Entity
-@Table(name = "RECIPE")
-public class Recipe implements Serializable {
-  private static final long serialVersionUID = 1L;
+public class RecipeDTO {
 
-  //create unique ID
-  @Id
-  @GeneratedValue
   private Long id;
 
   private String title;
