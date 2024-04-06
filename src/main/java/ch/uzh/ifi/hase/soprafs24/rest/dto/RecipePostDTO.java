@@ -8,7 +8,7 @@ public class RecipePostDTO {
 
   private Long id;
 
-  private String name;
+  private String title;
 
   private String shortDescription;
 
@@ -35,12 +35,12 @@ public class RecipePostDTO {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public String getTitle() {
+    return title;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public String getShortDescription() {
