@@ -15,9 +15,6 @@ public class Group implements Serializable {
   @GeneratedValue
   private Long id;
 
-  @Column(nullable = false)
-  private String token;
-
   private String name;
 
   private List<Long> members = new ArrayList<>();
@@ -29,15 +26,7 @@ public class Group implements Serializable {
   public void setId(Long id) {
     this.id = id;
   }
-
-  public String getToken() {
-    return token;
-  }
-
-  public void setToken(String token) {
-    this.token = token;
-  }
-
+  
   public String getName() {
     return name;
   }

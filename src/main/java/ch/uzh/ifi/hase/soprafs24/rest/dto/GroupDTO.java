@@ -11,9 +11,6 @@ public class GroupDTO {
 
   private List<Long> members = new ArrayList<>();
 
-  //Idk how the invitations should look like
-  //private List<> invitations = new ArrayList<>();
-
   public Long getId() {
     return id;
   }
@@ -36,8 +33,5 @@ public class GroupDTO {
 
   public void setMembers(List<Long> members) {
     this.members = members;
-  }
-
-  //invitations come here
-  
+  }  
 }
