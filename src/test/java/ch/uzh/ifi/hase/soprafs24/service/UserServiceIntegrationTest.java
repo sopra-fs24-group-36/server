@@ -13,11 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test class for the UserResource REST resource.
- *
- * @see UserService
- */
+
 @WebAppConfiguration
 @SpringBootTest
 public class UserServiceIntegrationTest {
@@ -78,6 +74,28 @@ public class UserServiceIntegrationTest {
 
       // check that an error is thrown
       assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser2));
+    }
+
+    @Test
+    public void createUser_duplicateEmail_throwsException() {
+        assertNull(userRepository.findByUsername("testUsername"));
+
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        User createdUser = userService.createUser(testUser);
+
+        // attempt to create second user with same username
+        User testUser2 = new User();
+
+        // change the email but forget about the username
+        testUser2.setPassword("password");
+        testUser2.setUsername("username2");
+        testUser2.setEmail("email.email@email.com");
+
+        // check that an error is thrown
+        assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser2));
     }
 
 
