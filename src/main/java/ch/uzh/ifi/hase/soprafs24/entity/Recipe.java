@@ -84,7 +84,7 @@ public class Recipe implements Serializable {
     this.ingredients = ingredients;
   }
 
-  public List<String> getInstrucions() {
+  public List<String> getInstructions() {
     return instructions;
   }
 
