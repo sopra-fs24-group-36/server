@@ -11,7 +11,11 @@
 - 30.03, Sarina, #21, to reason about whether the setup for the USER database was correct I implemented a basic scenario and added tests for this
 
 ### Jazz
-
+- 26.03. Jasmine, (concerns many issues among them #25), created base components present on numerous pages: Dashboard, Header, Footer, new base container
+- 27.03 & 28.03, Jasmine, #3, created homepage view based on Figma design
+- 30.03, Jasmine, #9, created the page to add a recipe
+- 06.04, Jasmine, #9 & #3, added pictures, some minor styling on homepage and recipe adding page
+- 07.04, Jasmine, #11, created basic UI components for viewing a recipe (not complete) 
 
 ### Yujie
 - 31.03, Yujie, #1, Created the login page
