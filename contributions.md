@@ -13,7 +13,10 @@
 ### Jazz
 
 
-### Jade
+### Yujie
+- 31.03, Yujie, #1, Created the login page
+- 31.03, Yujie, #2, Created the register page, edit Router
+- 07.04, Yujie, #18, Created group cookbook view, changed #10 personal cookbook view
 
 
 ### Summer
