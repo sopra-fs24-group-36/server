@@ -51,16 +51,16 @@ public interface DTOMapper {
     @Mapping(source = "image" , target = "image")
     @Mapping(source = "tags" , target = "tags")
     @Mapping(source = "cookbooks" , target = "cookbooks")
-    Recipe convertUserPostDTOtoEntity(RecipePostDTO recipePostDTO);
+    Recipe convertRecipePostDTOtoEntity(RecipePostDTO recipePostDTO);
 
     @Mapping(source = "id" , target = "id")
-    Recipe convertUserGetDTOtoEntity(RecipeGetDTO recipeGetDTO);
+    Recipe convertRecipeGetDTOtoEntity(RecipeGetDTO recipeGetDTO);
 
     @Mapping(source = "id" , target = "id")
-    Recipe convertUserPutDTOtoEntity(RecipePutDTO recipePutDTO);
+    Recipe convertRecipePutDTOtoEntity(RecipePutDTO recipePutDTO);
 
     @Mapping(source = "id" , target = "id")
-    Recipe convertUserDeleteDTOtoEntity(RecipeDeleteDTO recipeDeleteDTO);
+    Recipe convertRecipeDeleteDTOtoEntity(RecipeDeleteDTO recipeDeleteDTO);
 
     @Mapping(source = "id" , target = "id")
     @Mapping(source = "title" , target = "title")
@@ -79,10 +79,10 @@ public interface DTOMapper {
     @Mapping(source = "groupID" , target = "groupID")
     @Mapping(source = "name" , target = "name")
     @Mapping(source = "members" , target = "members")
-    Group convertUserPostDTOtoEntity(GroupPostDTO groupPostDTO);
+    Group convertGroupPostDTOtoEntity(GroupPostDTO groupPostDTO);
 
     @Mapping(source = "id" , target = "id")
-    Group convertUserDeleteDTOtoEntity(GroupDeleteDTO groupDeleteDTO);
+    Group convertGroupDeleteDTOtoEntity(GroupDeleteDTO groupDeleteDTO);
 
     @Mapping(source = "id" , target = "id")
     @Mapping(source = "name" , target = "name")
@@ -91,16 +91,16 @@ public interface DTOMapper {
 
     @Mapping(source = "id" , target = "id")
     @Mapping(source = "ingredient" , target = "ingredient")
-    ShoppingList convertUserPostDTOtoEntity(ShoppingListPostDTO shoppingListPostDTO);
+    ShoppingList convertShoppingListPostDTOtoEntity(ShoppingListPostDTO shoppingListPostDTO);
 
     @Mapping(source = "id" , target = "id")
-    ShoppingList convertUserGetDTOtoEntity(ShoppingListGetDTO shoppingListGetDTO);
+    ShoppingList convertShoppingListGetDTOtoEntity(ShoppingListGetDTO shoppingListGetDTO);
     
     @Mapping(source = "itemID" , target = "itemID")
-    ShoppingList convertUserPutDTOtoEntity(ShoppingListPutDTO shoppingListPutDTO);
+    ShoppingList convertShoppingListPutDTOtoEntity(ShoppingListPutDTO shoppingListPutDTO);
     
     @Mapping(source = "id" , target = "id")
-    ShoppingList convertUserDeleteDTOtoEntity(ShoppingListDeleteDTO shoppingListDeleteDTO);
+    ShoppingList convertShoppingListDeleteDTOtoEntity(ShoppingListDeleteDTO shoppingListDeleteDTO);
 
     @Mapping(source = "id" , target = "id")
     @Mapping(source = "items" , target = "items")
