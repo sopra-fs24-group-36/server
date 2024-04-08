@@ -81,7 +81,7 @@ public interface DTOMapper {
     @Mapping(source = "members" , target = "members")
     Group convertGroupPostDTOtoEntity(GroupPostDTO groupPostDTO);
 
-    @Mapping(source = "id" , target = "id")
+    @Mapping(source = "userID" , target = "userID")
     Group convertGroupDeleteDTOtoEntity(GroupDeleteDTO groupDeleteDTO);
 
     @Mapping(source = "id" , target = "id")
