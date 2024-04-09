@@ -25,14 +25,22 @@ public class Recipe implements Serializable {
 
   private String cookingTime;
 
+  @ElementCollection
+  @Column(name = "ingredients")
   private List<String> ingredients = new ArrayList<>();
 
+  @ElementCollection
+  @Column(name = "instructions")
   private List<String> instructions = new ArrayList<>();
 
   private String image;
 
+  @ElementCollection
+  @Column(name = "tags")
   private List<RecipeTags> tags = new ArrayList<>(3);
 
+  @ElementCollection
+  @Column(name = "cookbooks")
   private List<Long> cookbooks = new ArrayList<>();
 
 
