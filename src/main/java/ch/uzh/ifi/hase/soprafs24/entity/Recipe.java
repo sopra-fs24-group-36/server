@@ -27,21 +27,21 @@ public class Recipe implements Serializable {
 
   @ElementCollection
   @Column(name = "ingredients")
-  private List<String> ingredients = new ArrayList<>();
+  private List<String> ingredients;
 
   @ElementCollection
   @Column(name = "instructions")
-  private List<String> instructions = new ArrayList<>();
+  private List<String> instructions;
 
   private String image;
 
   @ElementCollection
   @Column(name = "tags")
-  private List<RecipeTags> tags = new ArrayList<>(3);
+  private List<RecipeTags> tags;
 
   @ElementCollection
   @Column(name = "cookbooks")
-  private List<Long> cookbooks = new ArrayList<>();
+  private List<Long> cookbooks;
 
 
   public Long getId() {
