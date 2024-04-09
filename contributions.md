@@ -26,7 +26,9 @@
 
 
 ### Summer
-
+- 01.04, xiaying, #5, created the profile page    https://github.com/sopra-fs24-group-36/client/issues/5
+- 02.04, Xiaying, #6, created the editing profile page    https://github.com/sopra-fs24-group-36/client/issues/6
+- 02.04, xiaying, #10, created the personalCookbook page    https://github.com/sopra-fs24-group-36/client/issues/10
 
 ### Marko
 - 04.04, Marko, #34, added the setup for the Recipe Database (Recipe Entity, Repository, Service, ...)
