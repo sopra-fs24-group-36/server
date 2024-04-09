@@ -9,6 +9,8 @@
 ### Sarina
 - 30.03, Sarina, #30, added the whole setup for the USER (User Entity, Repository, Service, etc.)
 - 30.03, Sarina, #21, to reason about whether the setup for the USER database was correct I implemented a basic scenario and added tests for this
+- 01.04, Sarina, #31, created the database table for COOKBOOKS (Entity, Repository, Service, etc.)
+- 05.04, Sarina, #23 and # 37, completed the functionality but still need to add some tests (hence not displayed as done yet)
 
 ### Jazz
 - 26.03. Jasmine, (concerns many issues among them #25), created base components present on numerous pages: Dashboard, Header, Footer, new base container
