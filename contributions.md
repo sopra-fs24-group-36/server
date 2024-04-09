@@ -35,4 +35,19 @@
 - 05.04, Marko, #47, added the same setup for the Group Database (Group Entity, Repository, Service, ...)
 - 05.04, Marko, #66, setup the database for ShoppingLists (ShoppingList Entity, Repository, Service, ...)
 - 07.04, Marko, #47, the invitations are stored with the user and not the group, changed it.
-- 08.04, Marko, #66 and #47, added to the DTOMapper all necessary mappers for groups/shoppingLists/recipes 
+- 08.04, Marko, #66 and #47, added to the DTOMapper all necessary mappers for groups/shoppingLists/recipes
+
+## Week 2
+
+### Sarina
+
+### Jazz
+- 09.04, #25, #4, finished UI of search bar, made username in top corner clickable, a few other minor changes
+
+### Yujie
+
+### Summer
+
+### Marko
+
+
