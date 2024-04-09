@@ -20,9 +20,9 @@
 - 07.04, Jasmine, #11, created basic UI components for viewing a recipe (not complete) 
 
 ### Yujie
-- 31.03, Yujie, #1, Created the login page
-- 31.03, Yujie, #2, Created the register page, edit Router
-- 07.04, Yujie, #18, Created group cookbook view, changed #10 personal cookbook view
+- 31.03, Yujie, #1, Created the login page    https://github.com/sopra-fs24-group-36/client/issues/1
+- 31.03, Yujie, #2, Created the register page, edit Router    https://github.com/sopra-fs24-group-36/client/issues/2
+- 07.04, Yujie, #18, Created group cookbook view, changed #10 personal cookbook view    https://github.com/sopra-fs24-group-36/client/issues/18
 
 
 ### Summer
