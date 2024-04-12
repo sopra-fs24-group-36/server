@@ -26,6 +26,8 @@ public class RecipeDTO {
 
   private List<Long> cookbooks = new ArrayList<>();
 
+  private Long authorID;
+
 
   public Long getId() {
     return id;
@@ -105,6 +107,14 @@ public class RecipeDTO {
 
   public void setCookbooks(List<Long> cookbooks) {
     this.cookbooks = cookbooks;
+  }
+
+  public Long getAuthorID() {
+    return authorID;
+  }
+
+  public void setAuthorID(Long authorID) {
+    this.authorID = authorID;
   }
 
 }

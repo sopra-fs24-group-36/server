@@ -72,6 +72,7 @@ public interface DTOMapper {
     @Mapping(source = "image" , target = "image")
     @Mapping(source = "tags" , target = "tags")
     @Mapping(source = "cookbooks" , target = "cookbooks")
+    @Mapping(source = "authorID" , target = "authorID")
     RecipeDTO convertEntityToRecipeDTO(Recipe recipe);
 
     @Mapping(source = "name" , target = "name")
