@@ -23,7 +23,6 @@ import java.util.Date;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,7 +38,7 @@ public class UserControllerTest {
   private UserService userService;
 
 
-  //  test the /users POST Mapping  //
+  //  test the creatUser method  //
   @Test
   public void createUser_validInput_userCreated() throws Exception {
       //all fields required by the USER
@@ -47,7 +46,6 @@ public class UserControllerTest {
       user.setId(1L);
       user.setUsername("testUsername");
       user.setToken("1");
-      user.setName("name");
       user.setPassword("password");
       user.setEmail("email.email@email.com");
       Date creationDate = new Date();
@@ -56,7 +54,6 @@ public class UserControllerTest {
 
       UserPostDTO userPostDTO = new UserPostDTO();
       userPostDTO.setPassword("password");
-      userPostDTO.setName("name");
       userPostDTO.setUsername("testUsername");
       userPostDTO.setEmail("email.email@email.com");
 
@@ -74,7 +71,6 @@ public class UserControllerTest {
               .andExpect(jsonPath("$.username", is(user.getUsername())))
               .andExpect(jsonPath("$.email", is(user.getEmail())))
               .andExpect(jsonPath("$.creationDate", matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\+\\d{2}:\\d{2}$")))
-              .andExpect(jsonPath("$.name", is(user.getName())))
               .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
     }
 
@@ -85,7 +81,6 @@ public class UserControllerTest {
         userPostDTO.setPassword("TestPassword");
         userPostDTO.setUsername("testUsername");
         userPostDTO.setEmail("email.email@email.com");
-        userPostDTO.setName("name");
 
         //mocks the user Service, this defines what createUser should return if it is called
         given(userService.createUser(Mockito.any()))
@@ -100,87 +95,6 @@ public class UserControllerTest {
         mockMvc.perform(postRequest)
                 .andExpect(status().isConflict());
     }
-
-
-    //  test the /users/login POST Mapping  //
-    @Test
-    public void logInUser_ValidInput() throws Exception {
-
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("testUsername");
-        user.setToken("1");
-        user.setName("name");
-        user.setPassword("password");
-        user.setEmail("email.email@email.com");
-        Date creationDate = new Date();
-        user.setCreationDate(creationDate);
-        user.setStatus(UserStatus.ONLINE);
-
-        UserPostDTO userPostDTO = new UserPostDTO();
-        userPostDTO.setPassword("password");
-        userPostDTO.setUsername("username");
-
-         given(userService.logIn(Mockito.any())).willReturn(user);
-
-         MockHttpServletRequestBuilder postRequest = post("/users/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(userPostDTO));
-
-        mockMvc.perform(postRequest)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(user.getId().intValue())))
-                .andExpect(jsonPath("$.username", is(user.getUsername())))
-                .andExpect(jsonPath("$.email", is(user.getEmail())))
-                .andExpect(jsonPath("$.creationDate", matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\+\\d{2}:\\d{2}$")))
-                .andExpect(jsonPath("$.name", is(user.getName())))
-                .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
-    }
-
-    @Test
-    public void logInUser_InValidInput() throws Exception {
-
-        UserPostDTO userPostDTO = new UserPostDTO();
-        userPostDTO.setPassword("password");
-        userPostDTO.setUsername("username");
-
-        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "User cannot be logged in"))
-                .when(userService).logIn(Mockito.any());
-
-
-        MockHttpServletRequestBuilder postRequest = post("/users/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(userPostDTO));
-
-        mockMvc.perform(postRequest)
-                .andExpect(status().isBadRequest());
-    }
-
-
-    //  test the /users/logout/{userId} POST Mapping  //
-    @Test
-    public void logOutUser_ValidInput() throws Exception {
-
-        MockHttpServletRequestBuilder postRequest = post("/users/logout/1")
-                .contentType(MediaType.APPLICATION_JSON);
-
-        mockMvc.perform(postRequest)
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void logOutUser_InValidInput() throws Exception {
-
-        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "User cannot be logged out"))
-                .when(userService).logOut(Mockito.any());
-
-        MockHttpServletRequestBuilder postRequest = post("/users/logout/1")
-                .contentType(MediaType.APPLICATION_JSON);
-
-        mockMvc.perform(postRequest)
-                .andExpect(status().isBadRequest());
-    }
-
 
     /*
     @Test

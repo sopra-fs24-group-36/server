@@ -40,8 +40,6 @@ public class UserServiceTest {
     Mockito.when(userRepository.save(Mockito.any())).thenReturn(testUser);
   }
 
-
-//  test createUser method  //
     @Test
     public void createUser_validInputs_success() {
         // when -> any object is being saved in the userRepository -> return the dummy
@@ -87,16 +85,5 @@ public class UserServiceTest {
         // is thrown
         assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser));
     }
-
-
-    //  test logIn method  //
-
-
-
-
-
-    //  test logOut method //
-
-
 
 }
