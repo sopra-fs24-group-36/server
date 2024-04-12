@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 
@@ -25,10 +27,15 @@ public class RecipeService {
     this.recipeRepository = recipeRepository;
   }
 
-
-  public Recipe createRecipe(Recipe newRecipe) {
+  public Recipe createRecipe(Long userID, Recipe newRecipe) {
 
     newRecipe = recipeRepository.save(newRecipe);
+
+    newRecipe.setAuthorID(userID);
+    
+    //something to save the recipe into the right cookbooks
+
+    //
     recipeRepository.flush();
 
     log.debug("Created new Recipe: {}", newRecipe);

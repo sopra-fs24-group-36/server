@@ -25,6 +25,7 @@ public class Recipe implements Serializable {
 
   private String cookingTime;
 
+  //ingredients as List of lists with 2 strings
   @ElementCollection
   @Column(name = "ingredients")
   private List<String> ingredients;
@@ -43,6 +44,7 @@ public class Recipe implements Serializable {
   @Column(name = "cookbooks")
   private List<Long> cookbooks;
 
+  private Long authorID;
 
   public Long getId() {
     return id;
@@ -123,5 +125,11 @@ public class Recipe implements Serializable {
   public void setCookbooks(List<Long> cookbooks) {
     this.cookbooks = cookbooks;
   }
+  public Long getAuthorID() {
+    return authorID;
+  }
 
+  public void setAuthorID(Long authorID) {
+    this.authorID = authorID;
+  }
 }
