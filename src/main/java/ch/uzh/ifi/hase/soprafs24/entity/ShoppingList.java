@@ -15,7 +15,9 @@ public class ShoppingList implements Serializable {
   @GeneratedValue
   private Long id;
 
-  private List<String> items = new ArrayList<>();
+  @ElementCollection
+  @CollectionTable(name = "items")
+  private List<String> items;
 
   public Long getId() {
     return id;

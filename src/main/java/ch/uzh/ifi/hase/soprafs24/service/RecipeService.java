@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 
@@ -25,15 +28,27 @@ public class RecipeService {
     this.recipeRepository = recipeRepository;
   }
 
+  public Recipe createRecipe(Long userID, Recipe newRecipe) {
 
-  public Recipe createRecipe(Recipe newRecipe) {
+    //something like checkifrecipeexists? probably not because it is in the users responsibility to not save multiple same recipes
 
     newRecipe = recipeRepository.save(newRecipe);
+
+    newRecipe.setAuthorID(userID);
+    
+    //something to save the recipe into all the right cookbooks, this would be in a loop since there may be more cookbooks to save it to
+    //maybe something like: for cookbookID in cookbooks {c = cookbookservice.findcookbook(cookbookID) then c.setrecipe(newrecipe) if the recipes are empty}
+
     recipeRepository.flush();
 
     log.debug("Created new Recipe: {}", newRecipe);
 
     return newRecipe;
+  }
+
+  public Recipe findRecipeById(Long recipeID) {
+    Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeID);
+    return optionalRecipe.orElse(null); // Returns null if recipe is not found
   }
 
 }

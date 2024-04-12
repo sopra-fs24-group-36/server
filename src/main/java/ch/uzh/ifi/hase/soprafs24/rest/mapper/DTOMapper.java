@@ -72,17 +72,12 @@ public interface DTOMapper {
     @Mapping(source = "image" , target = "image")
     @Mapping(source = "tags" , target = "tags")
     @Mapping(source = "cookbooks" , target = "cookbooks")
+    @Mapping(source = "authorID" , target = "authorID")
     RecipeDTO convertEntityToRecipeDTO(Recipe recipe);
 
-
-    @Mapping(source = "userID" , target = "userID")
-    @Mapping(source = "groupID" , target = "groupID")
     @Mapping(source = "name" , target = "name")
     @Mapping(source = "members" , target = "members")
     Group convertGroupPostDTOtoEntity(GroupPostDTO groupPostDTO);
-
-    @Mapping(source = "id" , target = "id")
-    Group convertGroupDeleteDTOtoEntity(GroupDeleteDTO groupDeleteDTO);
 
     @Mapping(source = "id" , target = "id")
     @Mapping(source = "name" , target = "name")
@@ -90,14 +85,7 @@ public interface DTOMapper {
     Group convertEntityToGroupDTO(Group group);
 
     @Mapping(source = "id" , target = "id")
-    @Mapping(source = "ingredient" , target = "ingredient")
-    ShoppingList convertShoppingListPostDTOtoEntity(ShoppingListPostDTO shoppingListPostDTO);
-
-    @Mapping(source = "id" , target = "id")
     ShoppingList convertShoppingListGetDTOtoEntity(ShoppingListGetDTO shoppingListGetDTO);
-    
-    @Mapping(source = "itemID" , target = "itemID")
-    ShoppingList convertShoppingListPutDTOtoEntity(ShoppingListPutDTO shoppingListPutDTO);
     
     @Mapping(source = "id" , target = "id")
     ShoppingList convertShoppingListDeleteDTOtoEntity(ShoppingListDeleteDTO shoppingListDeleteDTO);

@@ -17,7 +17,9 @@ public class Group implements Serializable {
 
   private String name;
 
-  private List<Long> members = new ArrayList<>();
+  @ElementCollection
+  @CollectionTable(name = "members")
+  private List<Long> members;
 
   public Long getId() {
     return id;

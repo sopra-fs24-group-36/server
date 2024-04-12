@@ -25,16 +25,26 @@ public class Recipe implements Serializable {
 
   private String cookingTime;
 
-  private List<String> ingredients = new ArrayList<>();
+  //ingredients as List of lists with 2 strings
+  @ElementCollection
+  @Column(name = "ingredients")
+  private List<String> ingredients;
 
-  private List<String> instructions = new ArrayList<>();
+  @ElementCollection
+  @Column(name = "instructions")
+  private List<String> instructions;
 
   private String image;
 
-  private List<RecipeTags> tags = new ArrayList<>(3);
+  @ElementCollection
+  @Column(name = "tags")
+  private List<RecipeTags> tags;
 
-  private List<Long> cookbooks = new ArrayList<>();
+  @ElementCollection
+  @Column(name = "cookbooks")
+  private List<Long> cookbooks;
 
+  private Long authorID;
 
   public Long getId() {
     return id;
@@ -84,7 +94,7 @@ public class Recipe implements Serializable {
     this.ingredients = ingredients;
   }
 
-  public List<String> getInstrucions() {
+  public List<String> getInstructions() {
     return instructions;
   }
 
@@ -115,5 +125,11 @@ public class Recipe implements Serializable {
   public void setCookbooks(List<Long> cookbooks) {
     this.cookbooks = cookbooks;
   }
+  public Long getAuthorID() {
+    return authorID;
+  }
 
+  public void setAuthorID(Long authorID) {
+    this.authorID = authorID;
+  }
 }
