@@ -16,6 +16,8 @@ public class RecipeDTO {
 
   private String cookingTime;
 
+  private List<String> amounts = new ArrayList<>();
+
   private List<String> ingredients = new ArrayList<>();
 
   private List<String> instructions = new ArrayList<>();
@@ -67,6 +69,14 @@ public class RecipeDTO {
 
   public void setCookingTime(String cookingTime) {
     this.cookingTime = cookingTime;
+  }
+
+  public List<String> getAmounts() {
+    return amounts;
+  }
+
+  public void setAmounts(List<String> amounts) {
+    this.amounts = amounts;
   }
 
   public List<String> getIngredients() {
