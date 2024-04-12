@@ -82,4 +82,67 @@ public class UserRepositoryIntegrationTest {
         assertEquals(found.getEmail(), user.getEmail());
         assertNotNull(found.getCreationDate());
     }
+
+
+
+    // test findByPassword //
+    @Test
+    public void findByPassword_success() {
+        // given
+        User user = new User();
+        user.setPassword("password");
+        user.setUsername("username");
+        user.setStatus(UserStatus.ONLINE);
+        user.setToken("1");
+        user.setEmail("email.email@email.com");
+        Date creationDate = new Date();
+        user.setCreationDate(creationDate);
+
+
+        entityManager.persist(user);
+        entityManager.flush();
+
+        // when
+        User found = userRepository.findByPassword(user.getPassword());
+
+        // then
+        assertNotNull(found.getId());
+        assertEquals(found.getUsername(), user.getUsername());
+        assertEquals(found.getToken(), user.getToken());
+        assertEquals(found.getStatus(), user.getStatus());
+        assertEquals(found.getPassword(), user.getPassword());
+        assertEquals(found.getEmail(), user.getEmail());
+        assertNotNull(found.getCreationDate());
+    }
+
+
+    // test findByUsernameAndPassword //
+    @Test
+    public void findByUsernameAndPassword_success() {
+        // given
+        User user = new User();
+        user.setPassword("password");
+        user.setUsername("username");
+        user.setStatus(UserStatus.ONLINE);
+        user.setToken("1");
+        user.setEmail("email.email@email.com");
+        Date creationDate = new Date();
+        user.setCreationDate(creationDate);
+
+
+        entityManager.persist(user);
+        entityManager.flush();
+
+        // when
+        User found = userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+
+        // then
+        assertNotNull(found.getId());
+        assertEquals(found.getUsername(), user.getUsername());
+        assertEquals(found.getToken(), user.getToken());
+        assertEquals(found.getStatus(), user.getStatus());
+        assertEquals(found.getPassword(), user.getPassword());
+        assertEquals(found.getEmail(), user.getEmail());
+        assertNotNull(found.getCreationDate());
+    }
 }
