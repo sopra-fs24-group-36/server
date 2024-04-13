@@ -47,8 +47,9 @@ public class RecipeService {
     // Loop through each cookbook ID
     for (long cookbookID : cookbookIDs) {
       Cookbook c = cookbookRepository.findById(cookbookID);
-      List<Long> recipes = c.getRecipes(); // Assuming getRecipes() returns a list of recipes in the cookbook
+      List<Long> recipes = c.getRecipes();
       recipes.add(cookbookID); // Add the new recipe to the list of recipes in the cookbook
+      c.setRecipes(recipes);
     }
 
     recipeRepository.flush();

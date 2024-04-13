@@ -20,6 +20,8 @@ public class Cookbook implements Serializable {
     @Column(nullable = false)
     private CookbookStatus status;
 
+    @ElementCollection
+    @Column(name = "recipes")
     private List<Long> recipes;
 
     public Long getId() {
