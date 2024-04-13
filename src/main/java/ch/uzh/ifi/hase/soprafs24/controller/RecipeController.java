@@ -60,7 +60,7 @@ public class RecipeController {
   @ResponseBody
   public List<RecipeDTO> getRecipes(@PathVariable("userID") Long userID) {
     
-    List<Recipe> recipes = recipeService.findAllRecipes(userID);
+    List<Recipe> recipes = recipeService.findAllRecipesWithUserID(userID);
 
     List<RecipeDTO> mapped_recipes = new ArrayList<>();
 

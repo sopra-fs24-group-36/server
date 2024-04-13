@@ -49,5 +49,5 @@
 ### Summer
 
 ### Marko
-
+- 13.04, Marko, #36, added the post/get requests to store single recipes in the database, as well es retrieve single/multiple ones. https://github.com/sopra-fs24-group-36/client/issues/36
 

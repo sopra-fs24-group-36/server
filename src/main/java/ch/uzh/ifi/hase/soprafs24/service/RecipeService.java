@@ -70,7 +70,7 @@ public class RecipeService {
     return optionalRecipe.orElse(null); // Returns null if recipe is not found
   }
 
-  public List<Recipe> findAllRecipes(Long userID) {
+  public List<Recipe> findAllRecipesWithUserID(Long userID) {
     List<Recipe> recipes = recipeRepository.findByAuthorID(userID);
 
     return recipes;
