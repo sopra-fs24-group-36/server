@@ -8,6 +8,8 @@ import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.RecipeService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -52,4 +54,14 @@ public class RecipeController {
   }
   
 
+  @GetMapping("/users/{userID}/cookbooks/")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public List<Long> getRecipes(@PathVariable("userID") Long userID) {
+    
+    List<Long> recipes = recipeService.findAllRecipes(userID);
+
+    return recipes;
+  }
+  
 }

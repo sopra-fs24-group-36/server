@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,11 @@ public class RecipeService {
     this.recipeRepository = recipeRepository;
   }
 
+  @Autowired
+  public void CookbookService(@Qualifier("cookbookRepository") CookbookRepository cookbookRepository) {
+    this.cookbookRepository = cookbookRepository;
+  }
+
   public Recipe createRecipe(Long userID, Recipe newRecipe) {
 
     //something like checkifrecipeexists? probably not because it is in the users responsibility to not save multiple same recipes
@@ -48,10 +54,10 @@ public class RecipeService {
     for (long cookbookID : cookbookIDs) {
       Cookbook c = cookbookRepository.findById(cookbookID);
       List<Long> recipes = c.getRecipes();
-      recipes.add(cookbookID); // Add the new recipe to the list of recipes in the cookbook
+      recipes.add(newRecipe.getId()); // Add the new recipe to the list of recipes in the cookbook
       c.setRecipes(recipes);
     }
-
+    cookbookRepository.flush();
     recipeRepository.flush();
 
     log.debug("Created new Recipe: {}", newRecipe);
@@ -62,6 +68,12 @@ public class RecipeService {
   public Recipe findRecipeById(Long recipeID) {
     Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeID);
     return optionalRecipe.orElse(null); // Returns null if recipe is not found
+  }
+
+  public List<Recipe> findAllRecipes(Long userID) {
+    List<Recipe> recipes = recipeRepository.findByAuthorID(userID);
+
+    return recipes;
   }
 
 }
