@@ -8,6 +8,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.RecipeService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -54,14 +55,19 @@ public class RecipeController {
   }
   
 
-  @GetMapping("/users/{userID}/cookbooks/")
+  @GetMapping("/users/{userID}/cookbooks")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public List<Long> getRecipes(@PathVariable("userID") Long userID) {
+  public List<RecipeDTO> getRecipes(@PathVariable("userID") Long userID) {
     
-    List<Long> recipes = recipeService.findAllRecipes(userID);
+    List<Recipe> recipes = recipeService.findAllRecipes(userID);
 
-    return recipes;
+    List<RecipeDTO> mapped_recipes = new ArrayList<>();
+
+    for (Recipe recipe : recipes) {
+      mapped_recipes.add(DTOMapper.INSTANCE.convertEntityToRecipeDTO(recipe));
+    }
+
+    return mapped_recipes;
   }
-  
 }
