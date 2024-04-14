@@ -25,12 +25,30 @@ public class RecipeController {
   @PostMapping("/users/{userID}/cookbooks")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  public RecipeDTO createRecipe(@PathVariable("userID") Long userID, @RequestBody RecipePostDTO recipePostDTO) {
+  public RecipeDTO createUserRecipe(@PathVariable("userID") Long userID, @RequestBody RecipePostDTO recipePostDTO) {
     try {
       Recipe recipeInput = DTOMapper.INSTANCE.convertRecipePostDTOtoEntity(recipePostDTO);
 
       // Extract the userID from the path and pass it along with the recipePostDTO
       Recipe createdRecipe = recipeService.createRecipe(userID, recipeInput);
+
+      // Returns the createdRecipe and maps it using the Data Transfer Object Mapper to only give necessary information back
+      return DTOMapper.INSTANCE.convertEntityToRecipeDTO(createdRecipe);
+    } catch (Exception e) {
+      // If an exception occurs during the conversion process, return HTTP error 409 (Conflict)
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Failed to create recipe. Check your input data.", e);
+    }
+  }
+
+  @PostMapping("/groups/{groupID}/cookbooks")
+  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseBody
+  public RecipeDTO createGroupRecipe(@PathVariable("groupID") Long groupID, @RequestBody RecipePostDTO recipePostDTO) {
+    try {
+      Recipe recipeInput = DTOMapper.INSTANCE.convertRecipePostDTOtoEntity(recipePostDTO);
+
+      // Extract the userID from the path and pass it along with the recipePostDTO
+      Recipe createdRecipe = recipeService.createGroupRecipe(groupID, recipeInput);
 
       // Returns the createdRecipe and maps it using the Data Transfer Object Mapper to only give necessary information back
       return DTOMapper.INSTANCE.convertEntityToRecipeDTO(createdRecipe);
