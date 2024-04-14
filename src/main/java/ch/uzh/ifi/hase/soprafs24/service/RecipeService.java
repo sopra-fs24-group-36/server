@@ -38,7 +38,7 @@ public class RecipeService {
     this.cookbookRepository = cookbookRepository;
   }
 
-  public Recipe createRecipe(Long userID, Recipe newRecipe) {
+  public Recipe createUserRecipe(Long userID, Recipe newRecipe) {
 
     //something like checkifrecipeexists? probably not because it is in the users responsibility to not save multiple same recipes
 

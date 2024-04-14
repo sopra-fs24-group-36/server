@@ -30,7 +30,7 @@ public class RecipeController {
       Recipe recipeInput = DTOMapper.INSTANCE.convertRecipePostDTOtoEntity(recipePostDTO);
 
       // Extract the userID from the path and pass it along with the recipePostDTO
-      Recipe createdRecipe = recipeService.createRecipe(userID, recipeInput);
+      Recipe createdRecipe = recipeService.createUserRecipe(userID, recipeInput);
 
       // Returns the createdRecipe and maps it using the Data Transfer Object Mapper to only give necessary information back
       return DTOMapper.INSTANCE.convertEntityToRecipeDTO(createdRecipe);
@@ -47,7 +47,7 @@ public class RecipeController {
     try {
       Recipe recipeInput = DTOMapper.INSTANCE.convertRecipePostDTOtoEntity(recipePostDTO);
 
-      // Extract the userID from the path and pass it along with the recipePostDTO
+      // Extract the groupID from the path and pass it along with the recipePostDTO
       Recipe createdRecipe = recipeService.createGroupRecipe(groupID, recipeInput);
 
       // Returns the createdRecipe and maps it using the Data Transfer Object Mapper to only give necessary information back
