@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.RecipeService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
@@ -61,7 +62,7 @@ public class RecipeController {
   @GetMapping("/users/{userID}/cookbooks/{recipeID}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public RecipeDTO getRecipe(@PathVariable("recipeID") long recipeID) {
+  public RecipeDTO getUserRecipe(@PathVariable("recipeID") long recipeID) {
     
     Recipe recipe = recipeService.findRecipeById(recipeID);
 
@@ -71,6 +72,38 @@ public class RecipeController {
 
     return DTOMapper.INSTANCE.convertEntityToRecipeDTO(recipe);
   }
+  
+  @GetMapping("/groups/{groupID}/cookbooks/{recipeID}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public RecipeDTO getGroupRecipe(@PathVariable("recipeID") long recipeID) {
+    
+    Recipe recipe = recipeService.findRecipeById(recipeID);
+
+    if (recipe == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found");
+    }
+
+    return DTOMapper.INSTANCE.convertEntityToRecipeDTO(recipe);
+  }
+
+  @PutMapping("/users/{userID}/cookbooks/{recipeID}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseBody
+  public void editUserRecipe(@PathVariable("recipeID") long recipeID, @RequestBody RecipePutDTO recipePutDTO) {
+    
+    Recipe recipe = recipeService.findRecipeById(recipeID);
+
+    if (recipe == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found");
+    }
+
+    Recipe recipeToUpdate = DTOMapper.INSTANCE.convertRecipePutDTOtoEntity(recipePutDTO);
+
+    recipeService.updateRecipe(recipeID, recipeToUpdate);
+
+  }
+  
   
 
   @GetMapping("/users/{userID}/cookbooks")

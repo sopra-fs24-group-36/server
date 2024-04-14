@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 
+import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.repository.CookbookRepository;
@@ -9,7 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cglib.core.CollectionUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +103,96 @@ public class RecipeService {
     List<Recipe> recipes = recipeRepository.findByAuthorID(userID);
 
     return recipes;
+  }
+
+  public void updateRecipe(long recipeID, Recipe recipeToUpdate){
+    String title = recipeToUpdate.getTitle();
+    
+    String shortDescription = recipeToUpdate.getShortDescription();
+
+    String link = recipeToUpdate.getLink();
+
+    String cookingTime = recipeToUpdate.getCookingTime();
+
+    List<String> amounts = recipeToUpdate.getAmounts();
+
+    List<String> ingredients = recipeToUpdate.getIngredients();
+
+    List<String> instructions = recipeToUpdate.getInstructions();
+
+    String image = recipeToUpdate.getImage();
+
+    List<RecipeTags> tags = recipeToUpdate.getTags();
+
+    List<Long> cookbooks = recipeToUpdate.getCookbooks();
+
+    try {
+      Recipe recipe = recipeRepository.findById(recipeID);
+      
+      if (title != null){
+        recipe.setTitle(title);
+      }
+      if (shortDescription != null){
+        recipe.setShortDescription(shortDescription);
+      }
+      if (link != null){
+        recipe.setLink(link);
+      }
+      if (cookingTime != null){
+        recipe.setCookingTime(cookingTime);
+      }
+      if (amounts != null){
+        recipe.setAmounts(amounts);
+      }
+      if (ingredients != null){
+        recipe.setIngredients(ingredients);
+      }
+      if (instructions != null){
+        recipe.setInstructions(instructions);
+      }
+      if (image != null){
+        recipe.setImage(image);
+      }
+      if (tags != null){
+        recipe.setTags(tags);
+      }
+      if (cookbooks != null) {
+        List<Long> before = recipe.getCookbooks();
+        recipe.setCookbooks(cookbooks);
+        List<Long> after = recipe.getCookbooks();
+    
+        // Create copies of the lists to avoid modifying the originals
+        List<Long> beforeCopy = new ArrayList<>(before);
+        List<Long> afterCopy = new ArrayList<>(after);
+    
+        // Calculate the elements present in 'after' but not in 'before'
+        afterCopy.removeAll(before);
+
+        for (long cookbookID:afterCopy){
+          //add recipe to cookbook
+          Cookbook c = cookbookRepository.findById(cookbookID);
+          List<Long> recipes = c.getRecipes();
+          recipes.add(recipe.getId()); // Add the new recipe to the list of recipes in the cookbook
+          c.setRecipes(recipes);
+        }
+    
+        // Calculate the elements present in 'before' but not in 'after'
+        beforeCopy.removeAll(after);
+
+        for (long cookbookID:beforeCopy){
+          //remove elements from cookbooks
+          Cookbook c = cookbookRepository.findById(cookbookID);
+          List<Long> recipes = c.getRecipes();
+          recipes.remove(recipe.getId()); // Add the new recipe to the list of recipes in the cookbook
+          c.setRecipes(recipes);
+        }
+
+      }
+  
+    } catch(Exception e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong, please check content");
+    }
+
   }
 
 }
