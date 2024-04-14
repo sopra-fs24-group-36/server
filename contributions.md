@@ -43,6 +43,9 @@
 
 ### Jazz
 - 09.04, #25, #4, finished UI of search bar, made username in top corner clickable, a few other minor changes
+- 12.04, #30, working on connection to backend - few changes to recipe page & making sure login and register work
+- 13.04, #30, working on connection to backend - recipes are successfully saved to database
+- 14.03, #11, working on connection to backend - recipe page is displayed correctly & viewing recipe page finished 
 
 ### Yujie
 
