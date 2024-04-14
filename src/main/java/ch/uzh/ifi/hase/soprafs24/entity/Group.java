@@ -21,6 +21,10 @@ public class Group implements Serializable {
   @CollectionTable(name = "members")
   private List<Long> members;
 
+  //save the personal cookbook id to the group
+  @OneToOne
+  private Cookbook cookbook;
+
   public Long getId() {
     return id;
   }
@@ -44,5 +48,9 @@ public class Group implements Serializable {
   public void setMembers(List<Long> members) {
     this.members = members;
   }
+
+  public Cookbook getCookbook() {return cookbook; }
+
+  public void setCookbook(Cookbook cookbook) {this.cookbook = cookbook; }
 
 }

@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 
+import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import org.slf4j.Logger;
@@ -34,6 +35,10 @@ public class GroupService {
     log.debug("Created new Group: {}", newGroup);
 
     return newGroup;
+  }
+
+  public void saveCookbook (Group group, Cookbook cookbook) {
+    group.setCookbook(cookbook);
   }
 
 }
