@@ -187,7 +187,10 @@ public class RecipeService {
           c.setRecipes(recipes);
         }
 
+        recipeRepository.save(recipe);
+        recipeRepository.flush();
       }
+      
   
     } catch(Exception e) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong, please check content");
