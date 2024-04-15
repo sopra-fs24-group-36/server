@@ -8,6 +8,7 @@
 ### Sarina
 - 15.04, [#23](https://github.com/sopra-fs24-group-36/server/issues/23), added all tests
 - 15.04, [#37](https://github.com/sopra-fs24-group-36/server/issues/37), added all tests
+- 12.04, [#71](https://github.com/sopra-fs24-group-36/server/issues/71), agreed on using postgres database to store and persist our data
 
 ### Jazz
 - 09.04, #25, #4, finished UI of search bar, made username in top corner clickable, a few other minor changes
