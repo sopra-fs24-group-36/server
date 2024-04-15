@@ -24,6 +24,8 @@
 - 12.04, [#26](https://github.com/sopra-fs24-group-36/client/issues/26), created a shopping list view
 
 ### Summer
+- 14.04 [#21](https://github.com/sopra-fs24-group-36/client/issues/21), Create a Invitations page
+- 15.04 [#12](https://github.com/sopra-fs24-group-36/client/issues/12), create a search bar to search by tags or names
 
 ### Marko
 - 13.04, Marko, [#36](https://github.com/sopra-fs24-group-36/client/issues/36) added the post/get requests to store single recipes in the database, as well es retrieve single/multiple ones. 
