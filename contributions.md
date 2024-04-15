@@ -9,6 +9,7 @@
 - 15.04, [#23](https://github.com/sopra-fs24-group-36/server/issues/23), added all tests
 - 15.04, [#37](https://github.com/sopra-fs24-group-36/server/issues/37), added all tests
 - 12.04, [#71](https://github.com/sopra-fs24-group-36/server/issues/71), agreed on using postgres database to store and persist our data
+- 15.04, [#72](https://github.com/sopra-fs24-group-36/server/issues/72), after various tries to get a working and correct solution i found one (having two databases, one for tests and one for the rest, while only the one not for tests actually persists data since it is not needed for the tests and makes things complicated)
 
 ### Jazz
 - 09.04, [#25](https://github.com/sopra-fs24-group-36/client/issues/25), [#4](https://github.com/sopra-fs24-group-36/client/issues/4), finished UI of search bar, made username in top corner clickable, a few other minor changes
