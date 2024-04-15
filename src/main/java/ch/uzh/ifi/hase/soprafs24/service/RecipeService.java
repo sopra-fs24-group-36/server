@@ -209,4 +209,20 @@ public class RecipeService {
 
   }
 
+  public void deleteRecipe(Recipe recipe) {
+    for (Long cookbookID : recipe.getCookbooks()) {
+        Optional<Cookbook> cOptional = cookbookRepository.findById(cookbookID);
+        cOptional.ifPresent(c -> {
+            List<Long> recipes = c.getRecipes();
+            if (recipes != null && recipes.contains(recipe.getId())) {
+                recipes.remove(recipe.getId());
+                c.setRecipes(recipes);
+                cookbookRepository.save(c);
+            }
+        });
+    }
+    recipeRepository.delete(recipe);
+}
+
+
 }

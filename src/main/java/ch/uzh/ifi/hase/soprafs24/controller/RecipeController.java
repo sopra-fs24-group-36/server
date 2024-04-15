@@ -20,8 +20,9 @@ import org.springframework.web.server.ResponseStatusException;
 public class RecipeController {
 
   private final RecipeService recipeService;
+  private final RecipeRepository recipeRepository;
 
-  RecipeController(RecipeService recipeService) {this.recipeService = recipeService; }
+  RecipeController(RecipeService recipeService, RecipeRepository recipeRepository) {this.recipeService = recipeService; this.recipeRepository = recipeRepository;}
 
   @PostMapping("/users/{userID}/cookbooks")
   @ResponseStatus(HttpStatus.CREATED)
@@ -103,8 +104,6 @@ public class RecipeController {
     recipeService.updateRecipe(recipeID, recipeToUpdate);
 
   }
-  
-  
 
   @GetMapping("/users/{userID}/cookbooks")
   @ResponseStatus(HttpStatus.OK)
@@ -121,4 +120,18 @@ public class RecipeController {
 
     return mapped_recipes;
   }
+
+  @DeleteMapping("/users/{userID}/cookbooks/{recipeID}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseBody
+  public void deleteRecipe(@PathVariable("recipeID") long recipeID) {
+      try {
+          Recipe recipeToDelete = recipeRepository.findById(recipeID);
+          recipeService.deleteRecipe(recipeToDelete);
+      } catch (Exception e) {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found", e);
+      }
+  }
+  
+
 }
