@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 
@@ -41,4 +44,38 @@ public class GroupService {
     group.setCookbook(cookbook);
   }
 
+  public void addUserToGroup(Long userID, Long groupID){
+    Optional<Group> groupOptional = groupRepository.findById(groupID);
+    
+    if (groupOptional.isPresent()) {
+        Group group = groupOptional.get();
+
+        List<Long> members = group.getMembers();
+        members.add(userID);
+        group.setMembers(members);
+        groupRepository.save(group);
+    } else {
+        throw new RuntimeException("Group with ID " + groupID + " not found");
+    }
+  }
+
+  public void deleteUserFromGroup(Long userID, Long groupID){
+    Optional<Group> groupOptional = groupRepository.findById(groupID);
+      
+    if (groupOptional.isPresent()) {
+        Group group = groupOptional.get();
+        
+        List<Long> members = group.getMembers();
+        
+        if (members.contains(userID)) {
+            members.remove(userID);
+            group.setMembers(members);
+            groupRepository.save(group);
+        } else {
+            throw new RuntimeException("User with ID " + userID + " is not a member of group with ID " + groupID);
+        }
+    } else {
+        throw new RuntimeException("Group with ID " + groupID + " not found");
+    }
+  }
 }

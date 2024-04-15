@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import antlr.collections.Stack;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,28 +73,37 @@ public class RecipeService {
 
   public Recipe createGroupRecipe(Long groupID, Recipe newRecipe) {
 
-    //something like checkifrecipeexists? probably not because it is in the users responsibility to not save multiple same recipes
-
+    // Save the new recipe
     newRecipe = recipeRepository.save(newRecipe);
-    
-    //something to save the recipe into all the right cookbooks, this would be in a loop since there may be more cookbooks to save it to
-    //maybe something like: for cookbookID in cookbooks {c = cookbookservice.findcookbook(cookbookID) then c.setrecipe(newrecipe) if the recipes are empty}
+
+    // Get the IDs of the cookbooks to associate the recipe with
     List<Long> cookbookIDs = newRecipe.getCookbooks();
         
-    // Loop through each cookbook ID but since it is only one it will be one iteration
+    // Loop through each cookbook ID
     for (long cookbookID : cookbookIDs) {
-      Cookbook c = cookbookRepository.findById(cookbookID);
-      List<Long> recipes = c.getRecipes();
-      recipes.add(newRecipe.getId()); // Add the new recipe to the list of recipes in the cookbook
-      c.setRecipes(recipes);
+        // Find the cookbook
+        Cookbook c = cookbookRepository.findById(cookbookID);
+        if (c != null) {
+            // Add the new recipe to the list of recipes in the cookbook
+            List<Long> recipes = c.getRecipes();
+            recipes.add(newRecipe.getId());
+            c.setRecipes(recipes);
+            // Save the updated cookbook
+            cookbookRepository.save(c);
+        } else {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong, please check content");
+        }
     }
+
+    // Flush changes to the database
     cookbookRepository.flush();
     recipeRepository.flush();
 
     log.debug("Created new Recipe: {}", newRecipe);
 
     return newRecipe;
-  }
+}
+
 
   public Recipe findRecipeById(Long recipeID) {
     Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeID);
