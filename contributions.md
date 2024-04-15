@@ -26,9 +26,10 @@
 ### Summer
 
 ### Marko
-- 13.04, Marko, [#36], (https://github.com/sopra-fs24-group-36/client/issues/36) added the post/get requests to store single recipes in the database, as well es retrieve single/multiple ones. 
-- 14.04, Marko, [#59], (https://github.com/sopra-fs24-group-36/client/issues/59) added the put requests to update single recipes in the database. 
-- 15.04 Marko, [#73], (https://github.com/sopra-fs24-group-36/client/issues/73) added all necessary things for the recipes including delete.
+- 13.04, Marko, [#36](https://github.com/sopra-fs24-group-36/client/issues/36) added the post/get requests to store single recipes in the database, as well es retrieve single/multiple ones. 
+- 14.04, Marko, [#59](https://github.com/sopra-fs24-group-36/client/issues/59) added the put requests to update single recipes in the database. 
+- 15.04 Marko, [#73](https://github.com/sopra-fs24-group-36/client/issues/73) added all necessary things for the recipes including delete.
+
 
 
 
@@ -63,4 +64,5 @@
 - 05.04, Marko, [#47](https://github.com/sopra-fs24-group-36/server/issues/47), added the same setup for the Group Database (Group Entity, Repository, Service, ...)
 - 05.04, Marko, [#66](https://github.com/sopra-fs24-group-36/server/issues/66), setup the database for ShoppingLists (ShoppingList Entity, Repository, Service, ...)
 - 07.04, Marko, [#47](https://github.com/sopra-fs24-group-36/server/issues/47), the invitations are stored with the user and not the group, changed it.
+- 08.04, Marko, [#66](https://github.com/sopra-fs24-group-36/server/issues/66) and [#47](https://github.com/sopra-fs24-group-36/server/issues/47), added to the DTOMapper all necessary mappers for groups/shoppingLists/recipes
 - 08.04, Marko, [#66](https://github.com/sopra-fs24-group-36/server/issues/66) and [#47](https://github.com/sopra-fs24-group-36/server/issues/47), added to the DTOMapper all necessary mappers for groups/shoppingLists/recipes
