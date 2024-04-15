@@ -51,5 +51,6 @@
 ### Marko
 - 13.04, Marko, #36, added the post/get requests to store single recipes in the database, as well es retrieve single/multiple ones. https://github.com/sopra-fs24-group-36/client/issues/36
 - 14.04, Marko, #59, added the put requests to update single recipes in the database. https://github.com/sopra-fs24-group-36/client/issues/59
+- 15.04 Marko, #73, added all necessary things for the recipes including delete. https://github.com/sopra-fs24-group-36/client/issues/73
 
 
