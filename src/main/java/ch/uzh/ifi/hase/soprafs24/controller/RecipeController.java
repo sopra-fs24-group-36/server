@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
+import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
+import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
@@ -21,8 +23,9 @@ public class RecipeController {
 
   private final RecipeService recipeService;
   private final RecipeRepository recipeRepository;
+  private final GroupRepository groupRepository;
 
-  RecipeController(RecipeService recipeService, RecipeRepository recipeRepository) {this.recipeService = recipeService; this.recipeRepository = recipeRepository;}
+  RecipeController(RecipeService recipeService, RecipeRepository recipeRepository, GroupRepository groupRepository) {this.recipeService = recipeService; this.recipeRepository = recipeRepository; this.groupRepository = groupRepository;}
 
   @PostMapping("/users/{userID}/cookbooks")
   @ResponseStatus(HttpStatus.CREATED)
@@ -127,11 +130,23 @@ public class RecipeController {
   public void deleteRecipe(@PathVariable("recipeID") long recipeID) {
       try {
           Recipe recipeToDelete = recipeRepository.findById(recipeID);
+          if (recipeToDelete == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found");
+          }
           recipeService.deleteRecipe(recipeToDelete);
       } catch (Exception e) {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found", e);
       }
   }
-  
 
+  @PutMapping("groups/{groupID}/cookbooks/{recipeID}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public void removeRecipeFromGroup(@PathVariable("groupID") Long groupID, @PathVariable("recipeID") Long recipeID) {
+    try{
+      recipeService.removeRecipeFromGroup(groupID, recipeID);
+    } catch (Exception e){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group or Recipe not found", e);
+    }
+  }
 }

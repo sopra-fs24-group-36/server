@@ -3,8 +3,10 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
+import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.repository.CookbookRepository;
+import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,8 @@ public class RecipeService {
   private final RecipeRepository recipeRepository;
 
   private CookbookRepository cookbookRepository;
+
+  private GroupRepository groupRepository;
 
   @Autowired
   public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository) {
@@ -222,7 +226,20 @@ public class RecipeService {
         });
     }
     recipeRepository.delete(recipe);
-}
+  }
+
+  public void removeRecipeFromGroup(Long groupID, Long recipeID) {
+    Group group = groupRepository.findById(groupID).orElseThrow(() -> new RuntimeException("Group not found"));
+
+    Cookbook cookbook = group.getCookbook();
+    List<Long> recipes = cookbook.getRecipes();
+    recipes.remove(recipeID);
+    cookbook.setRecipes(recipes);
+
+    cookbookRepository.save(cookbook);
+    groupRepository.save(group);
+  }
+
 
 
 }
