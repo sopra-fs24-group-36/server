@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDeleteDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
@@ -46,6 +47,7 @@ public interface DTOMapper {
     @Mapping(source = "shortDescription" , target = "shortDescription")
     @Mapping(source = "link" , target = "link")
     @Mapping(source = "cookingTime" , target = "cookingTime")
+    @Mapping(source = "amounts" , target = "amounts")
     @Mapping(source = "ingredients" , target = "ingredients")
     @Mapping(source = "instructions" , target = "instructions")
     @Mapping(source = "image" , target = "image")
@@ -56,7 +58,16 @@ public interface DTOMapper {
     @Mapping(source = "id" , target = "id")
     Recipe convertRecipeGetDTOtoEntity(RecipeGetDTO recipeGetDTO);
 
-    @Mapping(source = "id" , target = "id")
+    @Mapping(source = "title" , target = "title")
+    @Mapping(source = "shortDescription" , target = "shortDescription")
+    @Mapping(source = "link" , target = "link")
+    @Mapping(source = "cookingTime" , target = "cookingTime")
+    @Mapping(source = "amounts" , target = "amounts")
+    @Mapping(source = "ingredients" , target = "ingredients")
+    @Mapping(source = "instructions" , target = "instructions")
+    @Mapping(source = "image" , target = "image")
+    @Mapping(source = "tags" , target = "tags")
+    @Mapping(source = "cookbooks" , target = "cookbooks")
     Recipe convertRecipePutDTOtoEntity(RecipePutDTO recipePutDTO);
 
     @Mapping(source = "id" , target = "id")
@@ -67,6 +78,7 @@ public interface DTOMapper {
     @Mapping(source = "shortDescription" , target = "shortDescription")
     @Mapping(source = "link" , target = "link")
     @Mapping(source = "cookingTime" , target = "cookingTime")
+    @Mapping(source = "amounts" , target = "amounts")
     @Mapping(source = "ingredients" , target = "ingredients")
     @Mapping(source = "instructions" , target = "instructions")
     @Mapping(source = "image" , target = "image")
@@ -82,7 +94,7 @@ public interface DTOMapper {
     @Mapping(source = "id" , target = "id")
     @Mapping(source = "name" , target = "name")
     @Mapping(source = "members" , target = "members")
-    Group convertEntityToGroupDTO(Group group);
+    GroupDTO convertEntityToGroupDTO(Group group);
 
     @Mapping(source = "id" , target = "id")
     ShoppingList convertShoppingListGetDTOtoEntity(ShoppingListGetDTO shoppingListGetDTO);

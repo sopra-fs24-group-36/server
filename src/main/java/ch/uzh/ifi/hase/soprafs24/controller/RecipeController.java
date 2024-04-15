@@ -1,12 +1,18 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
+import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
+import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.RecipeService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,18 +22,38 @@ import org.springframework.web.server.ResponseStatusException;
 public class RecipeController {
 
   private final RecipeService recipeService;
+  private final RecipeRepository recipeRepository;
+  private final GroupRepository groupRepository;
 
-  RecipeController(RecipeService recipeService) {this.recipeService = recipeService; }
+  RecipeController(RecipeService recipeService, RecipeRepository recipeRepository, GroupRepository groupRepository) {this.recipeService = recipeService; this.recipeRepository = recipeRepository; this.groupRepository = groupRepository;}
 
   @PostMapping("/users/{userID}/cookbooks")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  public RecipeDTO createRecipe(@PathVariable("userID") Long userID, @RequestBody RecipePostDTO recipePostDTO) {
+  public RecipeDTO createUserRecipe(@PathVariable("userID") Long userID, @RequestBody RecipePostDTO recipePostDTO) {
     try {
       Recipe recipeInput = DTOMapper.INSTANCE.convertRecipePostDTOtoEntity(recipePostDTO);
 
       // Extract the userID from the path and pass it along with the recipePostDTO
-      Recipe createdRecipe = recipeService.createRecipe(userID, recipeInput);
+      Recipe createdRecipe = recipeService.createUserRecipe(userID, recipeInput);
+
+      // Returns the createdRecipe and maps it using the Data Transfer Object Mapper to only give necessary information back
+      return DTOMapper.INSTANCE.convertEntityToRecipeDTO(createdRecipe);
+    } catch (Exception e) {
+      // If an exception occurs during the conversion process, return HTTP error 409 (Conflict)
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Failed to create recipe. Check your input data.", e);
+    }
+  }
+
+  @PostMapping("/groups/{groupID}/cookbooks")
+  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseBody
+  public RecipeDTO createGroupRecipe(@PathVariable("groupID") Long groupID, @RequestBody RecipePostDTO recipePostDTO) {
+    try {
+      Recipe recipeInput = DTOMapper.INSTANCE.convertRecipePostDTOtoEntity(recipePostDTO);
+
+      // Extract the groupID from the path and pass it along with the recipePostDTO
+      Recipe createdRecipe = recipeService.createGroupRecipe(groupID, recipeInput);
 
       // Returns the createdRecipe and maps it using the Data Transfer Object Mapper to only give necessary information back
       return DTOMapper.INSTANCE.convertEntityToRecipeDTO(createdRecipe);
@@ -40,7 +66,7 @@ public class RecipeController {
   @GetMapping("/users/{userID}/cookbooks/{recipeID}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public RecipeDTO getRecipe(@PathVariable("recipeID") long recipeID) {
+  public RecipeDTO getUserRecipe(@PathVariable("recipeID") long recipeID) {
     
     Recipe recipe = recipeService.findRecipeById(recipeID);
 
@@ -51,5 +77,76 @@ public class RecipeController {
     return DTOMapper.INSTANCE.convertEntityToRecipeDTO(recipe);
   }
   
+  @GetMapping("/groups/{groupID}/cookbooks/{recipeID}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public RecipeDTO getGroupRecipe(@PathVariable("recipeID") long recipeID) {
+    
+    Recipe recipe = recipeService.findRecipeById(recipeID);
 
+    if (recipe == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found");
+    }
+
+    return DTOMapper.INSTANCE.convertEntityToRecipeDTO(recipe);
+  }
+
+  @PutMapping("/users/{userID}/cookbooks/{recipeID}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseBody
+  public void editUserRecipe(@PathVariable("recipeID") long recipeID, @RequestBody RecipePutDTO recipePutDTO) {
+    
+    Recipe recipe = recipeService.findRecipeById(recipeID);
+
+    if (recipe == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found");
+    }
+
+    Recipe recipeToUpdate = DTOMapper.INSTANCE.convertRecipePutDTOtoEntity(recipePutDTO);
+
+    recipeService.updateRecipe(recipeID, recipeToUpdate);
+
+  }
+
+  @GetMapping("/users/{userID}/cookbooks")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public List<RecipeDTO> getRecipes(@PathVariable("userID") Long userID) {
+    
+    List<Recipe> recipes = recipeService.findAllRecipesWithUserID(userID);
+
+    List<RecipeDTO> mapped_recipes = new ArrayList<>();
+
+    for (Recipe recipe : recipes) {
+      mapped_recipes.add(DTOMapper.INSTANCE.convertEntityToRecipeDTO(recipe));
+    }
+
+    return mapped_recipes;
+  }
+
+  @DeleteMapping("/users/{userID}/cookbooks/{recipeID}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseBody
+  public void deleteRecipe(@PathVariable("recipeID") long recipeID) {
+      try {
+          Recipe recipeToDelete = recipeRepository.findById(recipeID);
+          if (recipeToDelete == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found");
+          }
+          recipeService.deleteRecipe(recipeToDelete);
+      } catch (Exception e) {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found", e);
+      }
+  }
+
+  @PutMapping("groups/{groupID}/cookbooks/{recipeID}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public void removeRecipeFromGroup(@PathVariable("groupID") Long groupID, @PathVariable("recipeID") Long recipeID) {
+    try{
+      recipeService.removeRecipeFromGroup(groupID, recipeID);
+    } catch (Exception e){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group or Recipe not found", e);
+    }
+  }
 }

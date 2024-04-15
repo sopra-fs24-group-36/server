@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "COOKBOOK")
@@ -19,6 +20,9 @@ public class Cookbook implements Serializable {
     @Column(nullable = false)
     private CookbookStatus status;
 
+    @ElementCollection
+    @Column(name = "recipes")
+    private List<Long> recipes;
 
     public Long getId() {
         return id;
@@ -34,6 +38,14 @@ public class Cookbook implements Serializable {
 
     public void setStatus(CookbookStatus status) {
         this.status = status;
+    }
+
+    public List<Long> getRecipes(){
+        return recipes;
+    }
+
+    public void setRecipes(List<Long> recipes){
+        this.recipes = recipes;
     }
 
 }

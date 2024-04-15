@@ -25,7 +25,10 @@ public class Recipe implements Serializable {
 
   private String cookingTime;
 
-  //ingredients as List of lists with 2 strings
+  @ElementCollection
+  @Column(name = "amounts")
+  private List<String> amounts;
+
   @ElementCollection
   @Column(name = "ingredients")
   private List<String> ingredients;
@@ -84,6 +87,14 @@ public class Recipe implements Serializable {
 
   public void setCookingTime(String cookingTime) {
     this.cookingTime = cookingTime;
+  }
+
+  public List<String> getAmounts() {
+    return amounts;
+  }
+
+  public void setAmounts(List<String> amounts) {
+    this.amounts = amounts;
   }
 
   public List<String> getIngredients() {

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "GROUP")
+@Table(name = "GROUPS")
 public class Group implements Serializable {
   private static final long serialVersionUID = 1L;
 
@@ -20,6 +20,10 @@ public class Group implements Serializable {
   @ElementCollection
   @CollectionTable(name = "members")
   private List<Long> members;
+
+  //save the personal cookbook id to the group
+  @OneToOne
+  private Cookbook cookbook;
 
   public Long getId() {
     return id;
@@ -44,5 +48,9 @@ public class Group implements Serializable {
   public void setMembers(List<Long> members) {
     this.members = members;
   }
+
+  public Cookbook getCookbook() {return cookbook; }
+
+  public void setCookbook(Cookbook cookbook) {this.cookbook = cookbook; }
 
 }
