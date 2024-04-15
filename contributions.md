@@ -3,6 +3,25 @@
 - entry should consist of the date, your name, links to the github issues you worked on and optionally a short description 
 
 
+## Week 2
+
+### Sarina
+- 15.04, [#23](https://github.com/sopra-fs24-group-36/server/issues/23), added all tests
+- 15.04, [#37](https://github.com/sopra-fs24-group-36/server/issues/37), added all tests
+
+### Jazz
+- 09.04, #25, #4, finished UI of search bar, made username in top corner clickable, a few other minor changes
+- 12.04, #30, working on connection to backend - few changes to recipe page & making sure login and register work
+- 13.04, #30, working on connection to backend - recipes are successfully saved to database
+- 14.03, #11, working on connection to backend - recipe page is displayed correctly & viewing recipe page finished 
+
+### Yujie
+
+### Summer
+
+### Marko
+
+
 
 ## Week 1 (including easter break)
 
@@ -36,21 +55,5 @@
 - 05.04, Marko, #66, setup the database for ShoppingLists (ShoppingList Entity, Repository, Service, ...)
 - 07.04, Marko, #47, the invitations are stored with the user and not the group, changed it.
 - 08.04, Marko, #66 and #47, added to the DTOMapper all necessary mappers for groups/shoppingLists/recipes
-
-## Week 2
-
-### Sarina
-
-### Jazz
-- 09.04, #25, #4, finished UI of search bar, made username in top corner clickable, a few other minor changes
-- 12.04, #30, working on connection to backend - few changes to recipe page & making sure login and register work
-- 13.04, #30, working on connection to backend - recipes are successfully saved to database
-- 14.03, #11, working on connection to backend - recipe page is displayed correctly & viewing recipe page finished 
-
-### Yujie
-
-### Summer
-
-### Marko
 
 
