@@ -17,6 +17,9 @@
 - 14.03, [#11](https://github.com/sopra-fs24-group-36/client/issues/11), working on connection to backend - recipe page is displayed correctly & viewing recipe page finished 
 
 ### Yujie
+- 09.04, [#16](https://github.com/sopra-fs24-group-36/client/issues/16), created a group creation view
+- 11.04, [#19](https://github.com/sopra-fs24-group-36/client/issues/19), created a invitation view. Fixed dashboard, made it display different buttons depending on different pages
+- 12.04, [#26](https://github.com/sopra-fs24-group-36/client/issues/26), created a shopping list view
 
 ### Summer
 
