@@ -11,6 +11,8 @@ public class GroupDTO {
 
   private List<Long> members = new ArrayList<>();
 
+  private String image;
+
   public Long getId() {
     return id;
   }
@@ -33,5 +35,10 @@ public class GroupDTO {
 
   public void setMembers(List<Long> members) {
     this.members = members;
-  }  
+  } 
+
+  public String getImage(){return image;}
+
+  public void setImage(String image){this.image = image;}
+
 }

@@ -89,11 +89,13 @@ public interface DTOMapper {
 
     @Mapping(source = "name" , target = "name")
     @Mapping(source = "members" , target = "members")
+    @Mapping(source = "image" , target = "image")
     Group convertGroupPostDTOtoEntity(GroupPostDTO groupPostDTO);
 
     @Mapping(source = "id" , target = "id")
     @Mapping(source = "name" , target = "name")
     @Mapping(source = "members" , target = "members")
+    @Mapping(source = "image" , target = "image")
     GroupDTO convertEntityToGroupDTO(Group group);
 
     @Mapping(source = "id" , target = "id")

@@ -25,6 +25,8 @@ public class Group implements Serializable {
   @OneToOne
   private Cookbook cookbook;
 
+  private String image;
+
   public Long getId() {
     return id;
   }
@@ -52,5 +54,9 @@ public class Group implements Serializable {
   public Cookbook getCookbook() {return cookbook; }
 
   public void setCookbook(Cookbook cookbook) {this.cookbook = cookbook; }
+
+  public String getImage(){return image;}
+
+  public void setImage(String image){this.image = image;}
 
 }
