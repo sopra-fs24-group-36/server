@@ -3,6 +3,9 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.entity.Group;
+import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
+import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
@@ -10,6 +13,12 @@ import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.service.CookbookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * User Controller
@@ -23,10 +32,14 @@ public class UserController {
 
   private final UserService userService;
   private final CookbookService cookbookService;
+  private final UserRepository userRepository;
+  private final GroupRepository groupRepository;
 
-  UserController(UserService userService, CookbookService cookbookService) {
+  UserController(UserService userService, CookbookService cookbookService, UserRepository userRepository, GroupRepository groupRepository) {
     this.userService = userService;
     this.cookbookService = cookbookService;
+    this.userRepository = userRepository;
+    this.groupRepository = groupRepository;
   }
 
   // add user
@@ -72,5 +85,42 @@ public class UserController {
 
         userService.logOut(userId);
     }
+
+    @PostMapping("/users/{userID}/accept")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public void postMethodName(@PathVariable("userID") Long userID, @RequestBody Long groupID) {
+    
+        User user = userRepository.findById(userID).orElse(null);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        
+        List<Long> invitations = user.getInvitations();
+        if (invitations.contains(groupID)) {
+            invitations.remove(groupID); // Remove the groupID from the list
+            userRepository.save(user);
+            userRepository.flush();
+        } else {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invitation not found");
+        }
+
+        Group group = groupRepository.findById(groupID).orElse(null);
+        if (group == null) {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
+        }
+
+        List<Long> members = group.getMembers();
+        if (!members.contains(userID)){
+          members.add(userID);
+          group.setMembers(members);
+          groupRepository.save(group);
+          groupRepository.flush();
+        } else {
+          throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }        
+    }
+    
+    
 
 }

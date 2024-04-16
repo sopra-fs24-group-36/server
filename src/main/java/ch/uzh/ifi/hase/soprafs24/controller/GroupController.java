@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.CookbookService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
@@ -15,6 +16,8 @@ import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 
 import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -91,4 +94,22 @@ public class GroupController {
       groupService.deleteUserFromGroup(groupID, userID);
   
   }
+
+  @PostMapping("/groups/{groupID}/invitations")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public void inviteUserToGroup(@PathVariable("groupID") Long groupID, @RequestBody String email) {
+    
+    User user = userRepository.findByEmail(email);
+    if (user == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+    }
+    
+    List<Long> invitations = new ArrayList<>();
+    invitations.add(groupID);
+    user.setInvitations(invitations);
+    userRepository.save(user);
+    userRepository.flush();
+  }
+
 }
