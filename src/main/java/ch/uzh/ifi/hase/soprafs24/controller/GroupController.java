@@ -98,18 +98,26 @@ public class GroupController {
   @PostMapping("/groups/{groupID}/invitations")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public void inviteUserToGroup(@PathVariable("groupID") Long groupID, @RequestBody String email) {
+  public void inviteUserToGroup(@PathVariable("groupID") Long groupID, @RequestBody UserPostDTO userPostDTO) {
+
+    Group group = groupRepository.findById(groupID).orElse(null);
+    if (group == null){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
+    }
     
+    String email = userPostDTO.getEmail();
+
     User user = userRepository.findByEmail(email);
     if (user == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
     }
     
-    List<Long> invitations = new ArrayList<>();
+    List<Long> invitations = user.getInvitations();
     invitations.add(groupID);
     user.setInvitations(invitations);
     userRepository.save(user);
     userRepository.flush();
   }
 
+  
 }

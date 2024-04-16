@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import java.util.Date;
+import java.util.List;
 
 public class UserDTO {
 
@@ -19,6 +20,7 @@ public class UserDTO {
 
     private String profilePicture;
 
+    private List<Long> invitations;
 
 
     public Long getId() {
@@ -60,5 +62,9 @@ public class UserDTO {
     public String getProfilePicture() {return profilePicture;}
 
     public void setProfilePicture(String profilePicture) {this.profilePicture = profilePicture; }
+
+    public List<Long> getInvitations(){return invitations;}
+
+    public void setInvitations(List<Long> invitations) {this.invitations = invitations;}
 
 }

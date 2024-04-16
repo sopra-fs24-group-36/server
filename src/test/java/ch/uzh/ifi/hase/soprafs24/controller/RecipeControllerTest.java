@@ -618,7 +618,7 @@ public class RecipeControllerTest {
               .andExpect(status().isNotFound());
   }
   
-
+  
   private String asJsonString(final Object object) {
     try {
       return new ObjectMapper().writeValueAsString(object);

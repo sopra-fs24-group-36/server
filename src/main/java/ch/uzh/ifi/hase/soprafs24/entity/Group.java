@@ -18,7 +18,7 @@ public class Group implements Serializable {
   private String name;
 
   @ElementCollection
-  @CollectionTable(name = "members")
+  @Column(name = "members")
   private List<Long> members;
 
   //save the personal cookbook id to the group

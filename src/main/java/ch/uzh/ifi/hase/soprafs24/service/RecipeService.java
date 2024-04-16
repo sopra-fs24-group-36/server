@@ -5,9 +5,12 @@ import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
+import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.CookbookRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
+import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,31 +37,42 @@ public class RecipeService {
 
   private final RecipeRepository recipeRepository;
 
-  private CookbookRepository cookbookRepository;
+  private final CookbookRepository cookbookRepository;
 
-  private GroupRepository groupRepository;
+  private final GroupRepository groupRepository;
+
+  private final UserRepository userRepository;
 
   @Autowired
-  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository) {
+  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository, CookbookRepository cookbookRepository, GroupRepository groupRepository, UserRepository userRepository) {
     this.recipeRepository = recipeRepository;
-  }
-
-  @Autowired
-  public void CookbookService(@Qualifier("cookbookRepository") CookbookRepository cookbookRepository) {
     this.cookbookRepository = cookbookRepository;
+    this.groupRepository = groupRepository;
+    this.userRepository = userRepository;
   }
 
   public Recipe createUserRecipe(Long userID, Recipe newRecipe) {
 
-    //something like checkifrecipeexists? probably not because it is in the users responsibility to not save multiple same recipes
-
     newRecipe = recipeRepository.save(newRecipe);
 
+    //something like checkifrecipeexists? probably not because it is in the users responsibility to not save multiple same recipes 
     newRecipe.setAuthorID(userID);
+
+    User author = userRepository.findById(userID).orElse(null);
+    if (author == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found!");
+    }
+    
+    Cookbook perscookbook = author.getCookbook();
+    List<Long> persrecipes = perscookbook.getRecipes();
+    persrecipes.add(newRecipe.getId());
+    perscookbook.setRecipes(persrecipes);
+    cookbookRepository.save(perscookbook);
     
     //something to save the recipe into all the right cookbooks, this would be in a loop since there may be more cookbooks to save it to
     //maybe something like: for cookbookID in cookbooks {c = cookbookservice.findcookbook(cookbookID) then c.setrecipe(newrecipe) if the recipes are empty}
     List<Long> cookbookIDs = newRecipe.getCookbooks();
+    cookbookIDs.add(perscookbook.getId());
         
     // Loop through each cookbook ID
     for (long cookbookID : cookbookIDs) {
@@ -239,7 +253,5 @@ public class RecipeService {
     cookbookRepository.save(cookbook);
     groupRepository.save(group);
   }
-
-
 
 }

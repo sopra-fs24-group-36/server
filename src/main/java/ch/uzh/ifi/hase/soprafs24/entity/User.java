@@ -49,6 +49,8 @@ public class User implements Serializable {
     @OneToOne
     private Cookbook cookbook;
 
+    @ElementCollection
+    @Column(name = "invitations")
     private List<Long> invitations;
 
 

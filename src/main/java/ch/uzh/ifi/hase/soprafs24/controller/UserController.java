@@ -19,6 +19,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 /**
  * User Controller
@@ -86,10 +89,10 @@ public class UserController {
         userService.logOut(userId);
     }
 
-    @PostMapping("/users/{userID}/accept")
+    @PostMapping("/users/{userID}/accept/{groupID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-    public void postMethodName(@PathVariable("userID") Long userID, @RequestBody Long groupID) {
+    public void acceptInvitation(@PathVariable("userID") Long userID, @PathVariable("groupID") Long groupID) {
     
         User user = userRepository.findById(userID).orElse(null);
         if (user == null) {
@@ -98,7 +101,7 @@ public class UserController {
         
         List<Long> invitations = user.getInvitations();
         if (invitations.contains(groupID)) {
-            invitations.remove(groupID); // Remove the groupID from the list
+            invitations.remove(groupID); // Remove the groupID from the list -> accept
             userRepository.save(user);
             userRepository.flush();
         } else {
@@ -120,7 +123,38 @@ public class UserController {
           throw new ResponseStatusException(HttpStatus.CONFLICT);
         }        
     }
-    
-    
 
+    @PostMapping("/users/{userID}/deny/{groupID}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public void declineInvitation(@PathVariable("userID") Long userID, @PathVariable("groupID") Long groupID) {
+    
+        User user = userRepository.findById(userID).orElse(null);
+        if (user == null) {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        
+        List<Long> invitations = user.getInvitations();
+        if (invitations.contains(groupID)) {
+          invitations.remove(groupID); // Remove the groupID from the list -> decline
+          userRepository.save(user);
+          userRepository.flush();
+        } else {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invitation not found");
+        }
+    }
+
+    @GetMapping("/users/{userID}/invitations")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<Long> getAllInvitations(@PathVariable("userID") Long userID) {
+
+      User user = userRepository.findById(userID).orElse(null);
+      if (user == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+      }
+
+      return user.getInvitations();
+    }
+    
 }
