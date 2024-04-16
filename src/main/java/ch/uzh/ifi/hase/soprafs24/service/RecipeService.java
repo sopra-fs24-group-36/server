@@ -64,10 +64,6 @@ public class RecipeService {
     }
     
     Cookbook perscookbook = author.getCookbook();
-    List<Long> persrecipes = perscookbook.getRecipes();
-    persrecipes.add(newRecipe.getId());
-    perscookbook.setRecipes(persrecipes);
-    cookbookRepository.save(perscookbook);
     
     //something to save the recipe into all the right cookbooks, this would be in a loop since there may be more cookbooks to save it to
     //maybe something like: for cookbookID in cookbooks {c = cookbookservice.findcookbook(cookbookID) then c.setrecipe(newrecipe) if the recipes are empty}

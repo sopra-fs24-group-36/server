@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -147,14 +150,33 @@ public class UserController {
     @GetMapping("/users/{userID}/invitations")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<Long> getAllInvitations(@PathVariable("userID") Long userID) {
+    public List<Map<String, Object>> getAllInvitations(@PathVariable("userID") Long userID) {
 
       User user = userRepository.findById(userID).orElse(null);
       if (user == null) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
       }
 
-      return user.getInvitations();
+      List<Map<String, Object>> returnlistofmaps = new ArrayList<>();
+
+      for (Long groupID:user.getInvitations()){
+        Group g = groupRepository.findById(groupID).orElse(null);
+
+        if (g == null) {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
+        }
+
+        Map<String, Object> tuple = new HashMap<>();
+
+        // Add elements to the map
+        tuple.put("groupName", g.getName());
+        tuple.put("groupImage", g.getImage());
+        tuple.put("groupID", g.getId());
+
+        returnlistofmaps.add(tuple);
+      }
+
+      return returnlistofmaps;
     }
     
 }
