@@ -8,8 +8,6 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDeleteDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDeleteDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListDeleteDTO;
@@ -53,7 +51,6 @@ public interface DTOMapper {
     @Mapping(source = "image" , target = "image")
     @Mapping(source = "tags" , target = "tags")
     @Mapping(source = "cookbooks" , target = "cookbooks")
-    @Mapping(source = "authorID" , target = "authorID")
     Recipe convertRecipePostDTOtoEntity(RecipePostDTO recipePostDTO);
 
     @Mapping(source = "title" , target = "title")
