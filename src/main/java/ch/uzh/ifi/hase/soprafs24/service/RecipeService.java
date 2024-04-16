@@ -96,7 +96,20 @@ public class RecipeService {
 
     // Get the IDs of the cookbooks to associate the recipe with
     List<Long> cookbookIDs = newRecipe.getCookbooks();
-        
+
+    Group group = groupRepository.findById(groupID).orElse(null);
+    if (group == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found!");
+    }
+
+    Cookbook groupcookbook = group.getCookbook();
+    List<Long> grouprecipes = groupcookbook.getRecipes();
+    grouprecipes.add(newRecipe.getId());
+    groupcookbook.setRecipes(grouprecipes);
+    cookbookRepository.save(groupcookbook);
+    
+    cookbookIDs.add(groupcookbook.getId());
+
     // Loop through each cookbook ID
     for (long cookbookID : cookbookIDs) {
         // Find the cookbook
@@ -108,6 +121,7 @@ public class RecipeService {
             c.setRecipes(recipes);
             // Save the updated cookbook
             cookbookRepository.save(c);
+            cookbookRepository.flush();
         } else {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong, please check content");
         }
