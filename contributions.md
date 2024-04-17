@@ -2,6 +2,22 @@
 - manually append the two development tasks they completed during the week
 - entry should consist of the date, your name, links to the github issues you worked on and optionally a short description 
 
+## Week 3
+
+### Sarina
+- 17.04, [#29](https://github.com/sopra-fs24-group-36/server/issues/29) and [#89](https://github.com/sopra-fs24-group-36/server/issues/89), added the two REST endpoints to the systems including the tests
+
+### Jazz
+
+
+### Yujie
+
+
+### Summer
+
+
+### Marko
+
 
 ## Week 2
 
