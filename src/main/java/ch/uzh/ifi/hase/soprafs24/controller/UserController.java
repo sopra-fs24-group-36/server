@@ -11,13 +11,7 @@ import ch.uzh.ifi.hase.soprafs24.service.CookbookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * User Controller
- * This class is responsible for handling all REST request that are related to
- * the user.
- * The controller will receive the request and delegate the execution to the
- * UserService and finally return the result.
- */
+
 @RestController
 public class UserController {
 
@@ -73,4 +67,14 @@ public class UserController {
         userService.logOut(userId);
     }
 
+    @GetMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserDTO getUser(@PathVariable Long userId) {
+
+      User user = userService.getTheUser(userId);
+
+      return DTOMapper.INSTANCE.convertEntityToUserDTO(user);
+
+    }
 }

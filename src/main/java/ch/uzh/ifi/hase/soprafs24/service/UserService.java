@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,6 +83,18 @@ public class UserService {
     }
 
 
+    public User getTheUser (Long userId) {
+
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "userID was not found");
+        }
+
+        log.debug("Got the User: {}", user);
+
+        return user;
+    }
 
 
     //throw an error if the user does not already exist (if username or password or both provided is wrong)

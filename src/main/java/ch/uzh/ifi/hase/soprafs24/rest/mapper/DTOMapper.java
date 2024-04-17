@@ -5,7 +5,6 @@ import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDeleteDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDeleteDTO;
@@ -14,8 +13,6 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListDeleteDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
@@ -105,4 +102,7 @@ public interface DTOMapper {
     @Mapping(source = "id" , target = "id")
     @Mapping(source = "items" , target = "items")
     ShoppingList convertEntityToShoppingListDTO(ShoppingList shoppingList);
+
+    @Mapping(source = "id", target = "id")
+    User convertUserGetDTOtoEntity(UserGetDTO userGetDTO);
 }
