@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserServiceTest {
@@ -35,7 +37,7 @@ public class UserServiceTest {
     testUser.setPassword("password");
     testUser.setUsername("username");
 
-    // when -> any object is being save in the userRepository -> return the dummy
+    // when -> any object is being saved in the userRepository -> return the dummy
     // testUser
     Mockito.when(userRepository.save(Mockito.any())).thenReturn(testUser);
   }
@@ -97,6 +99,75 @@ public class UserServiceTest {
 
     //  test logOut method //
 
+
+
+    //  test getTheUser method //
+    @Test
+    public void getTheUser_validInputs_success() {
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+
+        User getUser = userService.getTheUser(1L);
+
+        assertEquals(testUser.getId(), getUser.getId());
+        assertEquals(testUser.getName(), getUser.getName());
+        assertEquals(testUser.getUsername(), getUser.getUsername());
+        assertEquals(testUser.getEmail(), getUser.getEmail());
+        assertEquals(testUser.getPassword(), getUser.getPassword());
+    }
+
+
+    @Test
+    public void getTheUser_InvalidInputs_throwsException() {
+
+        Mockito.when(userRepository.findById(2L)).thenReturn(null);
+
+        assertThrows(ResponseStatusException.class, () -> userService.getTheUser(2L));
+    }
+
+
+
+    //  test updateTheUser method //
+    @Test
+    public void updateTheUser_validInputs_success() {
+
+        User update = new User();
+        update.setName("new");
+        update.setEmail("new");
+        update.setUsername("new");
+        update.setProfilePicture("new");
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+        Mockito.when(userRepository.findByEmail("new")).thenReturn(null);
+        Mockito.when(userRepository.findByUsername("new")).thenReturn(null);
+
+
+        userService.updateTheUser(1L, update);
+
+
+        assertEquals(testUser.getName(), update.getName());
+        assertEquals(testUser.getUsername(), update.getUsername());
+        assertEquals(testUser.getEmail(), update.getEmail());
+        assertEquals(testUser.getProfilePicture(), update.getProfilePicture());
+    }
+
+
+    @Test
+    public void updateTheUser_InvalidInputs_throwsException() {
+
+        User update = new User();
+        update.setName("new");
+        update.setEmail("email.email@email.com");
+        update.setUsername("new");
+        update.setProfilePicture("new");
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+        Mockito.when(userRepository.findByEmail("email.email@email.com")).thenReturn(testUser);
+        Mockito.when(userRepository.findByUsername("new")).thenReturn(null);
+
+
+        assertThrows(ResponseStatusException.class, () -> userService.updateTheUser(1L, update));
+    }
 
 
 }

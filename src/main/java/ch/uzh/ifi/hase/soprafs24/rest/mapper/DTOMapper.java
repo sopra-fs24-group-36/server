@@ -4,21 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDeleteDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDeleteDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListDeleteDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListPutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -105,4 +91,11 @@ public interface DTOMapper {
     @Mapping(source = "id" , target = "id")
     @Mapping(source = "items" , target = "items")
     ShoppingList convertEntityToShoppingListDTO(ShoppingList shoppingList);
+
+
+    @Mapping(source = "username", target="username")
+    @Mapping(source = "name", target = "name")
+    @Mapping (source = "email", target = "email")
+    @Mapping(source = "profilePicture", target = "profilePicture")
+    User convertUserPutDTOtoEntity(UserPutDTO userPutDTO);
 }
