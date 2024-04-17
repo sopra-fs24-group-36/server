@@ -92,9 +92,6 @@ public interface DTOMapper {
     @Mapping(source = "items" , target = "items")
     ShoppingList convertEntityToShoppingListDTO(ShoppingList shoppingList);
 
-    @Mapping(source = "id", target = "id")
-    User convertUserGetDTOtoEntity(UserGetDTO userGetDTO);
-
 
     @Mapping(source = "username", target="username")
     @Mapping(source = "name", target = "name")

@@ -95,7 +95,7 @@ public class UserService {
         return user;
     }
 
-    public User updateTheUser (Long userId, User userUpdate) {
+    public void updateTheUser (Long userId, User userUpdate) {
 
       //get user by id and check if they exist
         User user = userRepository.findById(userId).orElse(null);
@@ -144,7 +144,6 @@ public class UserService {
             log.debug("ProfilePicture changed for User: {}", user);
         }
 
-        return user;
     }
 
 

@@ -5,14 +5,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -284,6 +277,26 @@ public class DTOMapperTest {
         assertEquals(group.getName(), groupDTO.getName());
     }
 
+
+    //test the UserPutDTOtoUser
+    @Test
+    public void testUpdateUser_fromUserPutDTO_toUser_success() {
+        // create UserPostDTO
+        UserPutDTO userPutDTO = new UserPutDTO();
+        userPutDTO.setName("name");
+        userPutDTO.setUsername("username");
+        userPutDTO.setEmail("email.email@email.com");
+        userPutDTO.setProfilePicture("pic");
+
+        // MAP -> Create user
+        User user = DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userPutDTO);
+
+        // check content
+        assertEquals(userPutDTO.getName(), user.getName());
+        assertEquals(userPutDTO.getUsername(), user.getUsername());
+        assertEquals(userPutDTO.getEmail(), user.getEmail());
+        assertEquals(userPutDTO.getProfilePicture(), user.getProfilePicture());
+    }
 
 
 

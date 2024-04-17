@@ -11,6 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Date;
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -106,5 +109,176 @@ public class UserServiceIntegrationTest {
 
 
     //  test logOut method //
+
+
+
+
+    //  test getTheUser method //
+    @Test
+    public void getTheUser_validInputs_success() {
+
+      //given
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        // when
+        User createdUser = userService.getTheUser(testUser.getId());
+
+        // then
+        assertEquals(testUser.getId(), createdUser.getId());
+        assertEquals(testUser.getEmail(), createdUser.getEmail());
+        assertEquals(testUser.getUsername(), createdUser.getUsername());
+        assertEquals(UserStatus.ONLINE, createdUser.getStatus());
+    }
+
+    @Test
+    public void getTheUser_InvalidInputs_throwsException() {
+
+        //given
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        // when
+        assertThrows(ResponseStatusException.class, () -> userService.getTheUser(2L));
+    }
+
+
+
+    //  test updateTheUser method //
+    @Test
+    public void updateTheUser_validInputs_success() {
+
+        //given
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        User updates = new User();
+        updates.setPassword("new");
+        updates.setUsername("new");
+        updates.setEmail("new");
+        updates.setProfilePicture("new");
+
+
+        // when
+        userService.updateTheUser(testUser.getId(), updates);
+
+        // compare the updated email from email retrieved from database
+        assertEquals(userRepository.findById(testUser.getId()).get().getEmail(), updates.getEmail());
+        assertEquals(userRepository.findById(testUser.getId()).get().getUsername(), updates.getUsername());
+        assertEquals(userRepository.findById(testUser.getId()).get().getName(), updates.getName());
+        assertEquals(userRepository.findById(testUser.getId()).get().getProfilePicture(), updates.getProfilePicture());
+    }
+
+
+    @Test
+    public void updateTheUser_InvalidUsername_throwsException() {
+
+        //given
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        User updates = new User();
+        updates.setPassword("new");
+        updates.setUsername("username");
+        updates.setEmail("new");
+        updates.setProfilePicture("new");
+
+
+        assertThrows(ResponseStatusException.class, () -> userService.updateTheUser(testUser.getId(), updates));
+
+    }
+
+    @Test
+    public void updateTheUser_InvalidEmail_throwsException() {
+
+        //given
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        User updates = new User();
+        updates.setPassword("new");
+        updates.setUsername("new");
+        updates.setEmail("email.email@email.com");
+        updates.setProfilePicture("new");
+
+
+        assertThrows(ResponseStatusException.class, () -> userService.updateTheUser(testUser.getId(), updates));
+
+    }
+
+    @Test
+    public void updateTheUser_InvalidId_throwsException() {
+
+        //given
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        User updates = new User();
+        updates.setPassword("new");
+        updates.setUsername("new");
+        updates.setEmail("new");
+        updates.setProfilePicture("new");
+
+
+        assertThrows(ResponseStatusException.class, () -> userService.updateTheUser(2L, updates));
+
+    }
+
+
+
 
 }
