@@ -21,9 +21,16 @@ public class Group implements Serializable {
   @Column(name = "members")
   private List<Long> members;
 
+  @ElementCollection
+  @Column(name = "members_names")
+  private List<String> membersNames;
+
   //save the personal cookbook id to the group
   @OneToOne
   private Cookbook cookbook;
+
+  @OneToOne
+  private ShoppingList shoppingList;
 
   private String image;
 
@@ -58,5 +65,13 @@ public class Group implements Serializable {
   public String getImage(){return image;}
 
   public void setImage(String image){this.image = image;}
+
+  public ShoppingList getShoppingList() {return shoppingList; }
+
+  public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList; }
+
+  public List<String> getMembersNames(){return membersNames;}
+
+  public void setMembersNames(List<String> membersNames){this.membersNames = membersNames;}
 
 }

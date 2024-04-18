@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
+import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupPostDTO;
@@ -10,6 +11,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.UserDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.CookbookService;
+import ch.uzh.ifi.hase.soprafs24.service.ShoppingListService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
@@ -30,12 +32,14 @@ public class GroupController {
   private final CookbookService cookbookService;
   private final UserRepository userRepository;
   private final GroupRepository groupRepository;
+  private final ShoppingListService shoppingListService;
 
-  GroupController(GroupService groupService, CookbookService cookbookService, UserRepository userRepository, GroupRepository groupRepository) {
+  GroupController(GroupService groupService, CookbookService cookbookService, UserRepository userRepository, GroupRepository groupRepository, ShoppingListService shoppingListService) {
     this.groupService = groupService;
     this.cookbookService = cookbookService;
     this.userRepository = userRepository;
     this.groupRepository = groupRepository;
+    this.shoppingListService = shoppingListService;
   }
 
   //here come the post/get/put mappings
@@ -49,10 +53,24 @@ public class GroupController {
 
     Group createdGroup = groupService.createGroup(groupInput);
 
-    //create the personal cookbook as soon as a new user registers
+    List<String> membersToAdd = groupInput.getMembersNames();
+    List<Long> groupMembers = createdGroup.getMembers();
+    for(String member:membersToAdd){
+      if(userRepository.findByEmail(member)==null){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+      }
+      groupMembers.add(userRepository.findByEmail(member).getId());
+    }
+
+    //create the group cookbook as soon as a new group is created
     Cookbook cookbook = new Cookbook();
     cookbook.setStatus(CookbookStatus.GROUP);
     Cookbook newCookbook = cookbookService.createCookbook(cookbook);
+
+    ShoppingList shoppingList = new ShoppingList();
+    ShoppingList newShoppingList = shoppingListService.createShoppingList(shoppingList);
+
+    groupService.saveShoppingList(createdGroup, newShoppingList);
     
     //set the ID of the cookbook to the GROUP it belongs to
     groupService.saveCookbook(createdGroup, newCookbook);
@@ -119,5 +137,4 @@ public class GroupController {
     userRepository.flush();
   }
 
-  
 }

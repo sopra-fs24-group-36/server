@@ -49,6 +49,9 @@ public class User implements Serializable {
     @OneToOne
     private Cookbook cookbook;
 
+    @OneToOne
+    private ShoppingList shoppingList;
+
     @ElementCollection
     @Column(name = "invitations")
     private List<Long> invitations;
@@ -130,4 +133,7 @@ public class User implements Serializable {
 
     public void setInvitations(List<Long> invitations){this.invitations = invitations;}
 
+    public ShoppingList getShoppingList() {return shoppingList; }
+
+    public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList; }  
 }

@@ -41,4 +41,5 @@ public class GroupDTO {
 
   public void setImage(String image){this.image = image;}
   
+  
 }

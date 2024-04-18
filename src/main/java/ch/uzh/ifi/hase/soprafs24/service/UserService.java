@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
+import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.slf4j.Logger;
@@ -84,8 +85,9 @@ public class UserService {
         user.setCookbook(cookbook);
     }
 
-
-
+    public void saveShoppingList(User user, ShoppingList shoppingList){
+        user.setShoppingList(shoppingList);
+    }
 
     //throw an error if the user does not already exist (if username or password or both provided is wrong)
     private void checkIfUserNotExists(User userToBeLoggedIn) {

@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
+import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,10 @@ public class GroupService {
 
   public void saveCookbook (Group group, Cookbook cookbook) {
     group.setCookbook(cookbook);
+  }
+
+  public void saveShoppingList(Group group, ShoppingList shoppingList){
+    group.setShoppingList(shoppingList);
   }
 
   public void addUserToGroup(Long userID, Long groupID){
