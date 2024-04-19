@@ -56,6 +56,10 @@ public class User implements Serializable {
     @Column(name = "invitations")
     private List<Long> invitations;
 
+    @ElementCollection
+    @Column(name = "usergroups")
+    private List<Long> groups;
+
 
     public Long getId() {
         return id;
@@ -135,5 +139,9 @@ public class User implements Serializable {
 
     public ShoppingList getShoppingList() {return shoppingList; }
 
-    public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList; }  
+    public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList; } 
+
+    public List<Long> getGroups(){return groups;}
+
+    public void setGroups(List<Long> groups){this.groups = groups;}
 }

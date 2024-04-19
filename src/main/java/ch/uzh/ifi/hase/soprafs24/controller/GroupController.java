@@ -133,6 +133,11 @@ public class GroupController {
     List<Long> invitations = user.getInvitations();
     invitations.add(groupID);
     user.setInvitations(invitations);
+
+    List<Long> groups = user.getGroups();
+    groups.add(group.getId());
+    user.setGroups(groups);
+
     userRepository.save(user);
     userRepository.flush();
   }
