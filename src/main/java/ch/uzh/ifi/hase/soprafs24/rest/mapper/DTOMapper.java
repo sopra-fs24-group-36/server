@@ -21,6 +21,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -108,4 +109,10 @@ public interface DTOMapper {
 
     @Mapping(source = "item", target = "item")
     ItemRequest convertItemPutDTOtoEntity(ItemPutDTO itemPostDTO);
+
+    @Mapping(source = "username", target="username")
+    @Mapping(source = "name", target = "name")
+    @Mapping (source = "email", target = "email")
+    @Mapping(source = "profilePicture", target = "profilePicture")
+    User convertUserPutDTOtoEntity(UserPutDTO userPutDTO);
 }

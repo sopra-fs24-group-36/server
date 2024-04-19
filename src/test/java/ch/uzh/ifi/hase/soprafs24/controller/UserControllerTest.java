@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs24.service.CookbookService;
 import ch.uzh.ifi.hase.soprafs24.service.ShoppingListService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
@@ -21,13 +22,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
-import java.util.List;
+
 import java.util.Date;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -194,6 +195,97 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(postRequest)
+                .andExpect(status().isBadRequest());
+    }
+
+
+    //  test the /users/{userId} GET Mapping  //
+    @Test
+    public void getUser_validInput() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testUsername");
+        user.setToken("1");
+        user.setName("name");
+        user.setPassword("password");
+        user.setEmail("email.email@email.com");
+        Date creationDate = new Date();
+        user.setCreationDate(creationDate);
+        user.setStatus(UserStatus.ONLINE);
+
+
+        given(userService.getTheUser(Mockito.any())).willReturn(user);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder getRequest = get("/users/1")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.username", is(user.getUsername())))
+                .andExpect(jsonPath("$.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.creationDate", matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\+\\d{2}:\\d{2}$")))
+                .andExpect(jsonPath("$.name", is(user.getName())))
+                .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
+    }
+
+
+    @Test
+    public void getUser_InvalidInput() throws Exception {
+
+
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "userID was not found"))
+                .when(userService).getTheUser(Mockito.any());
+
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder getRequest = get("/users/1")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isBadRequest());
+    }
+
+
+    //  test the /users/{userId} PUT Mapping  //
+    @Test
+    public void updateUser_ValidInput() throws Exception {
+
+        UserPutDTO userPutDTO = new UserPutDTO();
+        userPutDTO.setUsername("username");
+        userPutDTO.setName("name");
+        userPutDTO.setProfilePicture("profilePic");
+        userPutDTO.setEmail("email");
+
+        MockHttpServletRequestBuilder putRequest = put("/users/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPutDTO));
+
+        mockMvc.perform(putRequest)
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    public void updateUser_inValidInput() throws Exception {
+
+        UserPutDTO userPutDTO = new UserPutDTO();
+        userPutDTO.setUsername("username");
+        userPutDTO.setName("name");
+        userPutDTO.setProfilePicture("profilePic");
+        userPutDTO.setEmail("email");
+
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "User cannot be updated"))
+                .when(userService).updateTheUser(Mockito.any(), Mockito.any());
+
+        MockHttpServletRequestBuilder putRequest = put("/users/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPutDTO));
+
+        mockMvc.perform(putRequest)
                 .andExpect(status().isBadRequest());
     }
 

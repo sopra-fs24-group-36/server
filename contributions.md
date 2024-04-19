@@ -2,6 +2,24 @@
 - manually append the two development tasks they completed during the week
 - entry should consist of the date, your name, links to the github issues you worked on and optionally a short description 
 
+## Week 3
+
+### Sarina
+- 17.04, [#29](https://github.com/sopra-fs24-group-36/server/issues/29) and [#89](https://github.com/sopra-fs24-group-36/server/issues/89), added the two REST endpoints to the systems including the tests
+
+### Jazz
+- 16.04, [#31](https://github.com/sopra-fs24-group-36/client/issues/31) the 3 most recently added recipes are shown on the home page, if the user has no recipes "no recipes yet" is displayed 
+- 18.04, [#23](https://github.com/sopra-fs24-group-36/client/issues/23) the user can only edit their own recipes 
+
+
+### Yujie
+
+
+### Summer
+
+
+### Marko
+
 
 ## Week 2
 
@@ -24,6 +42,8 @@
 - 12.04, [#26](https://github.com/sopra-fs24-group-36/client/issues/26), created a shopping list view
 
 ### Summer
+- 14.04 [#21](https://github.com/sopra-fs24-group-36/client/issues/21), Create a Invitations page
+- 15.04 [#12](https://github.com/sopra-fs24-group-36/client/issues/12), create a search bar to search by tags or names
 
 ### Marko
 - 13.04, Marko, [#36](https://github.com/sopra-fs24-group-36/client/issues/36) added the post/get requests to store single recipes in the database, as well es retrieve single/multiple ones. 
