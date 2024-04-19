@@ -115,7 +115,7 @@ public class GroupController {
       }
   
       // If the user exists, proceed with adding them to the group
-      groupService.deleteUserFromGroup(groupID, userID);
+      groupService.deleteUserFromGroup(userID, groupID);
   
   }
 
