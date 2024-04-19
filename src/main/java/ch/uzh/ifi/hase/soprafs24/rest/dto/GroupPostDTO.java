@@ -9,9 +9,17 @@ public class GroupPostDTO {
   private String name;
 
   private List<Long> members = new ArrayList<>();
- 
+
+  private List<String> membersNames = new ArrayList<>();
+
+  private String image;
+
   public void setName(String name){
     this.name = name;
+  }
+
+  public void setMembersNames(List<String> membersNames){
+    this.membersNames = membersNames;
   }
 
   public void setMembers(List<Long> members){
@@ -22,7 +30,14 @@ public class GroupPostDTO {
     return name;
   }
 
+  public List<String> getMembersNames(){
+    return membersNames;
+  }
+
   public List<Long> getMembers(){
     return members;
   }
+  public String getImage(){return image;}
+
+  public void setImage(String image){this.image = image;}
 }

@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -48,7 +49,12 @@ public class User implements Serializable {
     @OneToOne
     private Cookbook cookbook;
 
+    @OneToOne
+    private ShoppingList shoppingList;
 
+    @ElementCollection
+    @Column(name = "invitations")
+    private List<Long> invitations;
 
 
     public Long getId() {
@@ -123,4 +129,11 @@ public class User implements Serializable {
 
     public void setCookbook(Cookbook cookbook) {this.cookbook = cookbook; }
 
+    public List<Long> getInvitations(){return invitations;}
+
+    public void setInvitations(List<Long> invitations){this.invitations = invitations;}
+
+    public ShoppingList getShoppingList() {return shoppingList; }
+
+    public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList; }  
 }

@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
+import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.slf4j.Logger;
@@ -81,6 +82,9 @@ public class UserService {
         user.setCookbook(cookbook);
     }
 
+    public void saveShoppingList(User user, ShoppingList shoppingList){
+        user.setShoppingList(shoppingList);
+    }
 
     public User getTheUser (Long userId) {
 
