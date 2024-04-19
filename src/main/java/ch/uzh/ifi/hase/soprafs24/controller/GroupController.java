@@ -60,6 +60,12 @@ public class GroupController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
       }
       groupMembers.add(userRepository.findByEmail(member).getId());
+
+      User user = userRepository.findByEmail(member);
+      List<Long> groups = user.getGroups();
+      groups.add(createdGroup.getId());
+      userRepository.save(user);
+      userRepository.flush();
     }
 
     //create the group cookbook as soon as a new group is created
@@ -109,7 +115,7 @@ public class GroupController {
       }
   
       // If the user exists, proceed with adding them to the group
-      groupService.deleteUserFromGroup(groupID, userID);
+      groupService.deleteUserFromGroup(userID, groupID);
   
   }
 
@@ -133,6 +139,11 @@ public class GroupController {
     List<Long> invitations = user.getInvitations();
     invitations.add(groupID);
     user.setInvitations(invitations);
+
+    List<Long> groups = user.getGroups();
+    groups.add(group.getId());
+    user.setGroups(groups);
+
     userRepository.save(user);
     userRepository.flush();
   }
