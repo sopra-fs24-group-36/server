@@ -82,7 +82,7 @@ public class GroupService {
     }
   }
 
-  public void deleteUserFromGroup(Long userID, Long groupID){
+  public void deleteUserFromGroup(Long groupID, Long userID){
     Optional<Group> groupOptional = groupRepository.findById(groupID);
       
     if (groupOptional.isPresent()) {

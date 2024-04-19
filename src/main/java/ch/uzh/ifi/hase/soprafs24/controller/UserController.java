@@ -206,4 +206,33 @@ public class UserController {
         userService.updateTheUser(userId, userUpdate);
 
     }
+
+    @GetMapping("/users/{userID}/groups")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Map<String, Object>> getUserGroups(@PathVariable("userID") Long userID) {
+
+      List<Map<String, Object>> returnlistofmaps = new ArrayList<>();
+      
+      User user = userRepository.findById(userID).orElse(null);
+      if (user == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+      }
+      List<Long> groups = user.getGroups();
+
+      for(Long groupID: groups){
+        Group group = groupRepository.findById(groupID).orElse(null);
+        if (group == null) {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
+        }
+
+        Map<String, Object> tuple = new HashMap<>();
+        tuple.put("groupName", group.getName());
+        tuple.put("groupImage", group.getImage());
+        tuple.put("groupID", group.getId());
+
+        returnlistofmaps.add(tuple);
+      }
+      return returnlistofmaps;
+    }
+    
 }

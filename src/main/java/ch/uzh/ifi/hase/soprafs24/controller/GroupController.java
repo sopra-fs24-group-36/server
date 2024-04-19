@@ -60,6 +60,12 @@ public class GroupController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
       }
       groupMembers.add(userRepository.findByEmail(member).getId());
+
+      User user = userRepository.findByEmail(member);
+      List<Long> groups = user.getGroups();
+      groups.add(createdGroup.getId());
+      userRepository.save(user);
+      userRepository.flush();
     }
 
     //create the group cookbook as soon as a new group is created
