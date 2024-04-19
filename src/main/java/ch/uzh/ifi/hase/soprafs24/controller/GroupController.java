@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 public class GroupController {
@@ -148,4 +151,8 @@ public class GroupController {
     userRepository.flush();
   }
 
+  @GetMapping("/RR")
+  public void getRickRolled() {
+    throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Never gonna give you up, never gonna let you down!");
+  }
 }
