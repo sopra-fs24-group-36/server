@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -86,5 +87,27 @@ public class ShoppingListService {
     } else {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "item is not on your shopping list, nothing to tick off!");
     }
+  }
+
+  public void emptyGroupShoppinglist(Group group){
+    ShoppingList shoppinglist = group.getShoppingList();
+
+    List<String> newItems = new ArrayList<>();
+
+    shoppinglist.setItems(newItems);
+
+    shoppingListRepository.save(shoppinglist);
+    shoppingListRepository.flush();
+  }
+
+  public void emptyUserShoppinglist(User user){
+    ShoppingList shoppinglist = user.getShoppingList();
+
+    List<String> newItems = new ArrayList<>();
+
+    shoppinglist.setItems(newItems);
+
+    shoppingListRepository.save(shoppinglist);
+    shoppingListRepository.flush();
   }
 }

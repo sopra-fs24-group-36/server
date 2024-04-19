@@ -124,5 +124,29 @@ public class ShoppingListController {
     }
     shoppingListService.removeUserItem(itemName, user);
   }
+
+  @DeleteMapping("/groups/{groupID}/shoppinglists")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseBody
+  public void emptyGroupShoppinglist(@PathVariable("groupID") Long groupID){
+
+    Group group = groupRepository.findById(groupID).orElse(null);
+    if(group == null){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found.");
+    }
+    shoppingListService.emptyGroupShoppinglist(group);
+  }
+
+  @DeleteMapping("/users/{userID}/shoppinglists")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseBody
+  public void emptyUserShoppinglist(@PathVariable("userID") Long userID){
+
+    User user = userRepository.findById(userID).orElse(null);
+    if(user == null){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+    }
+    shoppingListService.emptyUserShoppinglist(user);
+  }
   
 }
