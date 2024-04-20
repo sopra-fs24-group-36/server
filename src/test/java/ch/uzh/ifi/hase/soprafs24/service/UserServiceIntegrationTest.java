@@ -40,6 +40,7 @@ public class UserServiceIntegrationTest {
   public void createUser_validInputs_success() {
       // given
       assertNull(userRepository.findByUsername("username"));
+      assertNull(userRepository.findByEmail("email"));
 
       User testUser = new User();
       testUser.setPassword("password");
@@ -60,6 +61,7 @@ public class UserServiceIntegrationTest {
   @Test
   public void createUser_duplicateUsername_throwsException() {
       assertNull(userRepository.findByUsername("testUsername"));
+      assertNull(userRepository.findByEmail("email"));
 
       User testUser = new User();
       testUser.setPassword("password");
@@ -82,6 +84,7 @@ public class UserServiceIntegrationTest {
     @Test
     public void createUser_duplicateEmail_throwsException() {
         assertNull(userRepository.findByUsername("testUsername"));
+        assertNull(userRepository.findByEmail("email"));
 
         User testUser = new User();
         testUser.setPassword("password");
@@ -103,12 +106,106 @@ public class UserServiceIntegrationTest {
 
 
     //  test logIn method  //
+    @Test
+    public void logInUser_validInput() {
+
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+
+        testUser = userRepository.save(testUser);
+        userRepository.flush();
+
+        // when
+        User loggedInUser = userService.logIn(testUser);
+
+        // then
+        assertEquals(UserStatus.ONLINE, loggedInUser.getStatus());
+    }
 
 
+    @Test
+    public void logInUser_InvalidPasswordAndUsername() {
+
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        User wrongUser = new User();
+        wrongUser.setId(1L);
+        wrongUser.setPassword("wrong");
+        wrongUser.setUsername("wrong");
+        wrongUser.setEmail("email.email@email.com");
+        wrongUser.setToken(UUID.randomUUID().toString());
+        wrongUser.setCreationDate(creationDate);
+        wrongUser.setStatus(UserStatus.OFFLINE);
+
+        assertThrows(ResponseStatusException.class, () -> userService.logIn(wrongUser));
+    }
 
 
 
     //  test logOut method //
+
+    @Test
+    public void logOutUser_validInput() {
+
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.ONLINE);
+
+        testUser = userRepository.save(testUser);
+        userRepository.flush();
+
+        // when
+        userService.logOut(testUser.getId());
+
+        User updatedUser = userRepository.findById(testUser.getId()).orElse(null);
+        // then
+        assertNotNull(updatedUser); // Ensure user exists
+        assertEquals(UserStatus.OFFLINE, updatedUser.getStatus());
+    }
+
+    @Test
+    public void logOutUser_InvalidId() {
+
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.ONLINE);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        assertThrows(ResponseStatusException.class, () -> userService.logOut(2L));
+    }
+
 
 
 
@@ -274,7 +371,7 @@ public class UserServiceIntegrationTest {
         updates.setProfilePicture("new");
 
 
-        assertThrows(ResponseStatusException.class, () -> userService.updateTheUser(2L, updates));
+        assertThrows(ResponseStatusException.class, () -> userService.updateTheUser(5L, updates));
 
     }
 
