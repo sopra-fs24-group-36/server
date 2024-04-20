@@ -173,6 +173,89 @@ public class ShoppingListControllerTest {
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException));
     }
 
+    @Test
+    public void addItemUser_ValidInput_Success() throws Exception {
+        // Given
+
+        Long userID = 1L;
+        ItemPostDTO itemPostDTO = new ItemPostDTO();
+        itemPostDTO.setItem("Test Item");
+    
+        User user = new User();
+    
+        // Mock UserRepository behavior to return the user when findById is called with 1L
+        given(userRepository.findById(userID)).willReturn(java.util.Optional.of(user));
+    
+        // Perform request
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/1/shoppinglists")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(itemPostDTO)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    
+        verify(shoppingListService).addItemUser("Test Item", user);
+    }
+
+    @Test
+    public void getUserShoppinglist_ValidInput_Success() throws Exception {
+        // Given
+        Long userId = 1L;
+        User user = new User();
+        ShoppingList shoppingList = new ShoppingList();
+        // Set up your ShoppingList object
+        
+        user.setShoppingList(shoppingList);
+        given(userRepository.findById(userId)).willReturn(java.util.Optional.of(user));
+
+        // When/Then
+        mockMvc.perform(get("/users/" + userId + "/shoppinglists")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void removeItemUsers_Success() throws Exception {
+        // Given
+        Long userId = 1L;
+        ItemPutDTO itemPutDTO = new ItemPutDTO();
+        itemPutDTO.setItem("ItemToRemove");
+
+        User user = new User();
+        user.setId(userId);
+
+        // Mock repository behavior
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        doNothing().when(shoppingListService).removeUserItem(any(String.class), any(User.class));
+
+        // Perform request
+        mockMvc.perform(put("/users/{userID}/shoppinglists", userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(itemPutDTO)))
+                .andExpect(status().isNoContent());
+
+        // Verify that the shoppingListService.removeUserItem method was called with the correct arguments
+        verify(shoppingListService).removeUserItem("ItemToRemove", user);
+    }
+
+    @Test
+    public void emptyUserShoppinglist_Success() throws Exception {
+        // Given
+        Long userId = 1L;
+
+        User user = new User();
+        user.setId(userId);
+
+        // Mock repository behavior
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        doNothing().when(shoppingListService).emptyUserShoppinglist(any(User.class));
+
+        // Perform request
+        mockMvc.perform(delete("/users/{userID}/shoppinglists", userId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(shoppingListService).emptyUserShoppinglist(user);
+    }
+
     // Additional tests for other endpoints can be added similarly
 
     private String asJsonString(final Object object) {
