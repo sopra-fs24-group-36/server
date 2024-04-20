@@ -214,23 +214,30 @@ public class RecipeService {
         afterCopy.removeAll(before);
 
         for (long groupID:afterCopy){
-          //add recipe to cookbook
-          Cookbook c = cookbookRepository.findById(groupID);
+          Group g = groupRepository.findById(groupID).orElse(null);
+          if (g==null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found" + groupID);}
+          Cookbook c = g.getCookbook();
           List<Long> recipes = c.getRecipes();
           recipes.add(recipe.getId()); // Add the new recipe to the list of recipes in the cookbook
           c.setRecipes(recipes);
+          cookbookRepository.save(c);
+          cookbookRepository.flush();
         }
     
         // Calculate the elements present in 'before' but not in 'after'
         beforeCopy.removeAll(after);
 
-        for (long cookbookID:beforeCopy){
-          //remove elements from cookbooks
-          Cookbook c = cookbookRepository.findById(cookbookID);
+        for (long groupID:beforeCopy){
+          Group g = groupRepository.findById(groupID).orElse(null);
+          if (g==null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found" + groupID);}
+          Cookbook c = g.getCookbook();
           List<Long> recipes = c.getRecipes();
           recipes.remove(recipe.getId()); // Add the new recipe to the list of recipes in the cookbook
           c.setRecipes(recipes);
+          cookbookRepository.save(c);
+          cookbookRepository.flush();
         }
+        
 
         recipeRepository.save(recipe);
         recipeRepository.flush();
