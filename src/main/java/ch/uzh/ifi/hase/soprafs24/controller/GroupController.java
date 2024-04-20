@@ -58,15 +58,19 @@ public class GroupController {
 
     List<String> membersToAdd = groupInput.getMembersNames();
     List<Long> groupMembers = createdGroup.getMembers();
+    //something to add the user who created it
+
     for(String member:membersToAdd){
       if(userRepository.findByEmail(member)==null){
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found, " + member);
       }
-      groupMembers.add(userRepository.findByEmail(member).getId());
+    }
 
+    for(String member:membersToAdd){
       User user = userRepository.findByEmail(member);
-      List<Long> groups = user.getGroups();
-      groups.add(createdGroup.getId());
+      List<Long> invitations = user.getInvitations();
+      invitations.add(createdGroup.getId());
+      user.setInvitations(invitations);
       userRepository.save(user);
       userRepository.flush();
     }
@@ -142,10 +146,6 @@ public class GroupController {
     List<Long> invitations = user.getInvitations();
     invitations.add(groupID);
     user.setInvitations(invitations);
-
-    List<Long> groups = user.getGroups();
-    groups.add(group.getId());
-    user.setGroups(groups);
 
     userRepository.save(user);
     userRepository.flush();
