@@ -63,20 +63,31 @@ public class RecipeService {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found!");
     }
     
-    Cookbook perscookbook = author.getCookbook();
-    
-    //something to save the recipe into all the right cookbooks, this would be in a loop since there may be more cookbooks to save it to
-    //maybe something like: for cookbookID in cookbooks {c = cookbookservice.findcookbook(cookbookID) then c.setrecipe(newrecipe) if the recipes are empty}
-    List<Long> cookbookIDs = newRecipe.getCookbooks();
-    cookbookIDs.add(perscookbook.getId());
-        
-    // Loop through each cookbook ID
-    for (long cookbookID : cookbookIDs) {
-      Cookbook c = cookbookRepository.findById(cookbookID);
+    List<Long> groupIDs = newRecipe.getGroups();
+
+    User user = userRepository.findById(userID).orElse(null);
+    if (user == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");}
+    Cookbook cookbook = user.getCookbook();
+    List<Long> persrecipes = cookbook.getRecipes();
+    persrecipes.add(newRecipe.getId());
+    cookbook.setRecipes(persrecipes);
+    user.setCookbook(cookbook);
+    cookbookRepository.save(cookbook);
+    userRepository.save(user);
+
+    for (Long id:groupIDs){
+      Group g = groupRepository.findById(id).orElse(null);
+      if (g == null){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "GroupID not associated with a group");
+      }
+      Cookbook c = g.getCookbook();
       List<Long> recipes = c.getRecipes();
-      recipes.add(newRecipe.getId()); // Add the new recipe to the list of recipes in the cookbook
+
+      recipes.add(newRecipe.getId());
       c.setRecipes(recipes);
+      cookbookRepository.save(c);
     }
+
     cookbookRepository.flush();
     recipeRepository.flush();
 
@@ -90,38 +101,33 @@ public class RecipeService {
     // Save the new recipe
     newRecipe = recipeRepository.save(newRecipe);
 
-    // Get the IDs of the cookbooks to associate the recipe with
-    List<Long> cookbookIDs = newRecipe.getCookbooks();
+    List<Long> groupIDs = newRecipe.getGroups();
 
     Group group = groupRepository.findById(groupID).orElse(null);
-    if (group == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found!");
-    }
+    if(group == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");}
 
-    Cookbook groupcookbook = group.getCookbook();
-    List<Long> grouprecipes = groupcookbook.getRecipes();
+
+    Cookbook cookbook = group.getCookbook();
+    List<Long> grouprecipes = cookbook.getRecipes();
     grouprecipes.add(newRecipe.getId());
-    groupcookbook.setRecipes(grouprecipes);
-    cookbookRepository.save(groupcookbook);
-    
-    cookbookIDs.add(groupcookbook.getId());
+    cookbook.setRecipes(grouprecipes);
+    group.setCookbook(cookbook);
+    cookbookRepository.save(cookbook);
+    groupRepository.save(group);
+  
+    for (Long id:groupIDs){
+      Group g = groupRepository.findById(id).orElse(null);
+      if (g == null){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "GroupID not associated with a group");
+      }
+      Cookbook c = g.getCookbook();
+      List<Long> recipes = c.getRecipes();
 
-    // Loop through each cookbook ID
-    for (long cookbookID : cookbookIDs) {
-        // Find the cookbook
-        Cookbook c = cookbookRepository.findById(cookbookID);
-        if (c != null) {
-            // Add the new recipe to the list of recipes in the cookbook
-            List<Long> recipes = c.getRecipes();
-            recipes.add(newRecipe.getId());
-            c.setRecipes(recipes);
-            // Save the updated cookbook
-            cookbookRepository.save(c);
-            cookbookRepository.flush();
-        } else {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong, please check content");
-        }
+      recipes.add(newRecipe.getId());
+      c.setRecipes(recipes);
+      cookbookRepository.save(c);
     }
+    
 
     // Flush changes to the database
     cookbookRepository.flush();
@@ -163,7 +169,7 @@ public class RecipeService {
 
     List<RecipeTags> tags = recipeToUpdate.getTags();
 
-    List<Long> cookbooks = recipeToUpdate.getCookbooks();
+    List<Long> groupIDs = recipeToUpdate.getGroups();
 
     try {
       Recipe recipe = recipeRepository.findById(recipeID);
@@ -195,10 +201,10 @@ public class RecipeService {
       if (tags != null){
         recipe.setTags(tags);
       }
-      if (cookbooks != null) {
-        List<Long> before = recipe.getCookbooks();
-        recipe.setCookbooks(cookbooks);
-        List<Long> after = recipe.getCookbooks();
+      if (groupIDs != null) {
+        List<Long> before = recipe.getGroups();
+        recipe.setGroups(groupIDs);
+        List<Long> after = recipe.getGroups();
     
         // Create copies of the lists to avoid modifying the originals
         List<Long> beforeCopy = new ArrayList<>(before);
@@ -207,9 +213,9 @@ public class RecipeService {
         // Calculate the elements present in 'after' but not in 'before'
         afterCopy.removeAll(before);
 
-        for (long cookbookID:afterCopy){
+        for (long groupID:afterCopy){
           //add recipe to cookbook
-          Cookbook c = cookbookRepository.findById(cookbookID);
+          Cookbook c = cookbookRepository.findById(groupID);
           List<Long> recipes = c.getRecipes();
           recipes.add(recipe.getId()); // Add the new recipe to the list of recipes in the cookbook
           c.setRecipes(recipes);
@@ -238,16 +244,16 @@ public class RecipeService {
   }
 
   public void deleteRecipe(Recipe recipe) {
-    for (Long cookbookID : recipe.getCookbooks()) {
-        Optional<Cookbook> cOptional = cookbookRepository.findById(cookbookID);
-        cOptional.ifPresent(c -> {
-            List<Long> recipes = c.getRecipes();
-            if (recipes != null && recipes.contains(recipe.getId())) {
-                recipes.remove(recipe.getId());
-                c.setRecipes(recipes);
-                cookbookRepository.save(c);
-            }
-        });
+    for (Long id:recipe.getGroups()){
+      Group g = groupRepository.findById(id).orElse(null);
+      if(g == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");}
+      Cookbook c = g.getCookbook();
+      List<Long> recipes = c.getRecipes();
+      if (recipes.contains(recipe.getId())){
+        recipes.remove(recipe.getId());
+        c.setRecipes(recipes);
+        cookbookRepository.save(c);
+      } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe is not part of one of these groups");}
     }
     recipeRepository.delete(recipe);
   }

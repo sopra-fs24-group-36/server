@@ -92,10 +92,10 @@ public class RecipeControllerTest {
     tags.add(RecipeTags.VEGETARIAN);
     recipe.setTags(tags);
 
-    List<Long> cookbooks = new ArrayList<>();
-    cookbooks.add(1L);
-    cookbooks.add(2L);
-    recipe.setCookbooks(cookbooks);
+    List<Long> groupIDs = new ArrayList<>();
+    groupIDs.add(1L);
+    groupIDs.add(2L);
+    recipe.setGroups(groupIDs);
 
     recipe.setAuthorID(1L);
 
@@ -128,10 +128,10 @@ public class RecipeControllerTest {
     tagss.add(RecipeTags.VEGETARIAN);
     recipePostDTO.setTags(tagss);
 
-    List<Long> cookbookss = new ArrayList<>();
-    cookbookss.add(1L);
-    cookbookss.add(2L);
-    recipePostDTO.setCookbooks(cookbookss);
+    List<Long> groupIDss = new ArrayList<>();
+    groupIDss.add(1L);
+    groupIDss.add(2L);
+    recipePostDTO.setGroups(groupIDss);
 
     Long authorID = 1L;
 
@@ -156,8 +156,8 @@ public class RecipeControllerTest {
       .andExpect(jsonPath("$.image", is(recipe.getImage())))
       .andExpect(jsonPath("$.tags[0]", is("VEGAN")))
       .andExpect(jsonPath("$.tags[1]", is("VEGETARIAN")))
-      .andExpect(jsonPath("$.cookbooks[0]", is(1)))
-      .andExpect(jsonPath("$.cookbooks[1]", is(2)))
+      .andExpect(jsonPath("$.groups[0]", is(1)))
+      .andExpect(jsonPath("$.groups[1]", is(2)))
       .andExpect(jsonPath("$.authorID").value(equalTo(recipe.getAuthorID().intValue()))); // Update assertion
     }
 
@@ -194,9 +194,9 @@ public class RecipeControllerTest {
     tags.add(RecipeTags.VEGETARIAN);
     recipe.setTags(tags);
 
-    List<Long> cookbooks = new ArrayList<>();
-    cookbooks.add(1L);
-    recipe.setCookbooks(cookbooks);
+    List<Long> groupIDs = new ArrayList<>();
+    groupIDs.add(1L);
+    recipe.setGroups(groupIDs);
 
     RecipePostDTO recipePostDTO = new RecipePostDTO();
     recipePostDTO.setTitle("testrecipename");
@@ -226,9 +226,9 @@ public class RecipeControllerTest {
     tagss.add(RecipeTags.VEGETARIAN);
     recipePostDTO.setTags(tagss);
 
-    List<Long> cookbookss = new ArrayList<>();
-    cookbookss.add(1L);
-    recipePostDTO.setCookbooks(cookbookss);
+    List<Long> groupIDss = new ArrayList<>();
+    groupIDss.add(1L);
+    recipePostDTO.setGroups(groupIDss);
 
     Long groupID = 1L;
 
@@ -254,7 +254,7 @@ public class RecipeControllerTest {
       .andExpect(jsonPath("$.image", is(recipe.getImage())))
       .andExpect(jsonPath("$.tags[0]", is("VEGAN")))
       .andExpect(jsonPath("$.tags[1]", is("VEGETARIAN")))
-      .andExpect(jsonPath("$.cookbooks[0]", is(1)));
+      .andExpect(jsonPath("$.groups[0]", is(1)));
     }
 
   @Test
@@ -290,10 +290,10 @@ public class RecipeControllerTest {
     tags.add(RecipeTags.VEGETARIAN);
     recipe.setTags(tags);
 
-    List<Long> cookbooks = new ArrayList<>();
-    cookbooks.add(1L);
-    cookbooks.add(2L);
-    recipe.setCookbooks(cookbooks);
+    List<Long> groupIDs = new ArrayList<>();
+    groupIDs.add(1L);
+    groupIDs.add(2L);
+    recipe.setGroups(groupIDs);
 
     recipe.setAuthorID(1L);
 
@@ -316,8 +316,8 @@ public class RecipeControllerTest {
       .andExpect(jsonPath("$.image", is(expectedRecipeDTO.getImage())))
       .andExpect(jsonPath("$.tags[0]", is("VEGAN")))
       .andExpect(jsonPath("$.tags[1]", is("VEGETARIAN")))
-      .andExpect(jsonPath("$.cookbooks[0]", is(1)))
-      .andExpect(jsonPath("$.cookbooks[1]", is(2)))
+      .andExpect(jsonPath("$.groups[0]", is(1)))
+      .andExpect(jsonPath("$.groups[1]", is(2)))
       .andExpect(jsonPath("$.authorID").value(equalTo(expectedRecipeDTO.getAuthorID().intValue()))); // Update assertion
   }
 
@@ -355,10 +355,10 @@ public class RecipeControllerTest {
     tags.add(RecipeTags.VEGETARIAN);
     recipe.setTags(tags);
 
-    List<Long> cookbooks = new ArrayList<>();
-    cookbooks.add(1L);
-    cookbooks.add(2L);
-    recipe.setCookbooks(cookbooks);
+    List<Long> groupIDs = new ArrayList<>();
+    groupIDs.add(1L);
+    groupIDs.add(2L);
+    recipe.setGroups(groupIDs);
 
     RecipeDTO expectedRecipeDTO = DTOMapper.INSTANCE.convertEntityToRecipeDTO(recipe);
 
@@ -379,8 +379,8 @@ public class RecipeControllerTest {
       .andExpect(jsonPath("$.image", is(expectedRecipeDTO.getImage())))
       .andExpect(jsonPath("$.tags[0]", is("VEGAN")))
       .andExpect(jsonPath("$.tags[1]", is("VEGETARIAN")))
-      .andExpect(jsonPath("$.cookbooks[0]", is(1)))
-      .andExpect(jsonPath("$.cookbooks[1]", is(2)));
+      .andExpect(jsonPath("$.groups[0]", is(1)))
+      .andExpect(jsonPath("$.groups[1]", is(2)));
   }
 
   @Test
@@ -477,10 +477,10 @@ public class RecipeControllerTest {
     tags1.add(RecipeTags.VEGETARIAN);
     recipe1.setTags(tags1);
 
-    List<Long> cookbooks1 = new ArrayList<>();
-    cookbooks1.add(1L);
-    cookbooks1.add(2L);
-    recipe1.setCookbooks(cookbooks1);
+    List<Long> groupIDs1 = new ArrayList<>();
+    groupIDs1.add(1L);
+    groupIDs1.add(2L);
+    recipe1.setGroups(groupIDs1);
 
     recipe1.setAuthorID(1L);
 
@@ -513,10 +513,10 @@ public class RecipeControllerTest {
     tags2.add(RecipeTags.VEGETARIAN);
     recipe2.setTags(tags2);
 
-    List<Long> cookbooks2 = new ArrayList<>();
-    cookbooks2.add(1L);
-    cookbooks2.add(2L);
-    recipe2.setCookbooks(cookbooks2);
+    List<Long> groupIDs2 = new ArrayList<>();
+    groupIDs2.add(1L);
+    groupIDs2.add(2L);
+    recipe2.setGroups(groupIDs2);
 
     recipe2.setAuthorID(1L);
 
@@ -547,8 +547,8 @@ public class RecipeControllerTest {
       .andExpect(jsonPath("$[0].image", is(expectedRecipeDTOs.get(0).getImage())))
       .andExpect(jsonPath("$[0].tags[0]", is("VEGAN")))
       .andExpect(jsonPath("$[0].tags[1]", is("VEGETARIAN")))
-      .andExpect(jsonPath("$[0].cookbooks[0]", is(1)))
-      .andExpect(jsonPath("$[0].cookbooks[1]", is(2)))
+      .andExpect(jsonPath("$[0].groups[0]", is(1)))
+      .andExpect(jsonPath("$[0].groups[1]", is(2)))
       .andExpect(jsonPath("$[0].authorID").value(equalTo(expectedRecipeDTOs.get(0).getAuthorID().intValue())))
       .andExpect(jsonPath("$[1].id", is(expectedRecipeDTOs.get(1).getId().intValue())))
       .andExpect(jsonPath("$[1].title", is(expectedRecipeDTOs.get(1).getTitle())))
@@ -561,8 +561,8 @@ public class RecipeControllerTest {
       .andExpect(jsonPath("$[1].image", is(expectedRecipeDTOs.get(1).getImage())))
       .andExpect(jsonPath("$[1].tags[0]", is("VEGAN")))
       .andExpect(jsonPath("$[1].tags[1]", is("VEGETARIAN")))
-      .andExpect(jsonPath("$[1].cookbooks[0]", is(1)))
-      .andExpect(jsonPath("$[1].cookbooks[1]", is(2)))
+      .andExpect(jsonPath("$[1].groups[0]", is(1)))
+      .andExpect(jsonPath("$[1].groups[1]", is(2)))
       .andExpect(jsonPath("$[1].authorID").value(equalTo(expectedRecipeDTOs.get(1).getAuthorID().intValue())));
   }
 
