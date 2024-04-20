@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs24.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,11 +14,12 @@ public class Group implements Serializable {
   @GeneratedValue
   private Long id;
 
+  @Column(nullable = false)
   private String name;
 
   @ElementCollection
-  @CollectionTable(name = "members")
-  private List<Long> members;
+    @CollectionTable(name = "members")
+    private List<Long> members;
 
   //save the personal cookbook id to the group
   @OneToOne

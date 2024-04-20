@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
+import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -351,7 +353,22 @@ public class UserServiceIntegrationTest {
     @Test
     public void updateTheUser_InvalidId_throwsException() {
 
-        //given
+
+        User updates = new User();
+        updates.setPassword("new");
+        updates.setUsername("new");
+        updates.setEmail("new");
+        updates.setProfilePicture("new");
+
+
+        assertThrows(ResponseStatusException.class, () -> userService.updateTheUser(1L, updates));
+
+    }
+
+    //  test saveCookbook method    //
+    @Test
+    public void saveCookbook_validInputs_success() {
+
         User testUser = new User();
         testUser.setPassword("password");
         testUser.setUsername("username");
@@ -361,20 +378,17 @@ public class UserServiceIntegrationTest {
         Date creationDate = new Date();
         testUser.setCreationDate(creationDate);
 
-        userRepository.save(testUser);
-        userRepository.flush();
+        Cookbook testCookbook = new Cookbook();
+        testCookbook.setId(2L);
+        testCookbook.setStatus(CookbookStatus.PERSONAL);
 
-        User updates = new User();
-        updates.setPassword("new");
-        updates.setUsername("new");
-        updates.setEmail("new");
-        updates.setProfilePicture("new");
+        // when
+        userService.saveCookbook(testUser, testCookbook);
 
-
-        assertThrows(ResponseStatusException.class, () -> userService.updateTheUser(5L, updates));
+        // then
+        assertEquals(testUser.getCookbook(), testCookbook);
 
     }
-
 
 
 
