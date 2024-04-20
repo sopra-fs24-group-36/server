@@ -55,7 +55,7 @@ public interface DTOMapper {
     @Mapping(source = "instructions" , target = "instructions")
     @Mapping(source = "image" , target = "image")
     @Mapping(source = "tags" , target = "tags")
-    @Mapping(source = "cookbooks" , target = "cookbooks")
+    @Mapping(source = "groups" , target = "groups")
     Recipe convertRecipePostDTOtoEntity(RecipePostDTO recipePostDTO);
 
     @Mapping(source = "title" , target = "title")
@@ -67,7 +67,7 @@ public interface DTOMapper {
     @Mapping(source = "instructions" , target = "instructions")
     @Mapping(source = "image" , target = "image")
     @Mapping(source = "tags" , target = "tags")
-    @Mapping(source = "cookbooks" , target = "cookbooks")
+    @Mapping(source = "groups" , target = "groups")
     Recipe convertRecipePutDTOtoEntity(RecipePutDTO recipePutDTO);
 
     @Mapping(source = "id" , target = "id")
@@ -80,7 +80,7 @@ public interface DTOMapper {
     @Mapping(source = "instructions" , target = "instructions")
     @Mapping(source = "image" , target = "image")
     @Mapping(source = "tags" , target = "tags")
-    @Mapping(source = "cookbooks" , target = "cookbooks")
+    @Mapping(source = "groups" , target = "groups")
     @Mapping(source = "authorID" , target = "authorID")
     RecipeDTO convertEntityToRecipeDTO(Recipe recipe);
 

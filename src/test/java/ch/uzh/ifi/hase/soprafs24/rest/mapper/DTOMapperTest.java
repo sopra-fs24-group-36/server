@@ -99,10 +99,10 @@ public class DTOMapperTest {
         tags.add(RecipeTags.VEGETARIAN);
         recipePostDTO.setTags(tags);
     
-        List<Long> cookbooks = new ArrayList<>();
-        cookbooks.add(1L);
-        cookbooks.add(2L);
-        recipePostDTO.setCookbooks(cookbooks);
+        List<Long> groupIDs = new ArrayList<>();
+        groupIDs.add(1L);
+        groupIDs.add(2L);
+        recipePostDTO.setGroups(groupIDs);
 
         // MAP -> Create recipe
         Recipe recipe = DTOMapper.INSTANCE.convertRecipePostDTOtoEntity(recipePostDTO);
@@ -120,7 +120,7 @@ public class DTOMapperTest {
         for (int i = 0; i < recipe.getTags().size(); i++) {
             assertEquals(recipe.getTags().get(i), recipePostDTO.getTags().get(i));
         }
-        assertEquals(recipe.getCookbooks(), recipePostDTO.getCookbooks());
+        assertEquals(recipe.getGroups(), recipePostDTO.getGroups());
     }
 
     @Test
@@ -154,10 +154,10 @@ public class DTOMapperTest {
         tags.add(RecipeTags.VEGETARIAN);
         recipe.setTags(tags);
 
-        List<Long> cookbooks = new ArrayList<>();
-        cookbooks.add(1L);
-        cookbooks.add(2L);
-        recipe.setCookbooks(cookbooks);
+        List<Long> groupIDs = new ArrayList<>();
+        groupIDs.add(1L);
+        groupIDs.add(2L);
+        recipe.setGroups(groupIDs);
 
         recipe.setAuthorID(1L);
 
@@ -178,7 +178,7 @@ public class DTOMapperTest {
         for (int i = 0; i < recipe.getTags().size(); i++) {
             assertEquals(recipe.getTags().get(i), recipeDTO.getTags().get(i));
         }
-        assertEquals(recipe.getCookbooks(), recipeDTO.getCookbooks());
+        assertEquals(recipe.getGroups(), recipeDTO.getGroups());
     }
 
     @Test
@@ -211,10 +211,10 @@ public class DTOMapperTest {
         tags.add(RecipeTags.VEGETARIAN);
         recipePutDTO.setTags(tags);
 
-        List<Long> cookbooks = new ArrayList<>();
-        cookbooks.add(1L);
-        cookbooks.add(2L);
-        recipePutDTO.setCookbooks(cookbooks);
+        List<Long> groupIDs = new ArrayList<>();
+        groupIDs.add(1L);
+        groupIDs.add(2L);
+        recipePutDTO.setGroups(groupIDs);
 
         // MAP -> Create recipe
         Recipe recipe = DTOMapper.INSTANCE.convertRecipePutDTOtoEntity(recipePutDTO);
@@ -232,7 +232,7 @@ public class DTOMapperTest {
         for (int i = 0; i < recipe.getTags().size(); i++) {
             assertEquals(recipe.getTags().get(i), recipePutDTO.getTags().get(i));
         }
-        assertEquals(recipe.getCookbooks(), recipePutDTO.getCookbooks());
+        assertEquals(recipe.getGroups(), recipePutDTO.getGroups());
     }
 
 

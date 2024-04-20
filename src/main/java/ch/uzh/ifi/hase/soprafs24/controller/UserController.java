@@ -108,8 +108,10 @@ public class UserController {
         }
         
         List<Long> invitations = user.getInvitations();
+        List<Long> usergroups = user.getGroups();
         if (invitations.contains(groupID)) {
             invitations.remove(groupID); // Remove the groupID from the list -> accept
+            usergroups.add(groupID);
             userRepository.save(user);
             userRepository.flush();
         } else {

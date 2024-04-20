@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
+import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
@@ -17,6 +18,9 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 public class RecipeController {
@@ -123,6 +127,39 @@ public class RecipeController {
 
     return mapped_recipes;
   }
+
+  @GetMapping("/groups/{groupID}/cookbooks")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public List<RecipeDTO> getGroupRecipes(@PathVariable("groupID") Long groupID) {
+
+    Group group = groupRepository.findById(groupID).orElse(null);
+    if (group == null){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
+    }
+
+    Cookbook cookbook = group.getCookbook();
+
+    List<Long> recipeIDs = cookbook.getRecipes();
+
+    List<Recipe> recipes = new ArrayList<>();
+
+    for (Long id: recipeIDs){
+      Recipe recipe = recipeRepository.findById(id).orElse(null);
+      if (recipe == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND);}
+      recipes.add(recipe);
+    }
+
+    List<RecipeDTO> returnRecipes = new ArrayList<>();
+
+    for (Recipe r:recipes){
+      RecipeDTO returnrecipe = DTOMapper.INSTANCE.convertEntityToRecipeDTO(r);
+      returnRecipes.add(returnrecipe);
+    }
+
+    return returnRecipes;
+  }
+  
 
   @DeleteMapping("/users/{userID}/cookbooks/{recipeID}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
