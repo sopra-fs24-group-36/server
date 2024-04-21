@@ -3,7 +3,9 @@ package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
+import ch.uzh.ifi.hase.soprafs24.entity.ItemRequest;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
+import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.junit.jupiter.api.Test;
@@ -298,6 +300,38 @@ public class DTOMapperTest {
         assertEquals(userPutDTO.getProfilePicture(), user.getProfilePicture());
     }
 
+    @Test
+    public void testCreateShoppingList_fromShoppingList_toShoppingListDTO_success(){
+        ShoppingList shoppingList = new ShoppingList();
+        List<String> items = new ArrayList<>();
+        items.add("Apple");
+        shoppingList.setItems(items);
+
+        // MAP
+        ShoppingListDTO shoppingListDTO = DTOMapper.INSTANCE.convertEntityToShoppingListDTO(shoppingList);
+
+        assertEquals(shoppingList.getItems(), shoppingListDTO.getItems());
+    }
+
+    @Test
+    public void testConvertItemPost_fromItemPostDTO_toItemRequest_success(){
+        ItemPostDTO itemPostDTO = new ItemPostDTO();
+        itemPostDTO.setItem("Apple");
+
+        ItemRequest itemRequest = DTOMapper.INSTANCE.convertItemPostDTOtoEntity(itemPostDTO);
+
+        assertEquals(itemPostDTO.getItem(), itemRequest.getItem());
+    }
+
+    @Test
+    public void testConvertItemPut_fromItemPutDTO_toItemRequest_success(){
+        ItemPutDTO itemPutDTO = new ItemPutDTO();
+        itemPutDTO.setItem("Apple");
+
+        ItemRequest itemRequest = DTOMapper.INSTANCE.convertItemPutDTOtoEntity(itemPutDTO);
+
+        assertEquals(itemPutDTO.getItem(), itemRequest.getItem());
+    }
 
 
 }
