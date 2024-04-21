@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -148,6 +151,17 @@ public class GroupController {
 
     userRepository.save(user);
     userRepository.flush();
+  }
+
+  @GetMapping("/groups/{groupID}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public GroupDTO getGroup(@PathVariable("groupID") Long groupID) {
+    Group group = groupRepository.findById(groupID).orElse(null);
+
+    if (group == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group with ID: " + groupID + " was not found");}
+
+    return DTOMapper.INSTANCE.convertEntityToGroupDTO(group);
   }
 
   @GetMapping("/RR")
