@@ -92,12 +92,59 @@ public class UserServiceTest {
 
 
     //  test logIn method  //
+    @Test
+    public void logIn_validInput () {
+
+        // Arrange
+        Mockito.when(userRepository.findByUsername("username")).thenReturn(testUser);
+        Mockito.when(userRepository.findByPassword("password")).thenReturn(testUser);
+        Mockito.when(userRepository.findByUsernameAndPassword("username", "password")).thenReturn(testUser);
 
 
+        // Act
+        User loggedInUser = userService.logIn(testUser);
 
+        // Assert
+        assertEquals(UserStatus.ONLINE, loggedInUser.getStatus());
+        Mockito.verify(userRepository, Mockito.times(1)).flush();
+    }
+
+
+    @Test
+    public void logIn_invalidUsernameAndPassword () {
+
+        // Arrange
+        Mockito.when(userRepository.findByUsername("username")).thenReturn(testUser);
+        Mockito.when(userRepository.findByPassword("password")).thenReturn(testUser);
+        Mockito.when(userRepository.findByUsernameAndPassword("username", "password")).thenReturn(null);
+
+        assertThrows(ResponseStatusException.class, () -> userService.logIn(testUser));
+    }
 
 
     //  test logOut method //
+    @Test
+    public void logOut_validInput () {
+
+        // Arrange
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+
+        // Act
+        userService.logOut(1L);
+
+        // Assert
+        Mockito.verify(userRepository, Mockito.times(1)).flush();
+    }
+
+
+    @Test
+    public void logOut_inValidId () {
+
+        // Arrange
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () -> userService.logOut(1L));
+    }
 
 
 

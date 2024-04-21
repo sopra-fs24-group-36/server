@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
+import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +42,7 @@ public class UserServiceIntegrationTest {
   public void createUser_validInputs_success() {
       // given
       assertNull(userRepository.findByUsername("username"));
+      assertNull(userRepository.findByEmail("email"));
 
       User testUser = new User();
       testUser.setPassword("password");
@@ -60,6 +63,7 @@ public class UserServiceIntegrationTest {
   @Test
   public void createUser_duplicateUsername_throwsException() {
       assertNull(userRepository.findByUsername("testUsername"));
+      assertNull(userRepository.findByEmail("email"));
 
       User testUser = new User();
       testUser.setPassword("password");
@@ -82,6 +86,7 @@ public class UserServiceIntegrationTest {
     @Test
     public void createUser_duplicateEmail_throwsException() {
         assertNull(userRepository.findByUsername("testUsername"));
+        assertNull(userRepository.findByEmail("email"));
 
         User testUser = new User();
         testUser.setPassword("password");
@@ -103,12 +108,106 @@ public class UserServiceIntegrationTest {
 
 
     //  test logIn method  //
+    @Test
+    public void logInUser_validInput() {
+
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+
+        testUser = userRepository.save(testUser);
+        userRepository.flush();
+
+        // when
+        User loggedInUser = userService.logIn(testUser);
+
+        // then
+        assertEquals(UserStatus.ONLINE, loggedInUser.getStatus());
+    }
 
 
+    @Test
+    public void logInUser_InvalidPasswordAndUsername() {
+
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        User wrongUser = new User();
+        wrongUser.setId(1L);
+        wrongUser.setPassword("wrong");
+        wrongUser.setUsername("wrong");
+        wrongUser.setEmail("email.email@email.com");
+        wrongUser.setToken(UUID.randomUUID().toString());
+        wrongUser.setCreationDate(creationDate);
+        wrongUser.setStatus(UserStatus.OFFLINE);
+
+        assertThrows(ResponseStatusException.class, () -> userService.logIn(wrongUser));
+    }
 
 
 
     //  test logOut method //
+
+    @Test
+    public void logOutUser_validInput() {
+
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.ONLINE);
+
+        testUser = userRepository.save(testUser);
+        userRepository.flush();
+
+        // when
+        userService.logOut(testUser.getId());
+
+        User updatedUser = userRepository.findById(testUser.getId()).orElse(null);
+        // then
+        assertNotNull(updatedUser); // Ensure user exists
+        assertEquals(UserStatus.OFFLINE, updatedUser.getStatus());
+    }
+
+    @Test
+    public void logOutUser_InvalidId() {
+
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.ONLINE);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        assertThrows(ResponseStatusException.class, () -> userService.logOut(2L));
+    }
+
 
 
 
@@ -254,7 +353,22 @@ public class UserServiceIntegrationTest {
     @Test
     public void updateTheUser_InvalidId_throwsException() {
 
-        //given
+
+        User updates = new User();
+        updates.setPassword("new");
+        updates.setUsername("new");
+        updates.setEmail("new");
+        updates.setProfilePicture("new");
+
+
+        assertThrows(ResponseStatusException.class, () -> userService.updateTheUser(1L, updates));
+
+    }
+
+    //  test saveCookbook method    //
+    @Test
+    public void saveCookbook_validInputs_success() {
+
         User testUser = new User();
         testUser.setPassword("password");
         testUser.setUsername("username");
@@ -264,20 +378,17 @@ public class UserServiceIntegrationTest {
         Date creationDate = new Date();
         testUser.setCreationDate(creationDate);
 
-        userRepository.save(testUser);
-        userRepository.flush();
+        Cookbook testCookbook = new Cookbook();
+        testCookbook.setId(2L);
+        testCookbook.setStatus(CookbookStatus.PERSONAL);
 
-        User updates = new User();
-        updates.setPassword("new");
-        updates.setUsername("new");
-        updates.setEmail("new");
-        updates.setProfilePicture("new");
+        // when
+        userService.saveCookbook(testUser, testCookbook);
 
-
-        assertThrows(ResponseStatusException.class, () -> userService.updateTheUser(2L, updates));
+        // then
+        assertEquals(testUser.getCookbook(), testCookbook);
 
     }
-
 
 
 

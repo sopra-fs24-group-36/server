@@ -153,21 +153,10 @@ public class UserService {
 
     //throw an error if the user does not already exist (if username or password or both provided is wrong)
     private void checkIfUserNotExists(User userToBeLoggedIn) {
-        User userByUsername = userRepository.findByUsername(userToBeLoggedIn.getUsername());
-        User userByPassword = userRepository.findByPassword(userToBeLoggedIn.getPassword());
         User userByUsernameAndPassword = userRepository.findByUsernameAndPassword(userToBeLoggedIn.getUsername(), userToBeLoggedIn.getPassword());
 
         String baseErrorMessage = "The %s provided %s not correct. Therefore, the user could not be logged in!";
-        if (userByUsername == null && userByPassword == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "username and the password", "are"));
-        }
-        else if (userByUsername == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "username", "is"));
-        }
-        else if (userByPassword == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "password", "is"));
-        }
-        else if (userByUsernameAndPassword == null) {
+        if (userByUsernameAndPassword == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "username or the password", "is"));
         }
     }

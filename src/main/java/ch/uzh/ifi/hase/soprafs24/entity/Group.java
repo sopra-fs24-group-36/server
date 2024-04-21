@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs24.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,11 +14,13 @@ public class Group implements Serializable {
   @GeneratedValue
   private Long id;
 
+  @Column(nullable = false)
   private String name;
 
   @ElementCollection
   @Column(name = "members")
   private List<Long> members;
+
 
   @ElementCollection
   @Column(name = "members_names")
