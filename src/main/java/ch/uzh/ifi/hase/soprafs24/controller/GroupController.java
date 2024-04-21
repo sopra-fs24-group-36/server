@@ -54,9 +54,21 @@ public class GroupController {
   @ResponseBody
   public GroupDTO createGroup(@RequestBody GroupPostDTO groupPostDTO) {
 
+    Long creator = groupPostDTO.getCreator();
+    User u = userRepository.findById(creator).orElse(null);
+    if (u == null) {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Creator with ID: "+creator+" was not found");}
+
     Group groupInput = DTOMapper.INSTANCE.convertGroupPostDTOtoEntity(groupPostDTO);
 
     Group createdGroup = groupService.createGroup(groupInput);
+
+    List<Long> groups = u.getGroups();
+    groups.add(createdGroup.getId());
+    u.setGroups(groups);
+
+    List<Long> members = new ArrayList<>();
+    members.add(u.getId());
+    createdGroup.setMembers(members);
 
     List<String> membersToAdd = groupInput.getMembersNames();
     List<Long> groupMembers = createdGroup.getMembers();
@@ -89,6 +101,9 @@ public class GroupController {
     
     //set the ID of the cookbook to the GROUP it belongs to
     groupService.saveCookbook(createdGroup, newCookbook);
+
+    groupRepository.save(createdGroup);
+    groupRepository.flush();
 
     return DTOMapper.INSTANCE.convertEntityToGroupDTO(createdGroup);
   }
