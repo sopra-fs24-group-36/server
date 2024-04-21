@@ -52,11 +52,13 @@ public class GroupService {
     group.setCookbook(cookbook);
   }
 
+
   public void saveShoppingList(Group group, ShoppingList shoppingList){
     group.setShoppingList(shoppingList);
   }
 
-  public void addUserToGroup(Long userID, Long groupID){
+  public Group addUserToGroup(Long userID, Long groupID){
+  
     Optional<Group> groupOptional = groupRepository.findById(groupID);
     
     if (groupOptional.isPresent()) {
@@ -68,6 +70,7 @@ public class GroupService {
         groupRepository.save(group);
         groupRepository.flush();
 
+
         User user = userRepository.findById(userID).orElse(null);
         if (user == null){
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
@@ -77,38 +80,46 @@ public class GroupService {
         user.setGroups(groups);
         userRepository.save(user);
         userRepository.flush();
+
+        return group;
+
     } else {
         throw new RuntimeException("Group with ID " + groupID + " not found");
     }
   }
 
-  public void deleteUserFromGroup(Long userID, Long groupID){
-    Optional<Group> groupOptional = groupRepository.findById(groupID);
-      
+  public Group deleteUserFromGroup(Long userId, Long groupId){
+    Optional<Group> groupOptional = groupRepository.findById(groupId);
+
     if (groupOptional.isPresent()) {
         Group group = groupOptional.get();
-        
+
         List<Long> members = group.getMembers();
-        
-        if (members.contains(userID)) {
-            members.remove(userID);
+
+        if (members.contains(userId)) {
+            members.remove(userId);
             group.setMembers(members);
             groupRepository.save(group);
+            groupRepository.flush();
 
-            User user = userRepository.findById(userID).orElse(null);
+
+            User user = userRepository.findById(userId).orElse(null);
             if (user == null){
               throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
             }
             List<Long> groups = user.getGroups();
-            groups.remove(groupID);
+            groups.remove(groupId);
             user.setGroups(groups);
             userRepository.save(user);
             userRepository.flush();
+
+            return group;
+
         } else {
-            throw new RuntimeException("User with ID " + userID + " is not a member of group with ID " + groupID);
+            throw new RuntimeException("User with ID " + userId + " is not a member of group with ID " + groupId);
         }
     } else {
-        throw new RuntimeException("Group with ID " + groupID + " not found");
+        throw new RuntimeException("Group with ID " + groupId + " not found");
     }
   }
 }

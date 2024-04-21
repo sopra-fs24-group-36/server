@@ -13,7 +13,6 @@ import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.CookbookService;
 import ch.uzh.ifi.hase.soprafs24.service.ShoppingListService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
-import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 
@@ -91,7 +90,7 @@ public class GroupController {
     return DTOMapper.INSTANCE.convertEntityToGroupDTO(createdGroup);
   }
 
-  // add group
+  // add user
   @PostMapping("/groups/{groupID}/{userID}")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
@@ -103,14 +102,14 @@ public class GroupController {
       }
   
       // If the user exists, proceed with adding them to the group
-      groupService.addUserToGroup(groupID, userID);
+      groupService.addUserToGroup(userID, groupID);
   
       // Convert and return the user DTO
       User user = userOptional.get();
       return DTOMapper.INSTANCE.convertEntityToUserDTO(user);
   }
 
-  // add group
+  // delete user
   @DeleteMapping("/groups/{groupID}/{userID}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ResponseBody
