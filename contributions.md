@@ -15,10 +15,12 @@
 
 
 ### Yujie
-- 21.04, [#33](https://github.com/sopra-fs24-group-36/client/issues/33), connet group cookbook to backend, it can display recipes in it
-- 21.04, [#34](https://github.com/sopra-fs24-group-36/client/issues/34), connet personal cookbook to backend, it can display recipes in it
-- 21.04, [#35](https://github.com/sopra-fs24-group-36/client/issues/35), connet user profile and edit profile to backend, the information changed is saved to the server, add authentication, user can only edit their own profile
-
+- 21.04, [#33](https://github.com/sopra-fs24-group-36/client/issues/33), connect group cookbook to backend, it can display recipes in it
+- 21.04, [#34](https://github.com/sopra-fs24-group-36/client/issues/34), connect personal cookbook to backend, it can display recipes in it
+- 21.04, [#35](https://github.com/sopra-fs24-group-36/client/issues/35), connect user profile and edit profile to backend, the information changed is saved to the server, add authentication, user can only edit their own profile
+- 21.04, [#44](https://github.com/sopra-fs24-group-36/client/issues/44), connect personal shoppinglist to backend, we can add, remove and clear all items
+- 21.04, [#45](https://github.com/sopra-fs24-group-36/client/issues/45), connect group shoppinglist to backend, we can add, remove and clear all items
+  
 ### Summer
 
 
