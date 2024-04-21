@@ -14,6 +14,8 @@ public class GroupPostDTO {
 
   private String image;
 
+  private Long creator;
+
   public void setName(String name){
     this.name = name;
   }
@@ -40,4 +42,8 @@ public class GroupPostDTO {
   public String getImage(){return image;}
 
   public void setImage(String image){this.image = image;}
+
+  public Long getCreator(){return creator;}
+
+  public void setCreator(Long creator){this.creator = creator;}
 }
