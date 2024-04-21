@@ -1,8 +1,10 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
+import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
+import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -94,28 +97,68 @@ public class GroupServiceIntegrationTest {
         initialMembers.add(789L);
         initialMembers.add(790L);
         testGroup.setMembers(new ArrayList<>(initialMembers));
-
-        groupRepository.save(testGroup);
+        testGroup = groupRepository.save(testGroup);
         groupRepository.flush();
 
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+        testUser = userRepository.save(testUser);
+        userRepository.flush();
+
         // Call the method under test
-        Group gotGroup = groupService.addUserToGroup(489L, testGroup.getId());
+        Group gotGroup = groupService.addUserToGroup(testUser.getId(), testGroup.getId());
 
         List<Long> expectedMembers = new ArrayList<>(initialMembers);
-        expectedMembers.add(489L);
+        expectedMembers.add(testUser.getId());
 
         // Assert that the actual list of members matches the expected list
         assertEquals(expectedMembers, gotGroup.getMembers());
         assertTrue(gotGroup.getMembers().contains(789L));
         assertTrue(gotGroup.getMembers().contains(790L));
-        assertTrue(gotGroup.getMembers().contains(489L));
+        assertTrue(gotGroup.getMembers().contains(testUser.getId()));
     }
 
 
     @Test
     public void addUserToGroup_inValidGroupId_throwsException() {
 
-        assertThrows(RuntimeException.class, () -> groupService.addUserToGroup(489L, 1L));
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setId(2L);
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        assertThrows(RuntimeException.class, () -> groupService.addUserToGroup(2L, 1L));
+
+    }
+
+    @Test
+    public void addUserToGroup_inValidUserId_throwsException() {
+
+        Group testGroup = new Group();
+        testGroup.setName("name");
+        List<Long> initialMembers = new ArrayList<>();
+        initialMembers.add(789L);
+        initialMembers.add(790L);
+        testGroup.setMembers(new ArrayList<>(initialMembers));
+        testGroup = groupRepository.save(testGroup);
+        groupRepository.flush();
+
+        Long GroupID = testGroup.getId();
+
+        assertThrows(ResponseStatusException.class, () -> groupService.addUserToGroup(2L, GroupID));
 
     }
 
@@ -124,26 +167,37 @@ public class GroupServiceIntegrationTest {
     @Test
     public void deleteUserFromGroup_validInputs_success() {
 
+
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+        testUser = userRepository.save(testUser);
+        userRepository.flush();
+
         Group testGroup = new Group();
         testGroup.setName("name");
         List<Long> initialMembers = new ArrayList<>();
         initialMembers.add(789L);
-        initialMembers.add(790L);
+        initialMembers.add(testUser.getId());
         testGroup.setMembers(new ArrayList<>(initialMembers));
-
-        groupRepository.save(testGroup);
+        testGroup = groupRepository.save(testGroup);
         groupRepository.flush();
 
         // Call the method under test
-        Group gotGroup = groupService.deleteUserFromGroup(testGroup.getId(), 790L);
+        Group gotGroup = groupService.deleteUserFromGroup(testUser.getId(), testGroup.getId());
 
         List<Long> expectedMembers = new ArrayList<>(initialMembers);
-        expectedMembers.remove(790L);
+        expectedMembers.remove(testUser.getId());
 
         // Assert that the actual list of members matches the expected list
         assertEquals(expectedMembers, gotGroup.getMembers());
         assertTrue(gotGroup.getMembers().contains(789L));
-        assertFalse(gotGroup.getMembers().contains(790L));
+        assertFalse(gotGroup.getMembers().contains(testUser.getId()));
     }
 
 
@@ -157,10 +211,12 @@ public class GroupServiceIntegrationTest {
         initialMembers.add(790L);
         testGroup.setMembers(new ArrayList<>(initialMembers));
 
-        groupRepository.save(testGroup);
+        testGroup = groupRepository.save(testGroup);
         groupRepository.flush();
 
-        assertThrows(RuntimeException.class, () -> groupService.deleteUserFromGroup(testGroup.getId(), 800L));
+        Long GroupID = testGroup.getId();
+
+        assertThrows(RuntimeException.class, () -> groupService.deleteUserFromGroup(3L ,GroupID));
 
     }
 
@@ -168,17 +224,54 @@ public class GroupServiceIntegrationTest {
     @Test
     public void deleteUserFromGroup_inValidGroupId_throwsException() {
 
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+        testUser = userRepository.save(testUser);
+        userRepository.flush();
+
+        Long UserID = testUser.getId();
+
+
+        assertThrows(RuntimeException.class, () -> groupService.deleteUserFromGroup(UserID, 790L));
+
+    }
+
+
+    @Test
+    public void deleteUserFromGroup_invalidInputUserNotMemberOfGroup_throwsException() {
+
+
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+        testUser = userRepository.save(testUser);
+        userRepository.flush();
+
+        Long UserID = testUser.getId();
+
         Group testGroup = new Group();
         testGroup.setName("name");
         List<Long> initialMembers = new ArrayList<>();
         initialMembers.add(789L);
-        initialMembers.add(790L);
         testGroup.setMembers(new ArrayList<>(initialMembers));
-
-        groupRepository.save(testGroup);
+        testGroup = groupRepository.save(testGroup);
         groupRepository.flush();
 
-        assertThrows(RuntimeException.class, () -> groupService.deleteUserFromGroup(8L, 790L));
+        Long GroupID = testGroup.getId();
 
+
+        // Call the method under test
+        assertThrows(RuntimeException.class, () -> groupService.deleteUserFromGroup(UserID, GroupID));
     }
 }

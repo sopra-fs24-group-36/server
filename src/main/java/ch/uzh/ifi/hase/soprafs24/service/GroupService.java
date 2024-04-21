@@ -88,7 +88,7 @@ public class GroupService {
     }
   }
 
-  public Group deleteUserFromGroup(Long groupId, Long userId){
+  public Group deleteUserFromGroup(Long userId, Long groupId){
     Optional<Group> groupOptional = groupRepository.findById(groupId);
 
     if (groupOptional.isPresent()) {
@@ -103,12 +103,12 @@ public class GroupService {
             groupRepository.flush();
 
 
-            User user = userRepository.findById(userID).orElse(null);
+            User user = userRepository.findById(userId).orElse(null);
             if (user == null){
               throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
             }
             List<Long> groups = user.getGroups();
-            groups.remove(groupID);
+            groups.remove(groupId);
             user.setGroups(groups);
             userRepository.save(user);
             userRepository.flush();

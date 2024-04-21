@@ -6,6 +6,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupPostDTO;
 import ch.uzh.ifi.hase.soprafs24.service.CookbookService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
+import ch.uzh.ifi.hase.soprafs24.service.ShoppingListService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,9 @@ public class GroupControllerTest {
 
     @MockBean
     private GroupRepository groupRepository;
+
+    @MockBean
+    private ShoppingListService shoppingListService;
 
 
     //  test for Post /groups mapping   //
