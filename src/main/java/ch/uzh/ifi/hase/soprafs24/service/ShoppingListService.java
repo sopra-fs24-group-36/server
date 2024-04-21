@@ -73,6 +73,8 @@ public class ShoppingListService {
       items.remove(item);
       shoppingListRepository.save(shoppingList);
       shoppingListRepository.flush();
+    } else {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "item is not on group shopping list, nothing to tick off!");
     }
   }
 
