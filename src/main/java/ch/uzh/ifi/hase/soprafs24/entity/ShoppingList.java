@@ -16,7 +16,7 @@ public class ShoppingList implements Serializable {
   private Long id;
 
   @ElementCollection
-  @CollectionTable(name = "items")
+  @Column(name = "items")
   private List<String> items;
 
   public Long getId() {

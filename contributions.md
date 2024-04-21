@@ -6,8 +6,12 @@
 
 ### Sarina
 - 17.04, [#29](https://github.com/sopra-fs24-group-36/server/issues/29) and [#89](https://github.com/sopra-fs24-group-36/server/issues/89), added the two REST endpoints to the systems including the tests
+- 20.04, regarding all issues involving groups, I added all the tests for all the group REST endpoints 
 
 ### Jazz
+- 16.04, [#31](https://github.com/sopra-fs24-group-36/client/issues/31) the 3 most recently added recipes are shown on the home page, if the user has no recipes "no recipes yet" is displayed 
+- 18.04, [#23](https://github.com/sopra-fs24-group-36/client/issues/23) the user can only edit their own recipes
+- 19.04, [#17](https://github.com/sopra-fs24-group-36/client/issues/17) the groups a user is part of are displayed on the home page. if the user is not part of any groups, a message is shown. 
 
 
 ### Yujie

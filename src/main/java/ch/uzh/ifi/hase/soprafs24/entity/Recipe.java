@@ -44,8 +44,8 @@ public class Recipe implements Serializable {
   private List<RecipeTags> tags;
 
   @ElementCollection
-  @Column(name = "cookbooks")
-  private List<Long> cookbooks;
+  @Column(name = "groupIDs")
+  private List<Long> groupIDs;
 
   private Long authorID;
 
@@ -129,12 +129,12 @@ public class Recipe implements Serializable {
     this.tags = tags;
   }
 
-  public List<Long> getCookbooks() {
-    return cookbooks;
+  public List<Long> getGroups() {
+    return groupIDs;
   }
 
-  public void setCookbooks(List<Long> cookbooks) {
-    this.cookbooks = cookbooks;
+  public void setGroups(List<Long> groupIDs) {
+    this.groupIDs = groupIDs;
   }
   public Long getAuthorID() {
     return authorID;

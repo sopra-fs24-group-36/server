@@ -1,9 +1,26 @@
 package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
+import ch.uzh.ifi.hase.soprafs24.entity.ItemRequest;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDeleteDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.ItemPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.ItemPutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListDeleteDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListPutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -38,11 +55,8 @@ public interface DTOMapper {
     @Mapping(source = "instructions" , target = "instructions")
     @Mapping(source = "image" , target = "image")
     @Mapping(source = "tags" , target = "tags")
-    @Mapping(source = "cookbooks" , target = "cookbooks")
+    @Mapping(source = "groups" , target = "groups")
     Recipe convertRecipePostDTOtoEntity(RecipePostDTO recipePostDTO);
-
-    @Mapping(source = "id" , target = "id")
-    Recipe convertRecipeGetDTOtoEntity(RecipeGetDTO recipeGetDTO);
 
     @Mapping(source = "title" , target = "title")
     @Mapping(source = "shortDescription" , target = "shortDescription")
@@ -53,13 +67,10 @@ public interface DTOMapper {
     @Mapping(source = "instructions" , target = "instructions")
     @Mapping(source = "image" , target = "image")
     @Mapping(source = "tags" , target = "tags")
-    @Mapping(source = "cookbooks" , target = "cookbooks")
+    @Mapping(source = "groups" , target = "groups")
     Recipe convertRecipePutDTOtoEntity(RecipePutDTO recipePutDTO);
 
     @Mapping(source = "id" , target = "id")
-    Recipe convertRecipeDeleteDTOtoEntity(RecipeDeleteDTO recipeDeleteDTO);
-
-    @Mapping(source = "id" , target = "id")
     @Mapping(source = "title" , target = "title")
     @Mapping(source = "shortDescription" , target = "shortDescription")
     @Mapping(source = "link" , target = "link")
@@ -69,17 +80,19 @@ public interface DTOMapper {
     @Mapping(source = "instructions" , target = "instructions")
     @Mapping(source = "image" , target = "image")
     @Mapping(source = "tags" , target = "tags")
-    @Mapping(source = "cookbooks" , target = "cookbooks")
+    @Mapping(source = "groups" , target = "groups")
     @Mapping(source = "authorID" , target = "authorID")
     RecipeDTO convertEntityToRecipeDTO(Recipe recipe);
 
     @Mapping(source = "name" , target = "name")
-    @Mapping(source = "members" , target = "members")
+    @Mapping(source = "membersNames" , target = "membersNames")
+    @Mapping(source = "image" , target = "image")
     Group convertGroupPostDTOtoEntity(GroupPostDTO groupPostDTO);
 
     @Mapping(source = "id" , target = "id")
     @Mapping(source = "name" , target = "name")
     @Mapping(source = "members" , target = "members")
+    @Mapping(source = "image" , target = "image")
     GroupDTO convertEntityToGroupDTO(Group group);
 
     @Mapping(source = "id" , target = "id")
@@ -88,10 +101,14 @@ public interface DTOMapper {
     @Mapping(source = "id" , target = "id")
     ShoppingList convertShoppingListDeleteDTOtoEntity(ShoppingListDeleteDTO shoppingListDeleteDTO);
 
-    @Mapping(source = "id" , target = "id")
     @Mapping(source = "items" , target = "items")
-    ShoppingList convertEntityToShoppingListDTO(ShoppingList shoppingList);
+    ShoppingListDTO convertEntityToShoppingListDTO(ShoppingList shoppingList);
 
+    @Mapping(source = "item", target = "item")
+    ItemRequest convertItemPostDTOtoEntity(ItemPostDTO itemPostDTO);
+
+    @Mapping(source = "item", target = "item")
+    ItemRequest convertItemPutDTOtoEntity(ItemPutDTO itemPostDTO);
 
     @Mapping(source = "username", target="username")
     @Mapping(source = "name", target = "name")

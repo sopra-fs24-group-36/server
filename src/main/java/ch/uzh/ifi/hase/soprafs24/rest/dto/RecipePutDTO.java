@@ -24,7 +24,7 @@ public class RecipePutDTO {
 
   private List<RecipeTags> tags = new ArrayList<>(3);
 
-  private List<Long> cookbooks = new ArrayList<>();
+  private List<Long> groups = new ArrayList<>();
 
   public String getTitle() {
     return title;
@@ -97,11 +97,11 @@ public class RecipePutDTO {
     this.tags = tags;
   }
 
-  public List<Long> getCookbooks() {
-    return cookbooks;
+  public List<Long> getGroups() {
+    return groups;
   }
 
-  public void setCookbooks(List<Long> cookbooks) {
-    this.cookbooks = cookbooks;
+  public void setGroups(List<Long> groups) {
+    this.groups = groups;
   }
 }
