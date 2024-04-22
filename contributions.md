@@ -1,12 +1,13 @@
 ## Description
 - manually append the two development tasks they completed during the week
-- entry should consist of the date, your name, links to the github issues you worked on and optionally a short description 
+- entry should consist of the date, your name, links to the github issues you worked on and optionally a short description
 
 ## Week 3
 
 ### Sarina
 - 17.04, [#29](https://github.com/sopra-fs24-group-36/server/issues/29) and [#89](https://github.com/sopra-fs24-group-36/server/issues/89), added the two REST endpoints to the systems including the tests
-- 20.04, regarding all issues involving groups, I added all the tests for all the group REST endpoints 
+- 20.04, regarding all issues involving groups, I added all the tests for all the group REST endpoints
+- 22.04, [#72](https://github.com/sopra-fs24-group-36/server/issues/72), finished the persistence of the server 
 
 ### Jazz
 - 16.04, [#31](https://github.com/sopra-fs24-group-36/client/issues/31) the 3 most recently added recipes are shown on the home page, if the user has no recipes "no recipes yet" is displayed 
