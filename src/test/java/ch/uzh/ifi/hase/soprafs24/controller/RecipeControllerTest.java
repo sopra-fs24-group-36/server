@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
+import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
@@ -591,8 +592,10 @@ public class RecipeControllerTest {
   @Test
   public void removeRecipeFromGroup_Success() throws Exception {
       // Mock successful removal of recipe from group
-      Mockito.doNothing().when(recipeService).removeRecipeFromGroup(Mockito.anyLong(), Mockito.anyLong());
-
+      Group g = new Group();
+      g.setName("test");
+      groupRepository.save(g);
+      Mockito.when(recipeService.removeRecipeFromGroup(Mockito.anyLong(), Mockito.anyLong())).thenReturn(g);
       // Perform PUT request
       mockMvc.perform(put("/groups/1/cookbooks/2"))
               .andExpect(status().isOk());
