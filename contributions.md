@@ -28,7 +28,9 @@
 - 21.04, [#45](https://github.com/sopra-fs24-group-36/client/issues/45), connect group shoppinglist to backend, we can add, remove and clear all items
   
 ### Summer
-
+- 21.04,[#37](https://github.com/sopra-fs24-group-36/client/issues/37) Create a calendar view of a user
+- 21.04,[#38](https://github.com/sopra-fs24-group-36/client/issues/37) create a calendar view of a group
+- 22.04,[#32](https://github.com/sopra-fs24-group-36/client/issues/37) make the invitation functionalities connected to backend
 
 ### Marko
 - 15.04, [#43](https://github.com/sopra-fs24-group-36/client/issues/43), was already implemented, had to do some bug fixes.
