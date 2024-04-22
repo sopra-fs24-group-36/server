@@ -16,6 +16,7 @@
 - 22.04, [#20](https://github.com/sopra-fs24-group-36/client/issues/20) UI and functionalities implemented to add a recipe to a group on recipe creation.
 - 22.04, [#36](https://github.com/sopra-fs24-group-36/client/issues/36) connected the API - just need to check uploading to github with Marion
 - 22.04, [#31](https://github.com/sopra-fs24-group-36/client/issues/31) all functionalities & buttons on the home page work
+- 22.04, [#39](https://github.com/sopra-fs24-group-36/client/issues/39) group functionalites for recipes - this issues was completed with issues #24 and #17
 
 
 ### Yujie
