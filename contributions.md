@@ -30,7 +30,15 @@
 
 
 ### Marko
-
+- 15.04, [#43](https://github.com/sopra-fs24-group-36/client/issues/43), was already implemented, had to do some bug fixes.
+- 16.04, [#39](https://github.com/sopra-fs24-group-36/client/issues/39), worked on the rest-specs and implemented all needed tests.
+- 17.04, [#48](https://github.com/sopra-fs24-group-36/client/issues/48), rest specifications, bug fixes and all needed tests done.
+- 18.04, [#56](https://github.com/sopra-fs24-group-36/client/issues/56), had to change some REST-endpoints so invitations are done by the user. Added all needed tests.
+- 19.04, [#66](https://github.com/sopra-fs24-group-36/client/issues/66), Rest specs and a ton of tests.
+- 19.04, [#55](https://github.com/sopra-fs24-group-36/client/issues/55), rest specs and tests.
+- 19.04, [#50](https://github.com/sopra-fs24-group-36/client/issues/50), had to add a new undefined rest-endpoint, tested it also.
+- 20.04, Wrote a loooooot of tests for most Controllers, Repositories, IntegrationTests, Services, Mappers regarding Recipes, Cookbooks, ShoppingLists and some for new Group-related requests.
+- 21.04, Continued with writing all needed tests for the issues above, deleted some unused files and tried to boost up the Test-coverage.
 
 ## Week 2
 
