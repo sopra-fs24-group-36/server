@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.service.CookbookService;
 import ch.uzh.ifi.hase.soprafs24.service.GroupService;
 import ch.uzh.ifi.hase.soprafs24.service.ShoppingListService;
@@ -30,6 +31,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -221,7 +223,115 @@ public class GroupControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    public void inviteUserToGroup_validInput_success() throws Exception {
+        Group group = new Group();
+        group.setId(1L);
+        group.setName("test");
+        group.setImage("test");
+        group.setMembers(new ArrayList<>());
 
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setEmail("test");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testUsername");
+        user.setToken("1");
+        user.setName("name");
+        user.setPassword("password");
+        user.setEmail("email.email@email.com");
+        Date creationDate = new Date();
+        user.setCreationDate(creationDate);
+        user.setStatus(UserStatus.ONLINE);
+        user.setInvitations(new ArrayList<>());
+
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+        given(userRepository.findByEmail(Mockito.anyString())).willReturn(user);
+        
+        MockHttpServletRequestBuilder postRequest = post("/groups/1/invitations")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void inviteUserToGroup_invalidInput_UserNotFound() throws Exception {
+        Group group = new Group();
+        group.setId(1L);
+        group.setName("test");
+        group.setImage("test");
+        group.setMembers(new ArrayList<>());
+
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setEmail("test");
+
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+        given(userRepository.findByEmail(Mockito.anyString())).willReturn(null);
+        
+        MockHttpServletRequestBuilder postRequest = post("/groups/1/invitations")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void inviteUserToGroup_invalidInput_GroupNotFound() throws Exception {
+
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setEmail("test");
+
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+        
+        MockHttpServletRequestBuilder postRequest = post("/groups/1/invitations")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getGroup_validInput_success() throws Exception {
+        Group group = new Group();
+        group.setId(1L);
+        group.setName("test");
+        group.setImage("test");
+        group.setMembers(new ArrayList<>());
+
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+        
+        MockHttpServletRequestBuilder getRequest = get("/groups/1")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getGroup_invalidInput_GroupNotFound() throws Exception {
+
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+        
+        MockHttpServletRequestBuilder getRequest = get("/groups/1")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getRickRolled_valid() throws Exception{
+        MockHttpServletRequestBuilder getRequest = get("/RR")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isIAmATeapot());
+    }
 
 
     private String asJsonString(final Object object) {

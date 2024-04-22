@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
@@ -24,6 +25,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
@@ -289,33 +293,234 @@ public class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-
-    /*
     @Test
-    public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
-        // given
+    public void acceptInvitation_validInput() throws Exception{
         User user = new User();
-        user.setName("Firstname Lastname");
-        user.setUsername("firstname@lastname");
-        user.setStatus(UserStatus.OFFLINE);
+        user.setId(1L);
+        user.setUsername("test");
+        user.setName("test");
+        user.setPassword("test");
+        user.setEmail("test");
+        user.setGroups(new ArrayList<>());
 
-        List<User> allUsers = Collections.singletonList(user);
+        Group group = new Group();
+        group.setId(2L);
+        group.setName("test");
+        group.setMembers(new ArrayList<>());
 
-        // this mocks the UserService -> we define above what the userService should
-        // return when getUsers() is called
-        given(userService.getUsers()).willReturn(allUsers);
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(2L);
+        user.setInvitations(invitations);
 
-        // when
-        MockHttpServletRequestBuilder getRequest = get("/users").contentType(MediaType.APPLICATION_JSON);
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
 
-        // then
-        mockMvc.perform(getRequest).andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].name", is(user.getName())))
-                .andExpect(jsonPath("$[0].username", is(user.getUsername())))
-                .andExpect(jsonPath("$[0].status", is(user.getStatus().toString())));
+        MockHttpServletRequestBuilder postRequest = post("/users/1/accept/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNoContent());
     }
-    */
+
+    @Test
+    public void acceptInvitation_invalidInput_noUser() throws Exception{
+
+        Group group = new Group();
+        group.setId(2L);
+        group.setName("test");
+        group.setMembers(new ArrayList<>());
+
+
+        given(userRepository.findById(Mockito.anyLong())).willReturn(null);
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+
+        MockHttpServletRequestBuilder postRequest = post("/users/1/accept/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void acceptInvitation_invalidInput_noGroup() throws Exception{
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("test");
+        user.setName("test");
+        user.setPassword("test");
+        user.setEmail("test");
+        user.setGroups(new ArrayList<>());
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(2L);
+        user.setInvitations(invitations);
+
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+
+        MockHttpServletRequestBuilder postRequest = post("/users/1/accept/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void declineInvitation_validInput() throws Exception{
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("test");
+        user.setName("test");
+        user.setPassword("test");
+        user.setEmail("test");
+        user.setGroups(new ArrayList<>());
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(2L);
+        user.setInvitations(invitations);
+
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+
+        MockHttpServletRequestBuilder postRequest = post("/users/1/deny/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void declineInvitation_invalidInput_UserNotFound() throws Exception{
+        given(userRepository.findById(Mockito.anyLong())).willReturn(null);
+
+        MockHttpServletRequestBuilder getRequest = post("/users/1/deny/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());        
+    }
+
+    @Test
+    public void getAllInvitations_validInput() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("test");
+        user.setName("test");
+        user.setPassword("test");
+        user.setEmail("test");
+        List<Long> list = new ArrayList<>();
+        list.add(2L);
+        user.setInvitations(list);
+
+        Group group = new Group();
+        group.setName("test");
+        group.setImage("test");
+        group.setId(2L);
+
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+
+        MockHttpServletRequestBuilder getRequest = get("/users/1/invitations")
+        .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getAllInvitations_invalidInput_noUser() throws Exception{
+
+        given(userRepository.findById(Mockito.anyLong())).willReturn(null);
+
+        MockHttpServletRequestBuilder postRequest = post("/users/1/deny/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getAllInvitations_invalidInput_GroupNotFound() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("test");
+        user.setName("test");
+        user.setPassword("test");
+        user.setEmail("test");
+        List<Long> list = new ArrayList<>();
+        list.add(2L);
+        user.setInvitations(list);
+
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+
+        MockHttpServletRequestBuilder getRequest = get("/users/1/invitations")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getUserGroups_validInput() throws Exception{
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("test");
+        user.setName("test");
+        user.setPassword("test");
+        user.setEmail("test");
+        List<Long> groups = new ArrayList<>();
+        groups.add(2L);
+        user.setGroups(groups);
+
+        Group group = new Group();
+        group.setName("test");
+        group.setImage("test");
+        group.setId(2L);
+
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+
+        MockHttpServletRequestBuilder getRequest = get("/users/1/groups")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk());
+        }
+
+        @Test
+        public void getUserGroups_invalidInput_UserNotFound() throws Exception{
+
+            given(userRepository.findById(Mockito.anyLong())).willReturn(null);
+    
+            MockHttpServletRequestBuilder getRequest = get("/users/1/groups")
+                    .contentType(MediaType.APPLICATION_JSON);
+    
+            mockMvc.perform(getRequest)
+                    .andExpect(status().isNotFound());
+        }
+
+        @Test
+        public void getUserGroups_invalidInput_GroupNotFound() throws Exception{
+            User user = new User();
+            user.setId(1L);
+            user.setUsername("test");
+            user.setName("test");
+            user.setPassword("test");
+            user.setEmail("test");
+            List<Long> groups = new ArrayList<>();
+            groups.add(2L);
+            user.setGroups(groups);
+    
+
+            given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+            given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+    
+            MockHttpServletRequestBuilder getRequest = get("/users/1/groups")
+                    .contentType(MediaType.APPLICATION_JSON);
+    
+            mockMvc.perform(getRequest)
+                    .andExpect(status().isNotFound());
+        }
 
   private String asJsonString(final Object object) {
     try {
