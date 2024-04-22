@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
+import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
@@ -160,6 +161,25 @@ public class RecipeControllerTest {
       .andExpect(jsonPath("$.groups[0]", is(1)))
       .andExpect(jsonPath("$.groups[1]", is(2)))
       .andExpect(jsonPath("$.authorID").value(equalTo(recipe.getAuthorID().intValue()))); // Update assertion
+  }
+  
+  @Test
+  public void createrecipe_invalidInput_throwsException() throws Exception {
+
+    RecipeDTO recipePostDTO = new RecipeDTO();
+
+    given(recipeService.createUserRecipe(Mockito.anyLong(), Mockito.any()))
+    .willAnswer(invocation -> {
+        throw new Exception();
+    });
+
+    MockHttpServletRequestBuilder postRequest = post("/users/1/cookbooks")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(asJsonString(recipePostDTO));
+
+    // then
+    mockMvc.perform(postRequest)
+      .andExpect(status().isConflict());
     }
 
   //  test the /recipes POST Mapping  //
@@ -259,6 +279,25 @@ public class RecipeControllerTest {
     }
 
   @Test
+  public void creategrouprecipe_invalidInput_throwsException() throws Exception {
+    //all fields required by recipe
+    RecipeDTO recipePostDTO = new RecipeDTO();
+
+    given(recipeService.createGroupRecipe(Mockito.anyLong(), Mockito.any()))
+    .willAnswer(invocation -> {
+        throw new Exception();
+    });
+
+    MockHttpServletRequestBuilder postRequest = post("/groups/1/cookbooks")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(asJsonString(recipePostDTO));
+
+    // then
+    mockMvc.perform(postRequest)
+      .andExpect(status().isConflict());
+  }
+
+  @Test
   public void getUserRecipe_recipeFound_returnRecipeDTO() throws Exception {
     // Given
     //all fields required by recipe
@@ -322,6 +361,62 @@ public class RecipeControllerTest {
       .andExpect(jsonPath("$.authorID").value(equalTo(expectedRecipeDTO.getAuthorID().intValue()))); // Update assertion
   }
 
+  @Test
+  public void getGroupRecipes_returnsMappedRecipes() throws Exception {
+    Recipe recipe = new Recipe();
+    recipe.setId(1L);
+
+    Group group = new Group();
+    Cookbook cookbook = new Cookbook();
+    List<Long> list = new ArrayList<>();
+    list.add(1L);
+    cookbook.setRecipes(list);
+    group.setCookbook(cookbook);
+
+    given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+    given(recipeRepository.findById(Mockito.any())).willReturn(Optional.of(recipe));
+
+    MockHttpServletRequestBuilder getRequest = get("/groups/1/cookbooks")
+    .contentType(MediaType.APPLICATION_JSON);
+
+  // then
+    mockMvc.perform(getRequest)
+      .andExpect(status().isOk());
+  }
+
+  @Test
+  public void getGroupRecipes_invalid_GroupNotFound() throws Exception {
+
+    given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+
+    MockHttpServletRequestBuilder getRequest = get("/groups/1/cookbooks")
+    .contentType(MediaType.APPLICATION_JSON);
+
+  // then
+    mockMvc.perform(getRequest)
+      .andExpect(status().isNotFound());
+  }
+
+  @Test
+  public void getGroupRecipes_invalid_RecipeNotFound() throws Exception {
+
+    Group group = new Group();
+    Cookbook cookbook = new Cookbook();
+    List<Long> list = new ArrayList<>();
+    list.add(1L);
+    cookbook.setRecipes(list);
+    group.setCookbook(cookbook);
+
+    given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+    given(recipeRepository.findById(Mockito.any())).willReturn(Optional.empty());
+
+    MockHttpServletRequestBuilder getRequest = get("/groups/1/cookbooks")
+    .contentType(MediaType.APPLICATION_JSON);
+
+  // then
+    mockMvc.perform(getRequest)
+      .andExpect(status().isNotFound());
+  }
 
   @Test
   public void getGroupRecipe_recipeFound_returnRecipeDTO() throws Exception {

@@ -97,6 +97,102 @@ public class GroupControllerTest {
     }
 
     @Test
+    public void createGroup_validInputMembers_groupCreated() throws Exception {
+
+        //the group that should be created
+        Group group = new Group();
+        group.setId(1L);
+        group.setName("name");
+        List<Long> m = new ArrayList<>();
+        m.add(1L);
+        group.setMembers(m);
+
+        //information for the request
+        GroupPostDTO groupPostDTO = new GroupPostDTO();
+        groupPostDTO.setName("name");
+        groupPostDTO.setCreator(1L);
+        List<String> members = new ArrayList<>();
+        members.add("user2");
+        groupPostDTO.setMembersNames(members);
+
+        User user = new User();
+        user.setId(1L);
+        List<Long> l = new ArrayList<>();
+        user.setGroups(l);
+
+        User user2 = new User();
+        user2.setInvitations(new ArrayList<>());
+
+        Long userID = 1L;
+
+        given(userRepository.findByEmail(Mockito.anyString())).willReturn(user2);
+        given(userRepository.findById(userID)).willReturn(Optional.of(user));
+        given(groupService.createGroup(Mockito.any())).willReturn(group);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = post("/groups")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(groupPostDTO));
+
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", is(group.getId().intValue())))
+                .andExpect(jsonPath("$.name", is(group.getName())));
+    }
+
+    @Test
+    public void createGroup_invalidInput_UserNotFoundd() throws Exception {
+
+        //the group that should be created
+        Group group = new Group();
+        group.setId(1L);
+        group.setName("name");
+        List<Long> m = new ArrayList<>();
+        m.add(1L);
+        group.setMembers(m);
+
+        //information for the request
+        GroupPostDTO groupPostDTO = new GroupPostDTO();
+        groupPostDTO.setName("name");
+        groupPostDTO.setCreator(1L);
+
+        given(userRepository.findById(Mockito.anyLong())).willReturn(null);
+        given(groupService.createGroup(Mockito.any())).willReturn(group);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = post("/groups")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(groupPostDTO));
+
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void createGroup_invalidInput_AuthorNotFound() throws Exception {
+        //information for the request
+        GroupPostDTO groupPostDTO = new GroupPostDTO();
+        groupPostDTO.setName("name");
+        groupPostDTO.setCreator(1L);
+
+        Long userID = 1L;
+
+        given(userRepository.findById(userID)).willReturn(Optional.empty());
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = post("/groups")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(groupPostDTO));
+
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
     public void createGroup_inValidInput_groupCreated() throws Exception {
         //fields for GROUPS
         List<Long> members = Arrays.asList(10L, 20L, 30L);
