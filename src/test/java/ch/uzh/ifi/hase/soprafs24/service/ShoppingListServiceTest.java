@@ -65,6 +65,24 @@ class ShoppingListServiceTest {
     }
 
     @Test
+    public void addItemGroup_ItemInList_NothingAdded() {
+      // Given
+      Group group = new Group();
+      ShoppingList shoppingList = new ShoppingList();
+      List<String> items = new ArrayList<>();
+      items.add("Apple");
+      shoppingList.setItems(items);
+      group.setShoppingList(shoppingList);
+      String item = "Apple";
+
+      // When
+      shoppingListService.addItemGroup(item, group);
+
+      // Then
+      assertTrue(shoppingList.getItems().contains(item));
+    }
+
+    @Test
     public void addItemUser_ItemNotInList_ItemAdded() {
       // Given
       User user = new User();
@@ -80,6 +98,24 @@ class ShoppingListServiceTest {
       // Then
       assertTrue(shoppingList.getItems().contains(item));
       verify(shoppingListRepository, times(1)).save(shoppingList);
+    }
+
+    @Test
+    public void addItemUser_ItemInList_NothingAdded() {
+      // Given
+      User user = new User();
+      ShoppingList shoppingList = new ShoppingList();
+      List<String> items = new ArrayList<>();
+      items.add("Banana");
+      shoppingList.setItems(items);
+      user.setShoppingList(shoppingList);
+      String item = "Banana";
+
+      // When
+      shoppingListService.addItemUser(item, user);
+
+      // Then
+      assertTrue(shoppingList.getItems().contains(item));
     }
 
     @Test
