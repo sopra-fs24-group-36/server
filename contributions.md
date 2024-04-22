@@ -14,6 +14,8 @@
 - 19.04, [#17](https://github.com/sopra-fs24-group-36/client/issues/17) the groups a user is part of are displayed on the home page. if the user is not part of any groups, a message is shown.
 - 22.04, [#24](https://github.com/sopra-fs24-group-36/client/issues/24) recipes can be added to new groups via edit after creation. edited content is displayed in all cookbooks the recipe is part of.
 - 22.04, [#20](https://github.com/sopra-fs24-group-36/client/issues/20) UI and functionalities implemented to add a recipe to a group on recipe creation.
+- 22.04, [#36](https://github.com/sopra-fs24-group-36/client/issues/36) connected the API - just need to check uploading to github with Marion
+- 22.04, [#31](https://github.com/sopra-fs24-group-36/client/issues/31) all functionalities & buttons on the home page work
 
 
 ### Yujie
