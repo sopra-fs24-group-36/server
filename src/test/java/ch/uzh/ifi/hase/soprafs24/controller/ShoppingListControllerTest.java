@@ -79,6 +79,22 @@ public class ShoppingListControllerTest {
         Mockito.verify(shoppingListService).addItemGroup("Test Item", group);
     }
 
+
+    @Test
+    public void addItemGroup_InvalidInput_throwsEcxeption() throws Exception {
+        // Given
+        ItemPostDTO itemPostDTO = new ItemPostDTO();
+        itemPostDTO.setItem("Test Item");
+
+        Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+
+        // Perform request
+        mockMvc.perform(MockMvcRequestBuilders.post("/groups/1/shoppinglists")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(itemPostDTO)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
     @Test
     public void getGroupShoppinglist_ValidInput_Success() throws Exception {
         // Given
@@ -196,11 +212,29 @@ public class ShoppingListControllerTest {
     }
 
     @Test
+    public void addItemUser_InvalidInput_throwsException() throws Exception {
+
+        ItemPostDTO itemPostDTO = new ItemPostDTO();
+        itemPostDTO.setItem("Test Item");
+        
+        // Mock UserRepository behavior to return the user when findById is called with 1L
+        given(userRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+    
+        // Perform request
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/1/shoppinglists")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(itemPostDTO)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
     public void getUserShoppinglist_ValidInput_Success() throws Exception {
         // Given
         Long userId = 1L;
         User user = new User();
         ShoppingList shoppingList = new ShoppingList();
+        shoppingList.setId(20L);
+        Long shoppingListId = shoppingList.getId();
         // Set up your ShoppingList object
         
         user.setShoppingList(shoppingList);
@@ -210,6 +244,17 @@ public class ShoppingListControllerTest {
         mockMvc.perform(get("/users/" + userId + "/shoppinglists")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getUserShoppinglist_InvalidInput_throwsException() throws Exception {
+        // Given
+        given(userRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+
+        // When/Then
+        mockMvc.perform(get("/users/1/shoppinglists")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -237,6 +282,23 @@ public class ShoppingListControllerTest {
     }
 
     @Test
+    public void removeItemUsers_throwsException() throws Exception {
+        // Given
+        ItemPutDTO itemPutDTO = new ItemPutDTO();
+        itemPutDTO.setItem("ItemToRemove");
+
+        // Mock repository behavior
+        when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+        doNothing().when(shoppingListService).removeUserItem(any(String.class), any(User.class));
+
+        // Perform request
+        mockMvc.perform(put("/users/1/shoppinglists")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(itemPutDTO)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void emptyUserShoppinglist_Success() throws Exception {
         // Given
         Long userId = 1L;
@@ -254,6 +316,18 @@ public class ShoppingListControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(shoppingListService).emptyUserShoppinglist(user);
+    }
+    
+    @Test
+    public void emptyUserShoppinglist_throwsException() throws Exception {
+
+        // Mock repository behavior
+        when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+
+        // Perform request
+        mockMvc.perform(delete("/users/1/shoppinglists")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     // Additional tests for other endpoints can be added similarly

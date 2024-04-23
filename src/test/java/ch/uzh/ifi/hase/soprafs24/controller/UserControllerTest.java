@@ -323,6 +323,65 @@ public class UserControllerTest {
     }
 
     @Test
+    public void acceptInvitation_invalidInput_throwsException() throws Exception{
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("test");
+        user.setName("test");
+        user.setPassword("test");
+        user.setEmail("test");
+        user.setGroups(new ArrayList<>());
+
+        Group group = new Group();
+        group.setId(2L);
+        group.setName("test");
+        group.setMembers(new ArrayList<>());
+
+        List<Long> invitations = new ArrayList<>();
+        user.setInvitations(invitations);
+
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+
+        MockHttpServletRequestBuilder postRequest = post("/users/1/accept/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void acceptInvitation_invalidInput_conflict() throws Exception{
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("test");
+        user.setName("test");
+        user.setPassword("test");
+        user.setEmail("test");
+        user.setGroups(new ArrayList<>());
+
+        Group group = new Group();
+        group.setId(2L);
+        group.setName("test");
+        List<Long> members = new ArrayList<>();
+        members.add(1L);
+        group.setMembers(members);
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(2L);
+        user.setInvitations(invitations);
+
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+
+        MockHttpServletRequestBuilder postRequest = post("/users/1/accept/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isConflict());
+    }
+
+    @Test
     public void acceptInvitation_invalidInput_noUser() throws Exception{
 
         Group group = new Group();
@@ -400,6 +459,29 @@ public class UserControllerTest {
     }
 
     @Test
+    public void declineInvitation_invalidInput_throwsException() throws Exception{
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("test");
+        user.setName("test");
+        user.setPassword("test");
+        user.setEmail("test");
+        user.setGroups(new ArrayList<>());
+
+        List<Long> invitations = new ArrayList<>();
+        user.setInvitations(invitations);
+
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+
+        MockHttpServletRequestBuilder postRequest = post("/users/1/deny/2")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
     public void getAllInvitations_validInput() throws Exception {
         User user = new User();
         user.setId(1L);
@@ -431,10 +513,10 @@ public class UserControllerTest {
 
         given(userRepository.findById(Mockito.anyLong())).willReturn(null);
 
-        MockHttpServletRequestBuilder postRequest = post("/users/1/deny/2")
+        MockHttpServletRequestBuilder getRequest = get("/users/1/invitations")
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(postRequest)
+        mockMvc.perform(getRequest)
                 .andExpect(status().isNotFound());
     }
 

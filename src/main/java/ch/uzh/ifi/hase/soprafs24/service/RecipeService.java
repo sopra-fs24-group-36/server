@@ -66,7 +66,6 @@ public class RecipeService {
     List<Long> groupIDs = newRecipe.getGroups();
 
     User user = userRepository.findById(userID).orElse(null);
-    if (user == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");}
     Cookbook cookbook = user.getCookbook();
     List<Long> persrecipes = cookbook.getRecipes();
     persrecipes.add(newRecipe.getId());

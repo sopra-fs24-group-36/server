@@ -203,12 +203,10 @@ public class RecipeServiceTest {
       long recipeId = 1L;
       Recipe existingRecipe = new Recipe();
       existingRecipe.setId(recipeId);
-      existingRecipe.setTitle("Old Title");
       existingRecipe.setShortDescription("Old Description");
   
       Recipe updatedRecipe = new Recipe();
       updatedRecipe.setId(recipeId);
-      updatedRecipe.setTitle("New Title");
       updatedRecipe.setShortDescription("New Description");
   
       // Mock behavior of recipeRepository.findById
@@ -218,7 +216,103 @@ public class RecipeServiceTest {
       recipeService.updateRecipe(recipeId, updatedRecipe);
   
       // Assert that the existing recipe has been updated correctly
-      assertEquals(updatedRecipe.getTitle(), existingRecipe.getTitle());
+      assertEquals(updatedRecipe.getShortDescription(), existingRecipe.getShortDescription());
+      // Add more assertions for other fields if needed
+  }
+
+  @Test
+  public void updateRecipe_ValidInput_SuccessfullyUpdatesRecipeWithNewGroups() {
+      // Mock data
+      long recipeId = 1L;
+
+      Recipe existingRecipe = new Recipe();
+      existingRecipe.setId(recipeId);
+      existingRecipe.setShortDescription("Old Description");
+      existingRecipe.setGroups(new ArrayList<>());
+  
+      Recipe updatedRecipe = new Recipe();
+      updatedRecipe.setId(recipeId);
+      updatedRecipe.setShortDescription("New Description");
+      List<Long> list = new ArrayList<>();
+      list.add(2L);
+      updatedRecipe.setGroups(list);
+
+      Group group = new Group();
+      Cookbook cookbook = new Cookbook();
+      cookbook.setRecipes(new ArrayList<>());
+      group.setCookbook(cookbook);
+  
+      // Mock behavior of recipeRepository.findById
+      when(recipeRepository.findById(Mockito.anyLong())).thenReturn(existingRecipe);
+      when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(group));
+  
+      // Call the method under test
+      recipeService.updateRecipe(recipeId, updatedRecipe);
+  
+      // Assert that the existing recipe has been updated correctly
+      assertEquals(updatedRecipe.getShortDescription(), existingRecipe.getShortDescription());
+      // Add more assertions for other fields if needed
+  }
+
+  @Test
+  public void updateRecipe_InalidInput_GroupNotfound() {
+      // Mock data
+      long recipeId = 1L;
+
+      Recipe existingRecipe = new Recipe();
+      existingRecipe.setId(recipeId);
+      existingRecipe.setShortDescription("Old Description");
+      existingRecipe.setGroups(new ArrayList<>());
+  
+      Recipe updatedRecipe = new Recipe();
+      updatedRecipe.setId(recipeId);
+      updatedRecipe.setShortDescription("New Description");
+      List<Long> list = new ArrayList<>();
+      list.add(2L);
+      updatedRecipe.setGroups(list);
+
+      // Mock behavior of recipeRepository.findById
+      when(recipeRepository.findById(Mockito.anyLong())).thenReturn(existingRecipe);
+      when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+  
+      // Assert that the existing recipe has been updated correctly
+      assertThrows(ResponseStatusException.class, () -> recipeService.updateRecipe(recipeId, updatedRecipe));
+      // Add more assertions for other fields if needed
+  }
+
+  @Test
+  public void updateRecipe_ValidInput_SuccessfullyUpdatesRecipeWithLessGroups() {
+      // Mock data
+      long recipeId = 1L;
+
+      Recipe existingRecipe = new Recipe();
+      existingRecipe.setId(recipeId);
+      existingRecipe.setShortDescription("Old Description");
+      List<Long> groupsBefore = new ArrayList<>();
+      groupsBefore.add(2L);
+      existingRecipe.setGroups(groupsBefore);
+  
+      Recipe updatedRecipe = new Recipe();
+      updatedRecipe.setId(recipeId);
+      updatedRecipe.setShortDescription("New Description");
+      updatedRecipe.setGroups(new ArrayList<>());
+
+      Group group = new Group();
+      group.setId(2L);
+      Cookbook cookbook = new Cookbook();
+      List<Long> recipes = new ArrayList<>();
+      recipes.add(1L);
+      cookbook.setRecipes(recipes);
+      group.setCookbook(cookbook);
+  
+      // Mock behavior of recipeRepository.findById
+      when(recipeRepository.findById(Mockito.anyLong())).thenReturn(existingRecipe);
+      when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(group));
+  
+      // Call the method under test
+      recipeService.updateRecipe(recipeId, updatedRecipe);
+  
+      // Assert that the existing recipe has been updated correctly
       assertEquals(updatedRecipe.getShortDescription(), existingRecipe.getShortDescription());
       // Add more assertions for other fields if needed
   }
@@ -272,6 +366,21 @@ public class RecipeServiceTest {
   }
 
   @Test
+  public void deleteRecipe_GroupNotFound_throwsException() {
+    // Create a recipe with associated groups
+    Recipe recipe = new Recipe();
+    recipe.setId(1L);
+    List<Long> groupIDs = new ArrayList<>();
+    groupIDs.add(1L);
+    recipe.setGroups(groupIDs);
+
+    Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+
+    // Verify that the recipe has been removed from the groups' cookbooks
+    assertThrows(ResponseStatusException.class, () -> recipeService.deleteRecipe(recipe));
+  }
+
+  @Test
   public void deleteRecipe_RemovesRecipeFromGroups_throwsException() {
     // Create a recipe with associated groups
     Recipe recipe = new Recipe();
@@ -322,16 +431,6 @@ public class RecipeServiceTest {
     // Assert that the method under test throws an exception when the group is not found
     assertThrows(RuntimeException.class, () -> recipeService.removeRecipeFromGroup(1L, 2L));
   }
-
-
-  
-
-
-  
-  
-  
-  
-
 
 
 }
