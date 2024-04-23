@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
+import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -295,6 +296,97 @@ public class UserServiceIntegrationTest {
         assertEquals(userRepository.findById(testUser.getId()).get().getProfilePicture(), updates.getProfilePicture());
     }
 
+    @Test
+    public void updateTheUser_validInputsUpdatedEmail_success() {
+
+        //given
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        User updates = new User();
+        updates.setPassword("new");
+        updates.setUsername("new");
+        updates.setProfilePicture("new");
+
+
+        // when
+        userService.updateTheUser(testUser.getId(), updates);
+
+        // compare the updated email from email retrieved from database
+        assertEquals(userRepository.findById(testUser.getId()).get().getUsername(), updates.getUsername());
+        assertEquals(userRepository.findById(testUser.getId()).get().getName(), updates.getName());
+        assertEquals(userRepository.findById(testUser.getId()).get().getProfilePicture(), updates.getProfilePicture());
+    }
+
+    @Test
+    public void updateTheUser_validInputsNoUsernameUpdate_success() {
+
+        //given
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        User updates = new User();
+        updates.setPassword("new");
+        updates.setEmail("new");
+        updates.setProfilePicture("new");
+
+
+        // when
+        userService.updateTheUser(testUser.getId(), updates);
+
+        // compare the updated email from email retrieved from database
+        assertEquals(userRepository.findById(testUser.getId()).get().getEmail(), updates.getEmail());
+        assertEquals(userRepository.findById(testUser.getId()).get().getName(), updates.getName());
+        assertEquals(userRepository.findById(testUser.getId()).get().getProfilePicture(), updates.getProfilePicture());
+    }
+
+    @Test
+    public void updateTheUser_validInputsNoUpdatedPicture_success() {
+
+        //given
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        User updates = new User();
+        updates.setPassword("new");
+        updates.setUsername("new");
+        updates.setEmail("new");
+
+        // when
+        userService.updateTheUser(testUser.getId(), updates);
+
+        // compare the updated email from email retrieved from database
+        assertEquals(userRepository.findById(testUser.getId()).get().getEmail(), updates.getEmail());
+        assertEquals(userRepository.findById(testUser.getId()).get().getUsername(), updates.getUsername());
+        assertEquals(userRepository.findById(testUser.getId()).get().getName(), updates.getName());
+    }
 
     @Test
     public void updateTheUser_InvalidUsername_throwsException() {
@@ -390,6 +482,27 @@ public class UserServiceIntegrationTest {
 
     }
 
+    @Test
+    public void saveShoppingList_validInputs_success() {
 
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList.setId(2L);
+
+        // when
+        userService.saveShoppingList(testUser, shoppingList);
+
+        // then
+        assertEquals(testUser.getShoppingList(), shoppingList);
+
+    }
 
 }
