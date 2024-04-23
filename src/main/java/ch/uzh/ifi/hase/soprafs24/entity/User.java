@@ -40,6 +40,7 @@ public class User implements Serializable {
 
     //optional, hence can be null
     @Column
+    @Lob
     private String profilePicture;
 
     @Column(nullable = false, unique = true)

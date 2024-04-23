@@ -33,6 +33,7 @@ public class Group implements Serializable {
   @OneToOne
   private ShoppingList shoppingList;
 
+  @Lob
   private String image;
 
   public Long getId() {
