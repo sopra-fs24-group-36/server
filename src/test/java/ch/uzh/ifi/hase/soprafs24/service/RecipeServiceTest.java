@@ -264,6 +264,31 @@ public class RecipeServiceTest {
   }
 
   @Test
+  public void createGroupRecipeMoreGroups_invalidInputs_throwsException() throws Exception{
+    List<Long> testgroups = new ArrayList<>();
+    testgroups.add(5L);
+
+    testRecipe.setGroups(testgroups);
+    
+    Cookbook cookbook = new Cookbook();
+    cookbook.setRecipes(new ArrayList<>());
+    cookbook.setStatus(CookbookStatus.GROUP);
+    Group group = new Group();
+    group.setName("test");
+    group.setMembers(new ArrayList<>());
+    group.setMembersNames(new ArrayList<>());
+    group.setCookbook(cookbook);
+    group.setImage("test");
+    cookbookRepository.save(cookbook);
+    groupRepository.save(group);
+
+    Mockito.when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
+    Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+    // then
+    assertThrows(ResponseStatusException.class, () -> recipeService.createGroupRecipe(group.getId(), testRecipe));
+  }
+
+  @Test
   public void findAllRecipesWithUserID_UserWithRecipes_SuccessfullyRetrievesRecipes() {
       // Mock data
       Long userId = 1L;
