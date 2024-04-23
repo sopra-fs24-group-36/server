@@ -71,6 +71,7 @@ public class UserControllerTest {
       user.setName("name");
       user.setPassword("password");
       user.setEmail("email.email@email.com");
+      user.setProfilePicture("testpicture");
       Date creationDate = new Date();
       user.setCreationDate(creationDate);
       user.setStatus(UserStatus.ONLINE);
@@ -80,6 +81,8 @@ public class UserControllerTest {
       userPostDTO.setName("name");
       userPostDTO.setUsername("testUsername");
       userPostDTO.setEmail("email.email@email.com");
+      userPostDTO.setProfilePicture("testpicture");
+
 
       given(userService.createUser(Mockito.any())).willReturn(user);
 
@@ -96,6 +99,7 @@ public class UserControllerTest {
               .andExpect(jsonPath("$.email", is(user.getEmail())))
               .andExpect(jsonPath("$.creationDate", matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\+\\d{2}:\\d{2}$")))
               .andExpect(jsonPath("$.name", is(user.getName())))
+              .andExpect(jsonPath("$.profilePicture", is(user.getProfilePicture())))
               .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
     }
 
