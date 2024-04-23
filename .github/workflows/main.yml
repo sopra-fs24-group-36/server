@@ -14,29 +14,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository code
+      - name: Checkout repository code main.yml
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-      - name: Install Java 17
+      - name: Install Java 17 main.yml
         uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: "17"
 
-      - name: Test and analyze
+      - name: Test and analyze main.yml
         run: ./gradlew test jacocoTestReport sonarqube
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   deploy:
-    name: Deploying to Google Cloud
+    name: Deploying to Google Cloud main.yml
     runs-on: ubuntu-latest
     needs: test
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Replace environment variables in app.yaml from  main.yml
+        uses: 73h/gae-app-yaml-replace-env-variables@v0.3
+        env:
+          GCP_DB_USERNAME: ${{ secrets.GCP_DB_USERNAME }}
+          GCP_DB_PASSWORD: ${{ secrets.GCP_DB_PASSWORD }}
+        with:
+          app_yaml_path: "app.yaml"
 
       - name: Deploy to App Engine
         id: deploy
@@ -46,5 +56,5 @@ jobs:
           version: v1
           credentials: ${{ secrets.GCP_SERVICE_CREDENTIALS }}
 
-      - name: Test
+      - name: Test main.yml
         run: curl "${{ steps.deploy.outputs.url }}"
