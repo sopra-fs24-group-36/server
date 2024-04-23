@@ -21,6 +21,7 @@ public class Recipe implements Serializable {
 
   private String shortDescription;
 
+  @Lob
   private String link;
 
   private String cookingTime;
@@ -37,6 +38,7 @@ public class Recipe implements Serializable {
   @Column(name = "instructions")
   private List<String> instructions;
 
+  @Lob
   private String image;
 
   @ElementCollection
