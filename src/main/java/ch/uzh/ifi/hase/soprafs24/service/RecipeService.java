@@ -66,7 +66,6 @@ public class RecipeService {
     List<Long> groupIDs = newRecipe.getGroups();
 
     User user = userRepository.findById(userID).orElse(null);
-    if (user == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");}
     Cookbook cookbook = user.getCookbook();
     List<Long> persrecipes = cookbook.getRecipes();
     persrecipes.add(newRecipe.getId());
@@ -265,7 +264,7 @@ public class RecipeService {
     recipeRepository.delete(recipe);
   }
 
-  public void removeRecipeFromGroup(Long groupID, Long recipeID) {
+  public Group removeRecipeFromGroup(Long groupID, Long recipeID) {
     Group group = groupRepository.findById(groupID).orElseThrow(() -> new RuntimeException("Group not found"));
 
     Cookbook cookbook = group.getCookbook();
@@ -275,6 +274,8 @@ public class RecipeService {
 
     cookbookRepository.save(cookbook);
     groupRepository.save(group);
+
+    return group;
   }
 
 }

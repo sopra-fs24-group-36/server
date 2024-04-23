@@ -1,27 +1,47 @@
 ## Description
 - manually append the two development tasks they completed during the week
-- entry should consist of the date, your name, links to the github issues you worked on and optionally a short description 
+- entry should consist of the date, your name, links to the github issues you worked on and optionally a short description
 
 ## Week 3
 
 ### Sarina
 - 17.04, [#29](https://github.com/sopra-fs24-group-36/server/issues/29) and [#89](https://github.com/sopra-fs24-group-36/server/issues/89), added the two REST endpoints to the systems including the tests
-- 20.04, regarding all issues involving groups, I added all the tests for all the group REST endpoints 
+- 20.04, regarding all issues involving groups, I added all the tests for all the group REST endpoints
+- 22.04, [#72](https://github.com/sopra-fs24-group-36/server/issues/72), finished the persistence of the server 
 
 ### Jazz
 - 16.04, [#31](https://github.com/sopra-fs24-group-36/client/issues/31) the 3 most recently added recipes are shown on the home page, if the user has no recipes "no recipes yet" is displayed 
 - 18.04, [#23](https://github.com/sopra-fs24-group-36/client/issues/23) the user can only edit their own recipes
-- 19.04, [#17](https://github.com/sopra-fs24-group-36/client/issues/17) the groups a user is part of are displayed on the home page. if the user is not part of any groups, a message is shown. 
+- 19.04, [#17](https://github.com/sopra-fs24-group-36/client/issues/17) the groups a user is part of are displayed on the home page. if the user is not part of any groups, a message is shown.
+- 22.04, [#24](https://github.com/sopra-fs24-group-36/client/issues/24) recipes can be added to new groups via edit after creation. edited content is displayed in all cookbooks the recipe is part of.
+- 22.04, [#20](https://github.com/sopra-fs24-group-36/client/issues/20) UI and functionalities implemented to add a recipe to a group on recipe creation.
+- 22.04, [#36](https://github.com/sopra-fs24-group-36/client/issues/36) connected the API - just need to check uploading to github with Marion
+- 22.04, [#31](https://github.com/sopra-fs24-group-36/client/issues/31) all functionalities & buttons on the home page work
+- 22.04, [#39](https://github.com/sopra-fs24-group-36/client/issues/39) group functionalites for recipes - this issues was completed with issues #24 and #17
 
 
 ### Yujie
-
-
+- 21.04, [#33](https://github.com/sopra-fs24-group-36/client/issues/33), connect group cookbook to backend, it can display recipes in it
+- 21.04, [#34](https://github.com/sopra-fs24-group-36/client/issues/34), connect personal cookbook to backend, it can display recipes in it
+- 21.04, [#35](https://github.com/sopra-fs24-group-36/client/issues/35), connect user profile and edit profile to backend, the information changed is saved to the server, add authentication, user can only edit their own profile
+- 21.04, [#44](https://github.com/sopra-fs24-group-36/client/issues/44), connect personal shoppinglist to backend, we can add, remove and clear all items
+- 21.04, [#45](https://github.com/sopra-fs24-group-36/client/issues/45), connect group shoppinglist to backend, we can add, remove and clear all items
+  
 ### Summer
-
+- 21.04,[#37](https://github.com/sopra-fs24-group-36/client/issues/37) Create a calendar view of a user
+- 21.04,[#38](https://github.com/sopra-fs24-group-36/client/issues/37) create a calendar view of a group
+- 22.04,[#32](https://github.com/sopra-fs24-group-36/client/issues/37) make the invitation functionalities connected to backend
 
 ### Marko
-
+- 15.04, [#43](https://github.com/sopra-fs24-group-36/client/issues/43), was already implemented, had to do some bug fixes.
+- 16.04, [#39](https://github.com/sopra-fs24-group-36/client/issues/39), worked on the rest-specs and implemented all needed tests.
+- 17.04, [#48](https://github.com/sopra-fs24-group-36/client/issues/48), rest specifications, bug fixes and all needed tests done.
+- 18.04, [#56](https://github.com/sopra-fs24-group-36/client/issues/56), had to change some REST-endpoints so invitations are done by the user. Added all needed tests.
+- 19.04, [#66](https://github.com/sopra-fs24-group-36/client/issues/66), Rest specs and a ton of tests.
+- 19.04, [#55](https://github.com/sopra-fs24-group-36/client/issues/55), rest specs and tests.
+- 19.04, [#50](https://github.com/sopra-fs24-group-36/client/issues/50), had to add a new undefined rest-endpoint, tested it also.
+- 20.04, Wrote a loooooot of tests for most Controllers, Repositories, IntegrationTests, Services, Mappers regarding Recipes, Cookbooks, ShoppingLists and some for new Group-related requests.
+- 21.04, Continued with writing all needed tests for the issues above, deleted some unused files and tried to boost up the Test-coverage.
 
 ## Week 2
 

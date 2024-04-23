@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
+import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
@@ -84,6 +85,27 @@ public class GroupServiceIntegrationTest {
         // then
         assertEquals(testGroup.getCookbook(), testCookbook);
 
+    }
+
+    //  test saveShoppingList method    //
+    @Test
+    public void saveShoppingList_validInputs_success() {
+
+        Group testGroup = new Group();
+        testGroup.setId(1L);
+        testGroup.setName("name");
+        List<Long> initialMembers = new ArrayList<>();
+        initialMembers.add(789L);
+        testGroup.setMembers(new ArrayList<>(initialMembers));
+
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList.setId(2L);
+
+        // when
+        groupService.saveShoppingList(testGroup, shoppingList);
+
+        // then
+        assertEquals(testGroup.getShoppingList(), shoppingList);
     }
 
 

@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -51,9 +54,21 @@ public class GroupController {
   @ResponseBody
   public GroupDTO createGroup(@RequestBody GroupPostDTO groupPostDTO) {
 
+    Long creator = groupPostDTO.getCreator();
+    User u = userRepository.findById(creator).orElse(null);
+    if (u == null) {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Creator with ID: "+creator+" was not found");}
+
     Group groupInput = DTOMapper.INSTANCE.convertGroupPostDTOtoEntity(groupPostDTO);
 
     Group createdGroup = groupService.createGroup(groupInput);
+
+    List<Long> groups = u.getGroups();
+    groups.add(createdGroup.getId());
+    u.setGroups(groups);
+
+    List<Long> members = new ArrayList<>();
+    members.add(u.getId());
+    createdGroup.setMembers(members);
 
     List<String> membersToAdd = groupInput.getMembersNames();
     List<Long> groupMembers = createdGroup.getMembers();
@@ -86,6 +101,9 @@ public class GroupController {
     
     //set the ID of the cookbook to the GROUP it belongs to
     groupService.saveCookbook(createdGroup, newCookbook);
+
+    groupRepository.save(createdGroup);
+    groupRepository.flush();
 
     return DTOMapper.INSTANCE.convertEntityToGroupDTO(createdGroup);
   }
@@ -148,6 +166,17 @@ public class GroupController {
 
     userRepository.save(user);
     userRepository.flush();
+  }
+
+  @GetMapping("/groups/{groupID}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public GroupDTO getGroup(@PathVariable("groupID") Long groupID) {
+    Group group = groupRepository.findById(groupID).orElse(null);
+
+    if (group == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group with ID: " + groupID + " was not found");}
+
+    return DTOMapper.INSTANCE.convertEntityToGroupDTO(group);
   }
 
   @GetMapping("/RR")
