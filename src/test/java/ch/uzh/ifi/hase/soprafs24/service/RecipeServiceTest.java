@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
+import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -139,6 +141,52 @@ public class RecipeServiceTest {
   }
 
   @Test
+  public void createUserRecipe_ValidInputMoreGroups_CreatesRecipe() {
+
+    Long userID = 1L;
+    Cookbook cookbook = new Cookbook();
+    List<Long> recipes = new ArrayList<>();
+    cookbook.setRecipes(recipes);
+    User user = new User();
+    user.setId(1L);
+    user.setCookbook(cookbook);
+
+    Group group = new Group();
+    group.setId(2L);
+    Cookbook groupcookbook = new Cookbook();
+    groupcookbook.setRecipes(new ArrayList<>());
+    groupcookbook.setStatus(CookbookStatus.GROUP);
+    group.setCookbook(groupcookbook);
+
+    List<Long> groups = new ArrayList<>();
+    groups.add(2L);
+    testRecipe.setGroups(groups);
+
+  
+    // Arrange
+    Mockito.when(userRepository.findById(userID)).thenReturn(Optional.of(user));
+    Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(group));
+
+    // Act
+    Recipe createdRecipe = recipeService.createUserRecipe(1L, testRecipe);
+
+    // Assert
+    assertNotNull(createdRecipe.getId()); // Ensure ID is assigned to the created recipe
+    assertEquals(testRecipe.getTitle(), createdRecipe.getTitle());
+    assertEquals(testRecipe.getId(), createdRecipe.getId());
+    assertEquals(testRecipe.getShortDescription(), createdRecipe.getShortDescription());
+    assertEquals(testRecipe.getLink(), createdRecipe.getLink());
+    assertEquals(testRecipe.getCookingTime(), createdRecipe.getCookingTime());
+    assertEquals(testRecipe.getAmounts(), createdRecipe.getAmounts());
+    assertEquals(testRecipe.getIngredients(), createdRecipe.getIngredients());
+    assertEquals(testRecipe.getInstructions(), createdRecipe.getInstructions());
+    assertEquals(testRecipe.getTags(), createdRecipe.getTags());
+    assertEquals(testRecipe.getGroups(), createdRecipe.getGroups());
+    assertEquals(testRecipe.getAuthorID(), createdRecipe.getAuthorID());
+    assertTrue(group.getCookbook().getRecipes().contains(1L));
+  }
+
+  @Test
   public void createUserRecipe_InvalidInput_throwsException() {
     Long userID = 1L;
     Cookbook cookbook = new Cookbook();
@@ -174,6 +222,45 @@ public class RecipeServiceTest {
     });
     // Assert
     assertThrows(ResponseStatusException.class, () -> recipeService.createUserRecipe(1L, testRecipe));
+  }
+
+  @Test
+  public void createGroupRecipeMoreGroups_validInputs_success() {
+    List<Long> testgroups = new ArrayList<>();
+    testgroups.add(5L);
+
+    testRecipe.setGroups(testgroups);
+    
+    Cookbook cookbook = new Cookbook();
+    cookbook.setRecipes(new ArrayList<>());
+    cookbook.setStatus(CookbookStatus.GROUP);
+    Group group = new Group();
+    group.setName("test");
+    group.setMembers(new ArrayList<>());
+    group.setMembersNames(new ArrayList<>());
+    group.setCookbook(cookbook);
+    group.setImage("test");
+    cookbookRepository.save(cookbook);
+    groupRepository.save(group);
+
+    Group group2 = new Group();
+    Cookbook cookbook2 = new Cookbook();
+    cookbook2.setRecipes(new ArrayList<>());
+    cookbook2.setStatus(CookbookStatus.GROUP);
+    group2.setCookbook(cookbook2);
+    group2.setName("test2");
+    cookbookRepository.save(cookbook2);
+    groupRepository.save(group2);
+    group2.setId(5L);
+
+    Mockito.when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
+    Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(group2));
+    // when
+    Recipe createdRecipe = recipeService.createGroupRecipe(group.getId(), testRecipe);
+
+    // then
+    assertEquals(testRecipe.getId(), createdRecipe.getId());
+    assertTrue(group2.getCookbook().getRecipes().contains(testRecipe.getId()));
   }
 
   @Test

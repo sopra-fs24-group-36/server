@@ -17,9 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -210,58 +212,71 @@ public class RecipeServiceIntegrationTest {
       assertNotNull(returnrecipe);
     }
 
+    @Transactional 
     @Test
     public void updateRecipe_validInputs_success() {
 
-      List<String> testlist = new ArrayList<>();
-      testlist.add("test");
+      // Existing recipe setup
+      List<String> oldlist = new ArrayList<>();
+      oldlist.add("test");
+      oldlist.add("test2");
 
-      List<RecipeTags> testtags = new ArrayList<>();
-      testtags.add(RecipeTags.VEGAN);
+      List<RecipeTags> oldtags = new ArrayList<>();
+      oldtags.add(RecipeTags.VEGAN);
 
-      Recipe testRecipe = new Recipe();
-      testRecipe.setTitle("test");
-      testRecipe.setShortDescription("test");
-      testRecipe.setLink("test");
-      testRecipe.setCookingTime("test");
-      testRecipe.setAmounts(testlist);
-      testRecipe.setIngredients(testlist);
-      testRecipe.setInstructions(testlist);
-      testRecipe.setImage("test");
-      testRecipe.setTags(testtags);
-      testRecipe.setAuthorID(1L);
-      recipeRepository.save(testRecipe);
+      Recipe oldRecipe = new Recipe();
+      oldRecipe.setTitle("test");
+      oldRecipe.setShortDescription("test");
+      oldRecipe.setLink("test");
+      oldRecipe.setCookingTime("test");
+      oldRecipe.setAmounts(oldlist);
+      oldRecipe.setIngredients(oldlist);
+      oldRecipe.setInstructions(oldlist);
+      oldRecipe.setImage("test");
+      oldRecipe.setTags(oldtags);
+      oldRecipe.setAuthorID(1L);
 
-      List<String> testlistupdate = new ArrayList<>();
-      testlistupdate.add("testupdate");
+      // Saving the recipe
+      recipeRepository.save(oldRecipe);
 
-      List<RecipeTags> testtagsupdate = new ArrayList<>();
-      testtagsupdate.add(RecipeTags.VEGETARIAN);
+      // Updated version of recipe setup
+      List<String> changedList = new ArrayList<>();
+      changedList.add("testupdate");
+      changedList.add("testupdate2");
 
-      Recipe updatedRecipe = new Recipe();
-      updatedRecipe.setTitle("testupdate");
-      updatedRecipe.setShortDescription("testupdate");
-      updatedRecipe.setLink("testupdate");
-      updatedRecipe.setCookingTime("testupdate");
-      updatedRecipe.setAmounts(testlistupdate);
-      updatedRecipe.setIngredients(testlistupdate);
-      updatedRecipe.setInstructions(testlistupdate);
-      updatedRecipe.setImage("testupdate");
-      updatedRecipe.setTags(testtagsupdate);
+      List<RecipeTags> changedTags = new ArrayList<>();
+      changedTags.add(RecipeTags.VEGETARIAN);
 
-      // update the recipe
-      recipeService.updateRecipe(testRecipe.getId(), updatedRecipe);
+      Recipe changedRecipe = new Recipe();
+      changedRecipe.setTitle("testupdate");
+      changedRecipe.setShortDescription("testupdate");
+      changedRecipe.setLink("testupdate");
+      changedRecipe.setCookingTime("testupdate");
+      changedRecipe.setAmounts(changedList);
+      changedRecipe.setIngredients(changedList);
+      changedRecipe.setInstructions(changedList);
+      changedRecipe.setImage("testupdate");
+      changedRecipe.setTags(changedTags);
+
+      // update the existing recipe with the existing-recipes ID and an updated version of the recipe
+      recipeService.updateRecipe(oldRecipe.getId(), changedRecipe);
+
+      // Retrieve updated Recipe
+      Recipe newTestRecipe = recipeRepository.findById(oldRecipe.getId()).orElse(null);
 
       // check that the updated stuff is not the same since we changed everything
-      assertNotEquals(testRecipe.getTitle(), updatedRecipe.getTitle());
-      assertNotEquals(testRecipe.getShortDescription(), updatedRecipe.getShortDescription());
-      assertNotEquals(testRecipe.getLink(), updatedRecipe.getLink());
-      assertNotEquals(testRecipe.getCookingTime(), updatedRecipe.getCookingTime());
-      assertNotEquals(testRecipe.getAmounts(), updatedRecipe.getAmounts());
-      assertNotEquals(testRecipe.getIngredients(), updatedRecipe.getIngredients());
-      assertNotEquals(testRecipe.getInstructions(), updatedRecipe.getInstructions());
-      assertNotEquals(testRecipe.getImage(), updatedRecipe.getImage());
-      assertNotEquals(testRecipe.getTags(), updatedRecipe.getTags());
+      assertNotNull(newTestRecipe);
+      assertEquals(newTestRecipe.getId(), oldRecipe.getId());
+      assertEquals(newTestRecipe.getTitle(), changedRecipe.getTitle());
+      assertEquals(newTestRecipe.getShortDescription(), changedRecipe.getShortDescription());
+      assertEquals(newTestRecipe.getLink(), changedRecipe.getLink());
+      assertEquals(newTestRecipe.getCookingTime(), changedRecipe.getCookingTime());
+      assertEquals(newTestRecipe.getAmounts(), changedRecipe.getAmounts());
+      assertEquals(newTestRecipe.getIngredients(), changedRecipe.getIngredients());
+      assertEquals(newTestRecipe.getInstructions(), changedRecipe.getInstructions());
+      assertEquals(newTestRecipe.getImage(), changedRecipe.getImage());
+      assertEquals(newTestRecipe.getTags(), changedRecipe.getTags());
+      assertEquals(newTestRecipe.getAuthorID(), oldRecipe.getAuthorID());
     }
 
     @Test
