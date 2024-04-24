@@ -10,7 +10,6 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.RecipeService;
-import ch.uzh.ifi.hase.soprafs24.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -97,7 +95,6 @@ public class RecipeController {
 
   @PutMapping("/users/{userID}/cookbooks/{recipeID}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ResponseBody
   public void editUserRecipe(@PathVariable("recipeID") long recipeID, @RequestBody RecipePutDTO recipePutDTO) {
     
     Recipe recipe = recipeService.findRecipeById(recipeID);
@@ -163,7 +160,6 @@ public class RecipeController {
 
   @DeleteMapping("/users/{userID}/cookbooks/{recipeID}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ResponseBody
   public void deleteRecipe(@PathVariable("recipeID") long recipeID) {
       try {
           Recipe recipeToDelete = recipeRepository.findById(recipeID);
@@ -178,7 +174,6 @@ public class RecipeController {
 
   @PutMapping("groups/{groupID}/cookbooks/{recipeID}")
   @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
   public void removeRecipeFromGroup(@PathVariable("groupID") Long groupID, @PathVariable("recipeID") Long recipeID) {
     try{
       recipeService.removeRecipeFromGroup(groupID, recipeID);
