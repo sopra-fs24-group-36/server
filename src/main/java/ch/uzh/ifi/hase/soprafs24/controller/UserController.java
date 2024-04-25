@@ -99,55 +99,15 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void acceptInvitation(@PathVariable("userID") Long userID, @PathVariable("groupID") Long groupID) {
     
-        User user = userRepository.findById(userID).orElse(null);
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
-        
-        List<Long> invitations = user.getInvitations();
-        List<Long> usergroups = user.getGroups();
-        if (invitations.contains(groupID)) {
-            invitations.remove(groupID); // Remove the groupID from the list -> accept
-            usergroups.add(groupID);
-            userRepository.save(user);
-            userRepository.flush();
-        } else {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invitation not found");
-        }
-
-        Group group = groupRepository.findById(groupID).orElse(null);
-        if (group == null) {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
-        }
-
-        List<Long> members = group.getMembers();
-        if (!members.contains(userID)){
-          members.add(userID);
-          group.setMembers(members);
-          groupRepository.save(group);
-          groupRepository.flush();
-        } else {
-          throw new ResponseStatusException(HttpStatus.CONFLICT);
-        }        
+        userService.userAcceptsInvitation(userID, groupID);
     }
 
     @PostMapping("/users/{userID}/deny/{groupID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void declineInvitation(@PathVariable("userID") Long userID, @PathVariable("groupID") Long groupID) {
-    
-        User user = userRepository.findById(userID).orElse(null);
-        if (user == null) {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
-        
-        List<Long> invitations = user.getInvitations();
-        if (invitations.contains(groupID)) {
-          invitations.remove(groupID); // Remove the groupID from the list -> decline
-          userRepository.save(user);
-          userRepository.flush();
-        } else {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invitation not found");
-        }
+
+        userService.userDeclinesInvitation(userID, groupID);
+
     }
 
     @GetMapping("/users/{userID}/invitations")

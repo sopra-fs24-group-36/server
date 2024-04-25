@@ -3,8 +3,10 @@ package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
+import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,12 +32,17 @@ public class UserServiceIntegrationTest {
   @Autowired
   private UserRepository userRepository;
 
+    @Qualifier("groupRepository")
+    @Autowired
+    private GroupRepository groupRepository;
+
   @Autowired
   private UserService userService;
 
   @BeforeEach
   public void setup() {
     userRepository.deleteAll();
+    groupRepository.deleteAll();
   }
 
 
@@ -504,5 +513,243 @@ public class UserServiceIntegrationTest {
         assertEquals(testUser.getShoppingList(), shoppingList);
 
     }
+
+
+    //  test userDeclinesInvitation method //
+    @Test
+    public void userDeclinesInvitation_validInputs_success() {
+
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(30L);
+        testUser.setInvitations(invitations);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        User user = userService.userDeclinesInvitation(testUser.getId(), 30L);
+
+        assertEquals(new ArrayList<>(), user.getInvitations());
+    }
+
+    @Test
+    public void userDeclinesInvitation_inValidUser_throwsException() {
+
+        assertThrows(ResponseStatusException.class, () -> userService.userDeclinesInvitation(1L, 30L));
+    }
+
+
+    @Test
+    public void userDeclinesInvitation_inInvitationNotFound_throwsException() {
+
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(50L);
+        testUser.setInvitations(invitations);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        assertThrows(ResponseStatusException.class, () -> userService.userDeclinesInvitation(1L, 30L));
+    }
+
+
+    //  test userAcceptsInvitation method //
+    @Test
+    public void userAcceptsInvitation_validInputs_success() {
+
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        Group group = new Group();
+        group.setName("name");
+        List<Long> members = new ArrayList<>();
+        members.add(testUser.getId());
+        group.setMembers(members);
+
+        groupRepository.save(group);
+        groupRepository.flush();
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(group.getId());
+        testUser.setInvitations(invitations);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(80L);
+        testUser.setGroups(groups);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        User user = userService.userAcceptsInvitation(testUser.getId(), group.getId());
+
+        groups.add(group.getId());
+
+        assertEquals(new ArrayList<>(), user.getInvitations());
+        assertIterableEquals(user.getGroups(), groups);
+    }
+
+    @Test
+    public void userAcceptsInvitation_inValidUser_throwsException() {
+
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        Group group = new Group();
+        group.setName("name");
+        List<Long> members = new ArrayList<>();
+        members.add(testUser.getId());
+        group.setMembers(members);
+
+        groupRepository.save(group);
+        groupRepository.flush();
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(8L);
+        testUser.setInvitations(invitations);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(80L);
+        testUser.setGroups(groups);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        assertThrows(ResponseStatusException.class, () -> userService.userAcceptsInvitation(5L, group.getId()));
+    }
+
+    @Test
+    public void userAcceptsInvitation_inValidInvitation_throwsException() {
+
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        Group group = new Group();
+        group.setName("name");
+        List<Long> members = new ArrayList<>();
+        members.add(testUser.getId());
+        group.setMembers(members);
+
+        groupRepository.save(group);
+        groupRepository.flush();
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(8L);
+        testUser.setInvitations(invitations);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(80L);
+        testUser.setGroups(groups);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        assertThrows(ResponseStatusException.class, () -> userService.userAcceptsInvitation(testUser.getId(), group.getId()));
+    }
+
+    @Test
+    public void userAcceptsInvitation_inValidGroup_throwsException() {
+
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        Group group = new Group();
+        group.setName("name");
+        List<Long> members = new ArrayList<>();
+        members.add(testUser.getId());
+        group.setMembers(members);
+
+        groupRepository.save(group);
+        groupRepository.flush();
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(group.getId());
+        testUser.setInvitations(invitations);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(80L);
+        testUser.setGroups(groups);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        assertThrows(ResponseStatusException.class, () -> userService.userAcceptsInvitation(testUser.getId(), 4L));
+    }
+
+    @Test
+    public void userAcceptsInvitation_inValidUserAlreadyInGroup_throwsException() {
+
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email.email@email.com");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        Group group = new Group();
+        group.setName("name");
+        List<Long> members = new ArrayList<>();
+        members.add(testUser.getId());
+        group.setMembers(members);
+
+        groupRepository.save(group);
+        groupRepository.flush();
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(8L);
+        testUser.setInvitations(invitations);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(group.getId());
+        testUser.setGroups(groups);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        assertThrows(ResponseStatusException.class, () -> userService.userAcceptsInvitation(testUser.getId(), group.getId()));
+    }
+
 
 }

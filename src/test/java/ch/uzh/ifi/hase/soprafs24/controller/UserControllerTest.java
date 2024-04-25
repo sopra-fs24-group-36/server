@@ -243,7 +243,6 @@ public class UserControllerTest {
     @Test
     public void getUser_InvalidInput() throws Exception {
 
-
         doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "userID was not found"))
                 .when(userService).getTheUser(Mockito.any());
 
@@ -297,27 +296,9 @@ public class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+
     @Test
-    public void acceptInvitation_validInput() throws Exception{
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("test");
-        user.setName("test");
-        user.setPassword("test");
-        user.setEmail("test");
-        user.setGroups(new ArrayList<>());
-
-        Group group = new Group();
-        group.setId(2L);
-        group.setName("test");
-        group.setMembers(new ArrayList<>());
-
-        List<Long> invitations = new ArrayList<>();
-        invitations.add(2L);
-        user.setInvitations(invitations);
-
-        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+    public void acceptInvitation_validInput() throws Exception {
 
         MockHttpServletRequestBuilder postRequest = post("/users/1/accept/2")
                 .contentType(MediaType.APPLICATION_JSON);
@@ -327,25 +308,10 @@ public class UserControllerTest {
     }
 
     @Test
-    public void acceptInvitation_invalidInput_throwsException() throws Exception{
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("test");
-        user.setName("test");
-        user.setPassword("test");
-        user.setEmail("test");
-        user.setGroups(new ArrayList<>());
+    public void acceptInvitation_InValidInput_NotFound() throws Exception {
 
-        Group group = new Group();
-        group.setId(2L);
-        group.setName("test");
-        group.setMembers(new ArrayList<>());
-
-        List<Long> invitations = new ArrayList<>();
-        user.setInvitations(invitations);
-
-        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found"))
+                .when(userService).userAcceptsInvitation(Mockito.any(), Mockito.any());
 
         MockHttpServletRequestBuilder postRequest = post("/users/1/accept/2")
                 .contentType(MediaType.APPLICATION_JSON);
@@ -355,28 +321,10 @@ public class UserControllerTest {
     }
 
     @Test
-    public void acceptInvitation_invalidInput_conflict() throws Exception{
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("test");
-        user.setName("test");
-        user.setPassword("test");
-        user.setEmail("test");
-        user.setGroups(new ArrayList<>());
+    public void acceptInvitation_InValidInput_Conflict() throws Exception {
 
-        Group group = new Group();
-        group.setId(2L);
-        group.setName("test");
-        List<Long> members = new ArrayList<>();
-        members.add(1L);
-        group.setMembers(members);
-
-        List<Long> invitations = new ArrayList<>();
-        invitations.add(2L);
-        user.setInvitations(invitations);
-
-        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
+        doThrow(new ResponseStatusException(HttpStatus.CONFLICT, "user already in group"))
+                .when(userService).userAcceptsInvitation(Mockito.any(), Mockito.any());
 
         MockHttpServletRequestBuilder postRequest = post("/users/1/accept/2")
                 .contentType(MediaType.APPLICATION_JSON);
@@ -385,64 +333,9 @@ public class UserControllerTest {
                 .andExpect(status().isConflict());
     }
 
-    @Test
-    public void acceptInvitation_invalidInput_noUser() throws Exception{
-
-        Group group = new Group();
-        group.setId(2L);
-        group.setName("test");
-        group.setMembers(new ArrayList<>());
-
-
-        given(userRepository.findById(Mockito.anyLong())).willReturn(null);
-        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
-
-        MockHttpServletRequestBuilder postRequest = post("/users/1/accept/2")
-                .contentType(MediaType.APPLICATION_JSON);
-
-        mockMvc.perform(postRequest)
-                .andExpect(status().isNotFound());
-    }
 
     @Test
-    public void acceptInvitation_invalidInput_noGroup() throws Exception{
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("test");
-        user.setName("test");
-        user.setPassword("test");
-        user.setEmail("test");
-        user.setGroups(new ArrayList<>());
-
-        List<Long> invitations = new ArrayList<>();
-        invitations.add(2L);
-        user.setInvitations(invitations);
-
-        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
-
-        MockHttpServletRequestBuilder postRequest = post("/users/1/accept/2")
-                .contentType(MediaType.APPLICATION_JSON);
-
-        mockMvc.perform(postRequest)
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void declineInvitation_validInput() throws Exception{
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("test");
-        user.setName("test");
-        user.setPassword("test");
-        user.setEmail("test");
-        user.setGroups(new ArrayList<>());
-
-        List<Long> invitations = new ArrayList<>();
-        invitations.add(2L);
-        user.setInvitations(invitations);
-
-        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+    public void declineInvitation_validInput() throws Exception {
 
         MockHttpServletRequestBuilder postRequest = post("/users/1/deny/2")
                 .contentType(MediaType.APPLICATION_JSON);
@@ -452,32 +345,12 @@ public class UserControllerTest {
     }
 
     @Test
-    public void declineInvitation_invalidInput_UserNotFound() throws Exception{
-        given(userRepository.findById(Mockito.anyLong())).willReturn(null);
+    public void declineInvitation_InValidInput() throws Exception {
 
-        MockHttpServletRequestBuilder getRequest = post("/users/1/deny/2")
-                .contentType(MediaType.APPLICATION_JSON);
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "not found"))
+                .when(userService).userDeclinesInvitation(Mockito.any(), Mockito.any());
 
-        mockMvc.perform(getRequest)
-                .andExpect(status().isNotFound());        
-    }
-
-    @Test
-    public void declineInvitation_invalidInput_throwsException() throws Exception{
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("test");
-        user.setName("test");
-        user.setPassword("test");
-        user.setEmail("test");
-        user.setGroups(new ArrayList<>());
-
-        List<Long> invitations = new ArrayList<>();
-        user.setInvitations(invitations);
-
-        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-
-        MockHttpServletRequestBuilder postRequest = post("/users/1/deny/2")
+        MockHttpServletRequestBuilder postRequest = post("/users/1/decline/2")
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(postRequest)
