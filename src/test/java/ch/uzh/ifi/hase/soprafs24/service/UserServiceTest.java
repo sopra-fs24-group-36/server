@@ -1,7 +1,9 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,6 +23,9 @@ public class UserServiceTest {
 
   @Mock
   private UserRepository userRepository;
+
+  @Mock
+  private GroupRepository groupRepository;
 
   @InjectMocks
   private UserService userService;
@@ -214,6 +221,225 @@ public class UserServiceTest {
 
 
         assertThrows(ResponseStatusException.class, () -> userService.updateTheUser(1L, update));
+    }
+
+
+    @Test
+    public void userDeclinesInvitation_validInput_success() {
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(2L);
+        testUser.setInvitations(invitations);
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+
+        userService.userDeclinesInvitation(testUser.getId(), 2L);
+
+        assertEquals(testUser.getInvitations(), new ArrayList<>());
+
+    }
+
+    @Test
+    public void userDeclinesInvitation_inValidUser_throwsException() {
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(2L);
+        testUser.setInvitations(invitations);
+
+        Mockito.when(userRepository.findById(3L)).thenReturn(null);
+
+        assertThrows(ResponseStatusException.class, () -> userService.userDeclinesInvitation(3L, 2L));
+    }
+
+    @Test
+    public void userDeclinesInvitation_inValidInvitation_throwsException() {
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(2L);
+        testUser.setInvitations(invitations);
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+
+        assertThrows(ResponseStatusException.class, () -> userService.userDeclinesInvitation(testUser.getId(), 4L));
+    }
+
+    @Test
+    public void userDeclinesInvitation_inValidInvitationNull_throwsException() {
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+
+        assertThrows(ResponseStatusException.class, () -> userService.userDeclinesInvitation(testUser.getId(), 4L));
+    }
+
+
+    @Test
+    public void userAcceptsInvitation_validInput_success() {
+
+        Group group = new Group();
+        group.setName("name");
+        group.setId(2L);
+        List<Long> members = new ArrayList<>();
+        members.add(50L);
+        group.setMembers(members);
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(group.getId());
+        testUser.setInvitations(invitations);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(80L);
+        testUser.setGroups(groups);
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+        Mockito.when(groupRepository.findById(Mockito.any())).thenReturn(Optional.of(group));
+
+        userService.userAcceptsInvitation(testUser.getId(), group.getId());
+
+        members.add(testUser.getId());
+        groups.add(group.getId());
+
+        assertEquals(new ArrayList<>(), testUser.getInvitations());
+        assertEquals(groups, testUser.getGroups());
+        assertEquals(members, group.getMembers());
+    }
+
+
+    @Test
+    public void userAcceptsInvitation_inValidUser_throwsException() {
+
+        Group group = new Group();
+        group.setName("name");
+        group.setId(2L);
+        List<Long> members = new ArrayList<>();
+        members.add(50L);
+        group.setMembers(members);
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(group.getId());
+        testUser.setInvitations(invitations);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(80L);
+        testUser.setGroups(groups);
+
+        Mockito.when(userRepository.findById(3L)).thenReturn(null);
+        Mockito.when(groupRepository.findById(Mockito.any())).thenReturn(Optional.of(group));
+
+        assertThrows(ResponseStatusException.class, () -> userService.userAcceptsInvitation(3L, group.getId()));
+    }
+
+    @Test
+    public void userAcceptsInvitation_inValidInvitationNull_throwsException() {
+
+        Group group = new Group();
+        group.setName("name");
+        group.setId(2L);
+        List<Long> members = new ArrayList<>();
+        members.add(50L);
+        group.setMembers(members);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(80L);
+        testUser.setGroups(groups);
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+        Mockito.when(groupRepository.findById(Mockito.any())).thenReturn(Optional.of(group));
+
+        assertThrows(ResponseStatusException.class, () -> userService.userAcceptsInvitation(testUser.getId(), group.getId()));
+    }
+
+    @Test
+    public void userAcceptsInvitation_inValidInvitation_throwsException() {
+
+        Group group = new Group();
+        group.setName("name");
+        group.setId(2L);
+        List<Long> members = new ArrayList<>();
+        members.add(50L);
+        group.setMembers(members);
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(30L);
+        testUser.setInvitations(invitations);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(80L);
+        testUser.setGroups(groups);
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+        Mockito.when(groupRepository.findById(Mockito.any())).thenReturn(Optional.of(group));
+
+        assertThrows(ResponseStatusException.class, () -> userService.userAcceptsInvitation(testUser.getId(), group.getId()));
+    }
+
+    @Test
+    public void userAcceptsInvitation_inValidGroup_throwsException() {
+
+        Group group = new Group();
+        group.setName("name");
+        group.setId(2L);
+        List<Long> members = new ArrayList<>();
+        members.add(50L);
+        group.setMembers(members);
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(30L);
+        testUser.setInvitations(invitations);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(80L);
+        testUser.setGroups(groups);
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+        Mockito.when(groupRepository.findById(5L)).thenReturn(null);
+
+        assertThrows(ResponseStatusException.class, () -> userService.userAcceptsInvitation(testUser.getId(), 5L));
+    }
+
+    @Test
+    public void userAcceptsInvitation_inValidMembersNull_throwsException() {
+
+        Group group = new Group();
+        group.setName("name");
+        group.setId(2L);
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(30L);
+        testUser.setInvitations(invitations);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(80L);
+        testUser.setGroups(groups);
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+        Mockito.when(groupRepository.findById(5L)).thenReturn(Optional.of(group));
+
+        assertThrows(ResponseStatusException.class, () -> userService.userAcceptsInvitation(testUser.getId(), 5L));
+    }
+
+
+    @Test
+    public void userAcceptsInvitation_inValidUserAlreadyInGroup_throwsException() {
+
+        Group group = new Group();
+        group.setName("name");
+        group.setId(2L);
+        List<Long> members = new ArrayList<>();
+        members.add(testUser.getId());
+        group.setMembers(members);
+
+        List<Long> invitations = new ArrayList<>();
+        invitations.add(30L);
+        testUser.setInvitations(invitations);
+
+        List<Long> groups = new ArrayList<>();
+        groups.add(80L);
+        testUser.setGroups(groups);
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+        Mockito.when(groupRepository.findById(Mockito.any())).thenReturn(Optional.of(group));
+
+        assertThrows(ResponseStatusException.class, () -> userService.userAcceptsInvitation(testUser.getId(), group.getId()));
     }
 
 

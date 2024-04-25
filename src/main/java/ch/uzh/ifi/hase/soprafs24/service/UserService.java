@@ -2,8 +2,10 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
+import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -26,9 +29,12 @@ public class UserService {
 
   private final UserRepository userRepository;
 
+  private final GroupRepository groupRepository;
+
   @Autowired
-  public UserService(@Qualifier("userRepository") UserRepository userRepository) {
+  public UserService(@Qualifier("userRepository") UserRepository userRepository, GroupRepository groupRepository) {
     this.userRepository = userRepository;
+    this.groupRepository = groupRepository;
   }
 
   //create a new user and save it to the database
@@ -149,6 +155,86 @@ public class UserService {
         }
 
     }
+
+
+    public User userDeclinesInvitation (Long userId, Long groupId) {
+
+        //get the invitations from user, throw error if null
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        //remove the groupId of invitations from user
+        List<Long> invitations = user.getInvitations();
+        if (invitations == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invitation not found");
+        }
+
+        if (invitations.contains(groupId)) {
+            invitations.remove(groupId);
+            user.setInvitations(invitations);
+            userRepository.save(user);
+            userRepository.flush();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invitation not found");
+        }
+
+        return user;
+
+    }
+
+
+    public User userAcceptsInvitation (Long userId, Long groupId) {
+
+        //get the user which accepted the invitation
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        //remove the invitation of groupId from the user
+        //add the group to the list of groups the user is a member of
+        List<Long> invitations = user.getInvitations();
+        List<Long> userGroups = user.getGroups();
+        //check that invitations exist
+        if (invitations == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invitation not found");
+        }
+        if (invitations.contains(groupId)) {
+            invitations.remove(groupId);
+            user.setInvitations(invitations);
+            userGroups.add(groupId);
+            user.setGroups(userGroups);
+            userRepository.save(user);
+            userRepository.flush();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invitation not found");
+        }
+
+        //check that group exists
+        Group group = groupRepository.findById(groupId).orElse(null);
+        if (group == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
+        }
+
+        //add user as member of group
+        List<Long> members = group.getMembers();
+        if (members == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Members are null");
+        }
+        if (!members.contains(userId)) {
+            members.add(userId);
+            group.setMembers(members);
+            groupRepository.save(group);
+            groupRepository.flush();
+        } else {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "user already in group");
+        }
+        return user;
+    }
+
+
 
 
     //throw an error if the user does not already exist (if username or password or both provided is wrong)
