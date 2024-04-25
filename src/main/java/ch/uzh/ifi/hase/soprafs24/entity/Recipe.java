@@ -4,7 +4,6 @@ import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity

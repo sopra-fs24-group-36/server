@@ -97,7 +97,6 @@ public class UserController {
 
     @PostMapping("/users/{userID}/accept/{groupID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ResponseBody
     public void acceptInvitation(@PathVariable("userID") Long userID, @PathVariable("groupID") Long groupID) {
     
         User user = userRepository.findById(userID).orElse(null);
@@ -134,7 +133,6 @@ public class UserController {
 
     @PostMapping("/users/{userID}/deny/{groupID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ResponseBody
     public void declineInvitation(@PathVariable("userID") Long userID, @PathVariable("groupID") Long groupID) {
     
         User user = userRepository.findById(userID).orElse(null);
@@ -209,6 +207,7 @@ public class UserController {
 
     @GetMapping("/users/{userID}/groups")
     @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     public List<Map<String, Object>> getUserGroups(@PathVariable("userID") Long userID) {
 
       List<Map<String, Object>> returnlistofmaps = new ArrayList<>();

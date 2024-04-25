@@ -14,7 +14,6 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.mapstruct.*;

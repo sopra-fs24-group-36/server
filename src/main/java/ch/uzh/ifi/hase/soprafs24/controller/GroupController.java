@@ -26,7 +26,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -84,7 +83,6 @@ public class GroupController {
   // delete user
   @DeleteMapping("/groups/{groupID}/{userID}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ResponseBody
   public void deleteUserFromGroup(@PathVariable Long groupID, @PathVariable long userID) {
       // Check if the user exists
       Optional<User> userOptional = userRepository.findById(userID);
@@ -99,7 +97,6 @@ public class GroupController {
 
   @PostMapping("/groups/{groupID}/invitations")
   @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
   public void inviteUserToGroup(@PathVariable("groupID") Long groupID, @RequestBody UserPostDTO userPostDTO) {
 
     groupService.inviteUserToGroup(groupID, userPostDTO);

@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -316,23 +315,241 @@ public class RecipeServiceIntegrationTest {
     @Test
     public void removeRecipeFromGroup_validInputs_success(){
 
+      //create new recipe
+      Recipe recipe = new Recipe();
+      recipeRepository.save(recipe);
+
+        //create cookbook and set status
       Cookbook cookbook = new Cookbook();
       cookbook.setStatus(CookbookStatus.GROUP);
+
+        //add recipe to cookbook
       List<Long> recipes = new ArrayList<>();
-      recipes.add(20L);
+      recipes.add(recipe.getId());
       cookbook.setRecipes(recipes);
       cookbookRepository.save(cookbook);
-      cookbookRepository.flush();
 
+        //create group and set cookbook
       Group group = new Group();
-      group.setName("test");
+      group.setName("name");
       group.setCookbook(cookbook);
-
       groupRepository.save(group);
-      groupRepository.flush();
 
-      Group g = recipeService.removeRecipeFromGroup(group.getId(), 20L);
-      
-      assertEquals(new ArrayList<>(), g.getCookbook().getRecipes());;
+        //add groupId to recipe
+      List<Long> groups = new ArrayList<>();
+      groups.add(group.getId());
+      recipe.setGroups(groups);
+      recipeRepository.save(recipe);
+
+      groupRepository.flush();
+      cookbookRepository.flush();
+      recipeRepository.flush();
+
+      //call method
+      Group g = recipeService.removeRecipeFromGroup(group.getId(), recipe.getId());
+
+      //groupCookbook does not contain recipes anymore
+      assertEquals(new ArrayList<>(), g.getCookbook().getRecipes());
+
     }
+
+    @Test
+    public void removeRecipeFromGroup_GroupNotFound(){
+
+        //create new recipe
+        Recipe recipe = new Recipe();
+        recipeRepository.save(recipe);
+
+        //create cookbook and set status
+        Cookbook cookbook = new Cookbook();
+        cookbook.setStatus(CookbookStatus.GROUP);
+
+        //add recipe to cookbook
+        List<Long> recipes = new ArrayList<>();
+        recipes.add(recipe.getId());
+        cookbook.setRecipes(recipes);
+        cookbookRepository.save(cookbook);
+
+        //create group and set cookbook
+        Group group = new Group();
+        group.setName("name");
+        group.setCookbook(cookbook);
+        groupRepository.save(group);
+
+        //add groupId to recipe
+        List<Long> groups = new ArrayList<>();
+        groups.add(group.getId());
+        recipe.setGroups(groups);
+        recipeRepository.save(recipe);
+
+        groupRepository.flush();
+        cookbookRepository.flush();
+        recipeRepository.flush();
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(2L, recipe.getId()));
+
+    }
+
+    @Test
+    public void removeRecipeFromGroup_RecipeNull(){
+
+        //create new recipe
+        Recipe recipe = new Recipe();
+        recipeRepository.save(recipe);
+
+        //create cookbook and set status
+        Cookbook cookbook = new Cookbook();
+        cookbook.setStatus(CookbookStatus.GROUP);
+
+        cookbookRepository.save(cookbook);
+
+        //create group and set cookbook
+        Group group = new Group();
+        group.setName("name");
+        group.setCookbook(cookbook);
+        groupRepository.save(group);
+
+        //add groupId to recipe
+        List<Long> groups = new ArrayList<>();
+        groups.add(group.getId());
+        recipe.setGroups(groups);
+        recipeRepository.save(recipe);
+
+        groupRepository.flush();
+        cookbookRepository.flush();
+        recipeRepository.flush();
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(group.getId(), recipe.getId()));
+
+    }
+
+    @Test
+    public void removeRecipeFromGroup_RecipeNotInCookbook(){
+
+        //create new recipe
+        Recipe recipe = new Recipe();
+        recipeRepository.save(recipe);
+
+        //create cookbook and set status
+        Cookbook cookbook = new Cookbook();
+        cookbook.setStatus(CookbookStatus.GROUP);
+
+        //add recipe to cookbook
+        List<Long> recipes = new ArrayList<>();
+        recipes.add(recipe.getId());
+        cookbook.setRecipes(recipes);
+        cookbookRepository.save(cookbook);
+
+        //create group and set cookbook
+        Group group = new Group();
+        group.setName("name");
+        group.setCookbook(cookbook);
+        groupRepository.save(group);
+
+        //add groupId to recipe
+        List<Long> groups = new ArrayList<>();
+        groups.add(group.getId());
+        recipe.setGroups(groups);
+        recipeRepository.save(recipe);
+
+        groupRepository.flush();
+        cookbookRepository.flush();
+        recipeRepository.flush();
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(group.getId(), 8L));
+    }
+
+    @Test
+    public void removeRecipeFromGroup_RecipeNotFound(){
+
+        //create cookbook and set status
+        Cookbook cookbook = new Cookbook();
+        cookbook.setStatus(CookbookStatus.GROUP);
+        cookbookRepository.save(cookbook);
+
+        //create group and set cookbook
+        Group group = new Group();
+        group.setName("name");
+        group.setCookbook(cookbook);
+        groupRepository.save(group);
+
+        groupRepository.flush();
+        cookbookRepository.flush();
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(group.getId(), 1L));
+    }
+
+
+    @Test
+    public void removeRecipeFromGroup_GroupNull(){
+
+        //create new recipe
+        Recipe recipe = new Recipe();
+        recipeRepository.save(recipe);
+
+        //create cookbook and set status
+        Cookbook cookbook = new Cookbook();
+        cookbook.setStatus(CookbookStatus.GROUP);
+
+        //add recipe to cookbook
+        List<Long> recipes = new ArrayList<>();
+        recipes.add(recipe.getId());
+        cookbook.setRecipes(recipes);
+        cookbookRepository.save(cookbook);
+
+        //create group and set cookbook
+        Group group = new Group();
+        group.setName("name");
+        group.setCookbook(cookbook);
+        groupRepository.save(group);
+
+        groupRepository.flush();
+        cookbookRepository.flush();
+        recipeRepository.flush();
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(group.getId(), recipe.getId()));
+    }
+
+    @Test
+    public void removeRecipeFromGroup_GroupNotInRecipe(){
+
+        //create new recipe
+        Recipe recipe = new Recipe();
+        recipeRepository.save(recipe);
+
+        //create cookbook and set status
+        Cookbook cookbook = new Cookbook();
+        cookbook.setStatus(CookbookStatus.GROUP);
+
+        //add recipe to cookbook
+        List<Long> recipes = new ArrayList<>();
+        recipes.add(recipe.getId());
+        cookbook.setRecipes(recipes);
+        cookbookRepository.save(cookbook);
+
+        //create group and set cookbook
+        Group group = new Group();
+        group.setName("name");
+        group.setCookbook(cookbook);
+        groupRepository.save(group);
+
+        //add groupId to recipe
+        List<Long> groups = new ArrayList<>();
+        groups.add(group.getId());
+        recipe.setGroups(groups);
+        recipeRepository.save(recipe);
+
+        groupRepository.flush();
+        cookbookRepository.flush();
+        recipeRepository.flush();
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(100L, recipe.getId()));
+    }
+
 }
