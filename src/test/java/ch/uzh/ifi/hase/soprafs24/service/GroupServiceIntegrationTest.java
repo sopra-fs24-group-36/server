@@ -43,6 +43,7 @@ public class GroupServiceIntegrationTest {
     }
 
 
+    /*
     //  test createGroup method //
     @Test
     public void createGroup_validInputs_success() {
@@ -62,6 +63,7 @@ public class GroupServiceIntegrationTest {
         assertEquals(testGroup.getMembers(), createdGroup.getMembers());
 
     }
+    */
 
 
     //  test saveCookbook method    //

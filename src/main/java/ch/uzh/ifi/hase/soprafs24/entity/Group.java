@@ -21,7 +21,6 @@ public class Group implements Serializable {
   @Column(name = "members")
   private List<Long> members;
 
-
   @ElementCollection
   @Column(name = "members_names")
   private List<String> membersNames;
@@ -34,6 +33,7 @@ public class Group implements Serializable {
   private ShoppingList shoppingList;
 
   @Lob
+  @Column(name = "image")
   private String image;
 
   public Long getId() {

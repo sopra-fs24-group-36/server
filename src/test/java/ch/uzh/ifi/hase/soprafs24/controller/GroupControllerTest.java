@@ -29,6 +29,7 @@ import java.util.*;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -82,7 +83,7 @@ public class GroupControllerTest {
         Long userID = 1L;
 
         given(userRepository.findById(userID)).willReturn(Optional.of(user));
-        given(groupService.createGroup(Mockito.any())).willReturn(group);
+        given(groupService.createGroup(Mockito.anyLong(), Mockito.any(Group.class))).willReturn(group);
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder postRequest = post("/groups")
@@ -115,19 +116,7 @@ public class GroupControllerTest {
         members.add("user2");
         groupPostDTO.setMembersNames(members);
 
-        User user = new User();
-        user.setId(1L);
-        List<Long> l = new ArrayList<>();
-        user.setGroups(l);
-
-        User user2 = new User();
-        user2.setInvitations(new ArrayList<>());
-
-        Long userID = 1L;
-
-        given(userRepository.findByEmail(Mockito.anyString())).willReturn(user2);
-        given(userRepository.findById(userID)).willReturn(Optional.of(user));
-        given(groupService.createGroup(Mockito.any())).willReturn(group);
+        given(groupService.createGroup(Mockito.anyLong(), Mockito.any(Group.class))).willReturn(group);
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder postRequest = post("/groups")
@@ -157,8 +146,7 @@ public class GroupControllerTest {
         groupPostDTO.setName("name");
         groupPostDTO.setCreator(1L);
 
-        given(userRepository.findById(Mockito.anyLong())).willReturn(null);
-        given(groupService.createGroup(Mockito.any())).willReturn(group);
+        given(groupService.createGroup(Mockito.anyLong(), Mockito.any(Group.class))).willThrow(ResponseStatusException.class);
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder postRequest = post("/groups")
@@ -167,7 +155,7 @@ public class GroupControllerTest {
 
         // then
         mockMvc.perform(postRequest)
-                .andExpect(status().isNotFound());
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -177,9 +165,7 @@ public class GroupControllerTest {
         groupPostDTO.setName("name");
         groupPostDTO.setCreator(1L);
 
-        Long userID = 1L;
-
-        given(userRepository.findById(userID)).willReturn(Optional.empty());
+        given(groupService.createGroup(Mockito.anyLong(), Mockito.any(Group.class))).willThrow(ResponseStatusException.class);
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder postRequest = post("/groups")
@@ -188,8 +174,7 @@ public class GroupControllerTest {
 
         // then
         mockMvc.perform(postRequest)
-                .andExpect(status().isNotFound());
-
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -210,7 +195,7 @@ public class GroupControllerTest {
         Long userID = 1L;
 
         given(userRepository.findById(userID)).willReturn(Optional.of(user));
-        given(groupService.createGroup(Mockito.any()))
+        given(groupService.createGroup(Mockito.anyLong(), Mockito.any(Group.class)))
                 .willThrow(new IllegalStateException("Creating a group failed because the details were incomplete"));
 
         // when/then -> do the request + validate the result
@@ -222,7 +207,6 @@ public class GroupControllerTest {
         mockMvc.perform(postRequest)
                 .andExpect(status().isConflict());
     }
-
 
     //  test for Post /groups/groupId/userId mapping   //
     @Test
@@ -364,9 +348,9 @@ public class GroupControllerTest {
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setEmail("test");
 
-        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(group));
-        given(userRepository.findByEmail(Mockito.anyString())).willReturn(null);
-        
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
+                .when(groupService).inviteUserToGroup(Mockito.anyLong(), Mockito.any(UserPostDTO.class));
+
         MockHttpServletRequestBuilder postRequest = post("/groups/1/invitations")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(userPostDTO));
@@ -381,7 +365,8 @@ public class GroupControllerTest {
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setEmail("test");
 
-        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
+                .when(groupService).inviteUserToGroup(Mockito.anyLong(), Mockito.any(UserPostDTO.class));
         
         MockHttpServletRequestBuilder postRequest = post("/groups/1/invitations")
                 .contentType(MediaType.APPLICATION_JSON)

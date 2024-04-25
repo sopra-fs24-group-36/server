@@ -34,17 +34,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class GroupController {
 
   private final GroupService groupService;
-  private final CookbookService cookbookService;
   private final UserRepository userRepository;
   private final GroupRepository groupRepository;
-  private final ShoppingListService shoppingListService;
 
-  GroupController(GroupService groupService, CookbookService cookbookService, UserRepository userRepository, GroupRepository groupRepository, ShoppingListService shoppingListService) {
+  GroupController(GroupService groupService, UserRepository userRepository, GroupRepository groupRepository) {
     this.groupService = groupService;
-    this.cookbookService = cookbookService;
     this.userRepository = userRepository;
     this.groupRepository = groupRepository;
-    this.shoppingListService = shoppingListService;
   }
 
   //here come the post/get/put mappings
@@ -54,58 +50,16 @@ public class GroupController {
   @ResponseBody
   public GroupDTO createGroup(@RequestBody GroupPostDTO groupPostDTO) {
 
-    Long creator = groupPostDTO.getCreator();
-    User u = userRepository.findById(creator).orElse(null);
-    if (u == null) {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Creator with ID: "+creator+" was not found");}
-
     Group groupInput = DTOMapper.INSTANCE.convertGroupPostDTOtoEntity(groupPostDTO);
 
-    Group createdGroup = groupService.createGroup(groupInput);
+    Long creator = groupPostDTO.getCreator();
 
-    List<Long> groups = u.getGroups();
-    groups.add(createdGroup.getId());
-    u.setGroups(groups);
-
-    List<Long> members = new ArrayList<>();
-    members.add(u.getId());
-    createdGroup.setMembers(members);
-
-    List<String> membersToAdd = groupInput.getMembersNames();
-    List<Long> groupMembers = createdGroup.getMembers();
-    //something to add the user who created it
-
-    for(String member:membersToAdd){
-      if(userRepository.findByEmail(member)==null){
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found, " + member);
-      }
+    try{
+      Group createdGroup = groupService.createGroup(creator, groupInput);
+      return DTOMapper.INSTANCE.convertEntityToGroupDTO(createdGroup);
+    } catch (Exception e){
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Creator not found or User in List not found!");
     }
-
-    for(String member:membersToAdd){
-      User user = userRepository.findByEmail(member);
-      List<Long> invitations = user.getInvitations();
-      invitations.add(createdGroup.getId());
-      user.setInvitations(invitations);
-      userRepository.save(user);
-      userRepository.flush();
-    }
-
-    //create the group cookbook as soon as a new group is created
-    Cookbook cookbook = new Cookbook();
-    cookbook.setStatus(CookbookStatus.GROUP);
-    Cookbook newCookbook = cookbookService.createCookbook(cookbook);
-
-    ShoppingList shoppingList = new ShoppingList();
-    ShoppingList newShoppingList = shoppingListService.createShoppingList(shoppingList);
-
-    groupService.saveShoppingList(createdGroup, newShoppingList);
-    
-    //set the ID of the cookbook to the GROUP it belongs to
-    groupService.saveCookbook(createdGroup, newCookbook);
-
-    groupRepository.save(createdGroup);
-    groupRepository.flush();
-
-    return DTOMapper.INSTANCE.convertEntityToGroupDTO(createdGroup);
   }
 
   // add user
@@ -148,24 +102,8 @@ public class GroupController {
   @ResponseBody
   public void inviteUserToGroup(@PathVariable("groupID") Long groupID, @RequestBody UserPostDTO userPostDTO) {
 
-    Group group = groupRepository.findById(groupID).orElse(null);
-    if (group == null){
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
-    }
-    
-    String email = userPostDTO.getEmail();
+    groupService.inviteUserToGroup(groupID, userPostDTO);
 
-    User user = userRepository.findByEmail(email);
-    if (user == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-    }
-    
-    List<Long> invitations = user.getInvitations();
-    invitations.add(groupID);
-    user.setInvitations(invitations);
-
-    userRepository.save(user);
-    userRepository.flush();
   }
 
   @GetMapping("/groups/{groupID}")
