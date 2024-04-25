@@ -64,87 +64,70 @@ public class RecipeControllerTest {
   //  test the /recipes POST Mapping  //
   @Test
   public void createrecipe_validInput_recipeCreated() throws Exception {
-    //all fields required by recipe
+    // Step 1: Setup - Create a Recipe object with all required fields populated.
     Recipe recipe = new Recipe();
     recipe.setId(1L);
     recipe.setTitle("testrecipename");
     recipe.setShortDescription("testdescription");
     recipe.setLink("testlink");
     recipe.setCookingTime("testtime");
+    recipe.setImage("testimage");
+    recipe.setAuthorID(1L);
 
+    // Adding amounts as a list to simulate a real user input.
     List<String> amounts = new ArrayList<>();
     amounts.add("testamount 1");
     amounts.add("testamount 2");
     recipe.setAmounts(amounts);
 
+    // Adding ingredients as a list.
     List<String> ingredients = new ArrayList<>();
     ingredients.add("testingredient 1");
     ingredients.add("testingredient 2");
     recipe.setIngredients(ingredients);
 
+    // Adding instructions as a list.
     List<String> instructions = new ArrayList<>();
     instructions.add("testinstruction 1");
     instructions.add("testinstruction 2");
     recipe.setInstructions(instructions);
 
-    recipe.setImage("testimage");
-
+    // Adding tags to represent the recipe.
     List<RecipeTags> tags = new ArrayList<>();
     tags.add(RecipeTags.VEGAN);
     tags.add(RecipeTags.VEGETARIAN);
     recipe.setTags(tags);
 
+    // Adding group IDs to simulate the recipe being created to multiple groups.
     List<Long> groupIDs = new ArrayList<>();
     groupIDs.add(1L);
     groupIDs.add(2L);
     recipe.setGroups(groupIDs);
 
-    recipe.setAuthorID(1L);
-
-
+    // Step 2: Create a RecipePostDTO object for sending as a request body.
     RecipePostDTO recipePostDTO = new RecipePostDTO();
-    recipePostDTO.setTitle("testrecipename");
-    recipePostDTO.setShortDescription("testdescription");
-    recipePostDTO.setLink("testlink");
-    recipePostDTO.setCookingTime("testtime");
+    recipePostDTO.setTitle(recipe.getTitle());
+    recipePostDTO.setShortDescription(recipe.getShortDescription());
+    recipePostDTO.setLink(recipe.getLink());
+    recipePostDTO.setCookingTime(recipe.getCookingTime());
+    recipePostDTO.setImage(recipe.getImage());
+    recipePostDTO.setAmounts(new ArrayList<>(amounts));
+    recipePostDTO.setIngredients(new ArrayList<>(ingredients));
+    recipePostDTO.setInstructions(new ArrayList<>(instructions));
+    recipePostDTO.setTags(new ArrayList<>(tags));
+    recipePostDTO.setGroups(new ArrayList<>(groupIDs));
 
-    List<String> amountss = new ArrayList<>();
-    amountss.add("testamount 1");
-    amountss.add("testamount 2");
-    recipePostDTO.setAmounts(amountss);
+    // Step 3: We mock the service layer to return our recipe when the correct user ID and any Recipe object are passed.
+    given(recipeService.createUserRecipe(Mockito.eq(recipe.getAuthorID()), Mockito.any())).willReturn(recipe);
 
-    List<String> ingredientss = new ArrayList<>();
-    ingredientss.add("testingredient 1");
-    ingredientss.add("testingredient 2");
-    recipePostDTO.setIngredients(ingredientss);
+    // Step 4: Build the POST request with the correct endpoint, content type, and JSON body.
+    MockHttpServletRequestBuilder postRequest = post("/users/" + recipe.getAuthorID() + "/cookbooks")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(asJsonString(recipePostDTO));
 
-    List<String> instructionss = new ArrayList<>();
-    instructionss.add("testinstruction 1");
-    instructionss.add("testinstruction 2");
-    recipePostDTO.setInstructions(instructionss);
-
-    recipePostDTO.setImage("testimage");
-
-    List<RecipeTags> tagss = new ArrayList<>();
-    tagss.add(RecipeTags.VEGAN);
-    tagss.add(RecipeTags.VEGETARIAN);
-    recipePostDTO.setTags(tagss);
-
-    List<Long> groupIDss = new ArrayList<>();
-    groupIDss.add(1L);
-    groupIDss.add(2L);
-    recipePostDTO.setGroups(groupIDss);
-
-    Long authorID = 1L;
-
-    given(recipeService.createUserRecipe(Mockito.eq(authorID), Mockito.any())).willReturn(recipe);
-
-    // when/then -> do the request + validate the result
-    MockHttpServletRequestBuilder postRequest = post("/users/1/cookbooks")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(asJsonString(recipePostDTO));
-
-    // then
+    // Step 5: Execute the request and verify the response.
+    // Ensure the status is 201 Created.
+    // Verify that the object returned matches expected values from the Recipe object.
     mockMvc.perform(postRequest)
       .andExpect(status().isCreated())
       .andExpect(jsonPath("$.id", is(recipe.getId().intValue())))
@@ -152,15 +135,15 @@ public class RecipeControllerTest {
       .andExpect(jsonPath("$.shortDescription", is(recipe.getShortDescription())))
       .andExpect(jsonPath("$.link", is(recipe.getLink())))
       .andExpect(jsonPath("$.cookingTime", is(recipe.getCookingTime())))
-      .andExpect(jsonPath("$.amounts", contains(recipe.getAmounts().toArray())))
-      .andExpect(jsonPath("$.ingredients", contains(recipe.getIngredients().toArray())))
-      .andExpect(jsonPath("$.instructions", contains(recipe.getInstructions().toArray())))
+      .andExpect(jsonPath("$.amounts", contains(amounts.toArray())))
+      .andExpect(jsonPath("$.ingredients", contains(ingredients.toArray())))
+      .andExpect(jsonPath("$.instructions", contains(instructions.toArray())))
       .andExpect(jsonPath("$.image", is(recipe.getImage())))
-      .andExpect(jsonPath("$.tags[0]", is("VEGAN")))
-      .andExpect(jsonPath("$.tags[1]", is("VEGETARIAN")))
-      .andExpect(jsonPath("$.groups[0]", is(1)))
-      .andExpect(jsonPath("$.groups[1]", is(2)))
-      .andExpect(jsonPath("$.authorID").value(equalTo(recipe.getAuthorID().intValue()))); // Update assertion
+      .andExpect(jsonPath("$.tags[0]", is(tags.get(0).toString())))
+      .andExpect(jsonPath("$.tags[1]", is(tags.get(1).toString())))
+      .andExpect(jsonPath("$.groups[0]", is(groupIDs.get(0).intValue())))
+      .andExpect(jsonPath("$.groups[1]", is(groupIDs.get(1).intValue())))
+      .andExpect(jsonPath("$.authorID", is(recipe.getAuthorID().intValue()))); // Verify that the author ID is correctly returned.
   }
   
   @Test

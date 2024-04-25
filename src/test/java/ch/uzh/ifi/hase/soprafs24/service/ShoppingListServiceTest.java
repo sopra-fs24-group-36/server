@@ -140,7 +140,7 @@ class ShoppingListServiceTest {
 
     @Test
     public void removeUserItem_ItemInList_ItemRemoved() {
-      // Given
+      // Create a User with a shoppinglist containing Items "Apple" and "Banana"
       User user = new User();
       ShoppingList shoppingList = new ShoppingList();
       List<String> items = new ArrayList<>();
@@ -148,13 +148,23 @@ class ShoppingListServiceTest {
       items.add("Banana");
       shoppingList.setItems(items);
       user.setShoppingList(shoppingList);
+
+      // Item which will be removed from the shoppinglist
       String item = "Banana";
 
-      // When
+      // Item which will still be in the shoppinglist
+      String itemNotRemoved = "Apple";
+
+      // Action of removing from shoppinglist
       shoppingListService.removeUserItem(item, user);
 
-      // Then
+      // Checking that item is not in the shoppinglist anymore
       assertFalse(shoppingList.getItems().contains(item));
+
+      // Checking that the other item is still in the shoppinglist
+      assertTrue(shoppingList.getItems().contains(itemNotRemoved));
+
+      // Verify that the saving of a shoppinglist is only done once during execution
       verify(shoppingListRepository, times(1)).save(shoppingList);
     }
 

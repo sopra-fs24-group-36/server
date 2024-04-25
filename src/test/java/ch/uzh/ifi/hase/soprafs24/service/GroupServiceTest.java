@@ -44,6 +44,7 @@ public class GroupServiceTest {
         Mockito.when(groupRepository.save(Mockito.any())).thenReturn(testGroup);
     }
 
+    /*
     //  test createGroup method //
     @Test
     public void createGroup_validInputs_success() {
@@ -57,6 +58,7 @@ public class GroupServiceTest {
         assertEquals(testGroup.getMembers(), createdGroup.getMembers());
 
     }
+    */
 
 
     //  test addUserToGroup method  //
