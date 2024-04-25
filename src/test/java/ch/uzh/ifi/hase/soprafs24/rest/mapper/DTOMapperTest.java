@@ -59,6 +59,7 @@ public class DTOMapperTest {
         user.setToken("1");
         Date creationDate = new Date();
         user.setCreationDate(creationDate);
+        user.setInvitations(new ArrayList<>());
 
         // MAP -> Create user
         UserDTO userDTO = DTOMapper.INSTANCE.convertEntityToUserDTO(user);
@@ -69,6 +70,7 @@ public class DTOMapperTest {
         assertEquals(user.getEmail(), userDTO.getEmail());
         assertNotNull(user.getCreationDate());
         assertEquals(user.getStatus(), userDTO.getStatus());
+        assertEquals(user.getInvitations(), userDTO.getInvitations());
     }
 
     @Test
