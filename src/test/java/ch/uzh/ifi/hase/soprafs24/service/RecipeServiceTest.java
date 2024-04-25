@@ -29,8 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class RecipeServiceTest {
@@ -517,32 +515,209 @@ public class RecipeServiceTest {
 
   @Test
   public void removeRecipeFromGroup_SuccessfullyRemovesRecipe() {
+
+    //create new recipe
+    Long recipeId = 2L;
+    Recipe mockRecipe = new Recipe();
+    mockRecipe.setId(recipeId);
+
     // Create a mock group and cookbook
     Group mockGroup = new Group();
+    mockGroup.setId(1L);
+    mockGroup.setName("Name");
     Cookbook mockCookbook = new Cookbook();
+
+    //add groupId to recipe
+    List<Long> groupIDs = new ArrayList<>();
+    groupIDs.add(1L);
+    mockRecipe.setGroups(groupIDs);
+
+    //add recipeId to cookbook
     List<Long> recipes = new ArrayList<>();
     recipes.add(2L);
     mockCookbook.setRecipes(recipes);
+
     mockGroup.setCookbook(mockCookbook); //recipe is part of this cookbook
 
     // Mock the group repository to return the mock group
-    Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockGroup));
+    when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockGroup));
+    //mock the recipe repository to return the mockRecipe
+    when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(mockRecipe));
 
     // Call the method under test
-    recipeService.removeRecipeFromGroup(1L, 2L);
+    recipeService.removeRecipeFromGroup(1L, recipeId);
 
     // Verify that the recipe has been removed from the group's cookbook
     Mockito.verify(cookbookRepository).save(mockCookbook);
   }
 
-  @Test
-  public void removeRecipeFromGroup_GroupNotFound_ThrowsException() {
-    // Mock the group repository to return empty optional, simulating a group not found scenario
-    Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-    // Assert that the method under test throws an exception when the group is not found
-    assertThrows(RuntimeException.class, () -> recipeService.removeRecipeFromGroup(1L, 2L));
-  }
+    @Test
+    public void removeRecipeFromGroup_InValidGroupNotFound_ThrowsException() {
+
+        //create new recipe
+        Long recipeId = 2L;
+        Recipe mockRecipe = new Recipe();
+        mockRecipe.setId(recipeId);
+
+        // Mock the group repository to return an exception
+        when(groupRepository.findById(Mockito.anyLong())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
+        //mock the recipe repository to return the mockRecipe
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(mockRecipe));
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(3L, recipeId));
+    }
+
+    @Test
+    public void removeRecipeFromGroup_InValidRecipeNull_ThrowsException() {
+
+        //create new recipe
+        Long recipeId = 2L;
+        Recipe mockRecipe = new Recipe();
+        mockRecipe.setId(recipeId);
+
+        // Create a mock group and cookbook
+        Group mockGroup = new Group();
+        mockGroup.setId(1L);
+        mockGroup.setName("Name");
+        Cookbook mockCookbook = new Cookbook();
+        mockGroup.setCookbook(mockCookbook);
+
+        // Mock the group repository to return the mock group
+        when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockGroup));
+        //mock the recipe repository to return the mockRecipe
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(mockRecipe));
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(1L, recipeId));
+    }
+
+
+    @Test
+    public void removeRecipeFromGroup_InValidRecipeNotInGroup_ThrowsException() {
+
+        //create new recipe
+        Long recipeId = 2L;
+        Recipe mockRecipe = new Recipe();
+        mockRecipe.setId(recipeId);
+
+        // Create a mock group and cookbook
+        Group mockGroup = new Group();
+        mockGroup.setId(1L);
+        mockGroup.setName("Name");
+        Cookbook mockCookbook = new Cookbook();
+
+        //add different recipeId to cookbook
+        List<Long> recipes = new ArrayList<>();
+        recipes.add(8L);
+        mockCookbook.setRecipes(recipes);
+
+        mockGroup.setCookbook(mockCookbook); //recipe is part of this cookbook
+
+        // Mock the group repository to return the mock group
+        when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockGroup));
+        //mock the recipe repository to return the mockRecipe
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(mockRecipe));
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(1L, recipeId));
+    }
+
+    @Test
+    public void removeRecipeFromGroup_InValidRecipeNotFound_ThrowsException() {
+
+        Long recipeId = 2L;
+
+        // Create a mock group and cookbook
+        Group mockGroup = new Group();
+        mockGroup.setId(1L);
+        mockGroup.setName("Name");
+        Cookbook mockCookbook = new Cookbook();
+
+        //add recipeId to cookbook
+        List<Long> recipes = new ArrayList<>();
+        recipes.add(2L);
+        mockCookbook.setRecipes(recipes);
+
+        mockGroup.setCookbook(mockCookbook); //recipe is part of this cookbook
+
+        // Mock the group repository to return the mock group
+        when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockGroup));
+        //mock the recipe repository to return the mockRecipe
+        when(recipeRepository.findById(recipeId)).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found"));
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(1L, recipeId));
+
+    }
+
+    @Test
+    public void removeRecipeFromGroup_InValidGroupNull_ThrowsException() {
+
+        //create new recipe
+        Long recipeId = 2L;
+        Recipe mockRecipe = new Recipe();
+        mockRecipe.setId(recipeId);
+
+        // Create a mock group and cookbook
+        Group mockGroup = new Group();
+        mockGroup.setId(1L);
+        mockGroup.setName("Name");
+        Cookbook mockCookbook = new Cookbook();
+
+        //add recipeId to cookbook
+        List<Long> recipes = new ArrayList<>();
+        recipes.add(2L);
+        mockCookbook.setRecipes(recipes);
+
+        mockGroup.setCookbook(mockCookbook); //recipe is part of this cookbook
+
+        // Mock the group repository to return the mock group
+        when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockGroup));
+        //mock the recipe repository to return the mockRecipe
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(mockRecipe));
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(1L, recipeId));
+    }
+
+
+    @Test
+    public void removeRecipeFromGroup_InValidGroupNotInRecipe_ThrowsException() {
+
+        //create new recipe
+        Long recipeId = 2L;
+        Recipe mockRecipe = new Recipe();
+        mockRecipe.setId(recipeId);
+
+        // Create a mock group and cookbook
+        Group mockGroup = new Group();
+        mockGroup.setId(1L);
+        mockGroup.setName("Name");
+        Cookbook mockCookbook = new Cookbook();
+
+        //add different groupId to recipe
+        List<Long> groupIDs = new ArrayList<>();
+        groupIDs.add(8L);
+        mockRecipe.setGroups(groupIDs);
+
+        //add recipeId to cookbook
+        List<Long> recipes = new ArrayList<>();
+        recipes.add(2L);
+        mockCookbook.setRecipes(recipes);
+
+        mockGroup.setCookbook(mockCookbook); //recipe is part of this cookbook
+
+        // Mock the group repository to return the mock group
+        when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockGroup));
+        //mock the recipe repository to return the mockRecipe
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(mockRecipe));
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(1L, recipeId));
+
+    }
 
 
 }

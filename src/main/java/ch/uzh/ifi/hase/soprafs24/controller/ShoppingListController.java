@@ -36,7 +36,6 @@ public class ShoppingListController {
   //here come the post/get/put mapping
   @PostMapping("/groups/{groupID}/shoppinglists")
   @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
   public void addItemGroup(@RequestBody ItemPostDTO itemPostDTO, @PathVariable("groupID") Long groupID) {
 
     ItemRequest item = DTOMapper.INSTANCE.convertItemPostDTOtoEntity(itemPostDTO);
@@ -51,7 +50,6 @@ public class ShoppingListController {
 
   @PostMapping("/users/{userID}/shoppinglists")
   @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
   public void addItemUser(@RequestBody ItemPostDTO itemPostDTO, @PathVariable("userID") Long userID) {
 
     ItemRequest item = DTOMapper.INSTANCE.convertItemPostDTOtoEntity(itemPostDTO);
@@ -71,6 +69,10 @@ public class ShoppingListController {
   public ShoppingListDTO getGroupShoppinglist(@PathVariable("groupID") Long groupID) {
 
     Group group = groupRepository.findById(groupID).orElse(null);
+
+      if(group == null){
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+      }
 
     ShoppingList shoppingList = group.getShoppingList();
 
@@ -94,7 +96,6 @@ public class ShoppingListController {
 
   @PutMapping("/groups/{groupID}/shoppinglists")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ResponseBody
   public void removeItemGroup(@PathVariable("groupID") Long groupID, @RequestBody ItemPutDTO itemPutDTO) {
       
     ItemRequest item = DTOMapper.INSTANCE.convertItemPutDTOtoEntity(itemPutDTO);
@@ -109,7 +110,6 @@ public class ShoppingListController {
 
   @PutMapping("/users/{userID}/shoppinglists")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ResponseBody
   public void removeItemUsers(@PathVariable("userID") Long userID, @RequestBody ItemPutDTO itemPutDTO) {
       
     ItemRequest item = DTOMapper.INSTANCE.convertItemPutDTOtoEntity(itemPutDTO);
@@ -124,7 +124,6 @@ public class ShoppingListController {
 
   @DeleteMapping("/groups/{groupID}/shoppinglists")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ResponseBody
   public void emptyGroupShoppinglist(@PathVariable("groupID") Long groupID){
 
     Group group = groupRepository.findById(groupID).orElse(null);
@@ -136,7 +135,6 @@ public class ShoppingListController {
 
   @DeleteMapping("/users/{userID}/shoppinglists")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  @ResponseBody
   public void emptyUserShoppinglist(@PathVariable("userID") Long userID){
 
     User user = userRepository.findById(userID).orElse(null);
