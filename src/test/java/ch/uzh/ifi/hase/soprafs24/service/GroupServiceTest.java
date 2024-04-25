@@ -5,6 +5,8 @@ import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,6 +25,12 @@ public class GroupServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private CookbookService cookbookService;
+
+    @Mock
+    private ShoppingListService shoppingListService;
 
     @InjectMocks
     private GroupService groupService;
@@ -44,22 +52,86 @@ public class GroupServiceTest {
         Mockito.when(groupRepository.save(Mockito.any())).thenReturn(testGroup);
     }
 
-    /*
     //  test createGroup method //
     @Test
     public void createGroup_validInputs_success() {
 
-        Group createdGroup = groupService.createGroup(testGroup);
+        Long creator = 1L;
+
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+        testUser.setGroups(new ArrayList<>());
+
+        User testUser2 = new User();
+        testUser2.setId(2L);
+        testUser2.setPassword("testt");
+        testUser2.setUsername("testt");
+        testUser2.setEmail("testt");
+        testUser2.setToken(UUID.randomUUID().toString());
+        Date creationDate2 = new Date();
+        testUser2.setCreationDate(creationDate2);
+        testUser2.setStatus(UserStatus.OFFLINE);
+        testUser2.setGroups(new ArrayList<>());
+        testUser2.setInvitations(new ArrayList<>());
+
+
+        List<String> list = new ArrayList<>();
+        list.add("test");
+        testGroup.setMembersNames(list);
+
+
+        Mockito.when(userRepository.findById(creator)).thenReturn(Optional.of(testUser));
+        Mockito.when(userRepository.findByEmail("test")).thenReturn(testUser2);
+
+        Group createdGroup = groupService.createGroup(creator, testGroup);
 
         Mockito.verify(groupRepository, Mockito.times(1)).save(Mockito.any());
 
         assertEquals(testGroup.getId(), createdGroup.getId());
         assertEquals(testGroup.getName(), createdGroup.getName());
         assertEquals(testGroup.getMembers(), createdGroup.getMembers());
-
     }
-    */
 
+    @Test
+    public void createGroup_invalidInputs_UserNotFound() {
+
+        Long creator = 1L;
+
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+        testUser.setGroups(new ArrayList<>());
+
+        List<String> list = new ArrayList<>();
+        list.add("test");
+        testGroup.setMembersNames(list);
+
+        Mockito.when(userRepository.findById(creator)).thenReturn(Optional.of(testUser));
+        Mockito.when(userRepository.findByEmail("test")).thenReturn(null);
+
+        assertThrows(RuntimeException.class, () -> groupService.createGroup(1L, testGroup));
+    }
+
+    @Test
+    public void createGroup_invalidInputs_throwsException() {
+
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(null);
+
+        assertThrows(RuntimeException.class, () -> groupService.createGroup(1L, testGroup));
+    }
 
     //  test addUserToGroup method  //
     @Test
@@ -189,5 +261,59 @@ public class GroupServiceTest {
 
 
         assertThrows(RuntimeException.class, () -> groupService.deleteUserFromGroup( 789L, 5L));
+    }
+
+    @Test
+    public void inviteUserToGroup_validInput_success() {
+
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email");
+        testUser.setToken(UUID.randomUUID().toString());
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+        testUser.setStatus(UserStatus.OFFLINE);
+
+        List<Long> initialGroups = new ArrayList<>();
+        testUser.setGroups(new ArrayList<>(initialGroups));
+
+        List<Long> invitations = new ArrayList<>();
+        testUser.setInvitations(invitations);
+
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setEmail("username");
+
+
+        Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(testGroup));
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(testUser);
+
+        groupService.inviteUserToGroup(testGroup.getId(), userPostDTO);
+
+        assertTrue(testUser.getInvitations().contains(testGroup.getId()));
+    }
+
+    @Test
+    public void inviteUserToGroup_invalidInput_UserNotFound() {
+
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setEmail("username");
+
+        Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(testGroup));
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(null);
+
+        assertThrows(RuntimeException.class, () -> groupService.inviteUserToGroup(testGroup.getId(), userPostDTO));
+    }
+
+    @Test
+    public void inviteUserToGroup_invalidInput_GroupNotFound() {
+
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setEmail("username");
+
+        Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> groupService.inviteUserToGroup(testGroup.getId(), userPostDTO));
     }
 }
