@@ -261,21 +261,46 @@ public class RecipeService {
         recipes.remove(recipe.getId());
         c.setRecipes(recipes);
         cookbookRepository.save(c);
+        cookbookRepository.flush();
       } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe is not part of one of these groups");}
     }
     recipeRepository.delete(recipe);
+    recipeRepository.flush();
   }
 
-  public Group removeRecipeFromGroup(Long groupID, Long recipeID) {
-    Group group = groupRepository.findById(groupID).orElseThrow(() -> new RuntimeException("Group not found"));
 
+  //need to also remove the group from the recipe otherwise remains in database
+  public Group removeRecipeFromGroup(Long groupID, Long recipeID) {
+
+    //make sure group exists and get group
+    Group group = groupRepository.findById(groupID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
+
+    //get cookbook of group and remove recipe, check that recipe found in group
     Cookbook cookbook = group.getCookbook();
     List<Long> recipes = cookbook.getRecipes();
-    recipes.remove(recipeID);
+    if (recipes == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found in the group's cookbook with ID: " + recipeID);
+    }
+    if (!recipes.remove(recipeID)) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found in the group's cookbook with ID: " + recipeID);
+    }
     cookbook.setRecipes(recipes);
-
     cookbookRepository.save(cookbook);
+    cookbookRepository.flush();
     groupRepository.save(group);
+    groupRepository.flush();
+
+    Recipe recipe = recipeRepository.findById(recipeID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found"));
+    List<Long> groups = recipe.getGroups();
+      if (groups == null) {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found in the recipe's group list with ID: " + groupID);
+      }
+    if (!groups.remove(groupID)) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found in the recipe's group list with ID: " + groupID);
+    }
+    recipe.setGroups(groups);
+    recipeRepository.save(recipe);
+    recipeRepository.flush();
 
     return group;
   }
