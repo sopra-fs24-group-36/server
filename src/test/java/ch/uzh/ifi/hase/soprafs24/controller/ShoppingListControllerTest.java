@@ -113,6 +113,17 @@ public class ShoppingListControllerTest {
     }
 
     @Test
+    public void getGroupShoppinglist_invalidinput_throwsExxception() throws Exception {
+
+        given(groupRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+
+        // When/Then
+        mockMvc.perform(get("/groups/1/shoppinglists")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void removeItemGroup_Success() throws Exception {
         // Given
         Long groupId = 1L;
