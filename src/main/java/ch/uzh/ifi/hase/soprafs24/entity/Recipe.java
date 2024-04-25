@@ -17,13 +17,17 @@ public class Recipe implements Serializable {
   @GeneratedValue
   private Long id;
 
+  @Column(name = "title")
   private String title;
 
+  @Column(name = "shortDescription")
   private String shortDescription;
 
   @Lob
+  @Column(name = "link")
   private String link;
 
+  @Column(name = "cookingTime")
   private String cookingTime;
 
   @ElementCollection
@@ -39,6 +43,7 @@ public class Recipe implements Serializable {
   private List<String> instructions;
 
   @Lob
+  @Column(name = "image")
   private String image;
 
   @ElementCollection

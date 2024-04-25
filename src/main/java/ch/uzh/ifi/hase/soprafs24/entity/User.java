@@ -39,8 +39,8 @@ public class User implements Serializable {
     private UserStatus status;
 
     //optional, hence can be null
-    @Column
     @Lob
+    @Column(name="profilePicture")
     private String profilePicture;
 
     @Column(nullable = false, unique = true)
