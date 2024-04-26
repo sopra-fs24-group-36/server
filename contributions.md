@@ -13,6 +13,8 @@
 - 25.04, [#15](https://github.com/sopra-fs24-group-36/client/issues/15) implemented all guards to make sure the user can only view the correct content 
 
 ### Yujie
+- 23.04, [#46](https://github.com/sopra-fs24-group-36/client/issues/46) implemented deleting/removing recipes from cookbook
+- 23.04, [#47](https://github.com/sopra-fs24-group-36/client/issues/47) finalize all image-related functions
 
 ### Summer 
 - 23.04, [#29](https://github.com/sopra-fs24-group-36/client/issues/29) Make that all members of a group can edit the group shopping list simultaneously.
