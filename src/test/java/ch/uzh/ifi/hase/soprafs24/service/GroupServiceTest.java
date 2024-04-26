@@ -266,6 +266,7 @@ public class GroupServiceTest {
     @Test
     public void inviteUserToGroup_validInput_success() {
 
+        // create a user which will get invited
         User testUser = new User();
         testUser.setId(1L);
         testUser.setPassword("password");
@@ -278,19 +279,27 @@ public class GroupServiceTest {
 
         List<Long> initialGroups = new ArrayList<>();
         testUser.setGroups(new ArrayList<>(initialGroups));
-
+    
         List<Long> invitations = new ArrayList<>();
         testUser.setInvitations(invitations);
 
+        // create the UserPostDTO object which the frontend sends to invite this user
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setEmail("username");
 
-
+        // mock the finding-group-by-id function to return the created testgroup
         Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(testGroup));
+
+        // mock the finding-user-by-id function to return the created user
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(testUser);
 
+        // asserting that the invitation is not there before the invitation is sent
+        assertFalse(invitations.contains(testGroup.getId()));
+
+        // do the action of inviting the user
         groupService.inviteUserToGroup(testGroup.getId(), userPostDTO);
 
+        // asserting that the groupid is saved in the invitations of the user
         assertTrue(testUser.getInvitations().contains(testGroup.getId()));
     }
 
