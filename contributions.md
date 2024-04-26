@@ -4,6 +4,9 @@
 
 ## Week 4
 ### Sarina 
+- deployed the persistence of database tables to google cloud (with almost no issues)
+- 24.04, [#10](https://github.com/sopra-fs24-group-36/server/issues/10), fixed the remove method for this since it got several logic errors and cause inconsistencies in the database (commit #63)
+- 25.04, [#56](https://github.com/sopra-fs24-group-36/server/issues/56) and [#55](https://github.com/sopra-fs24-group-36/server/issues/55), needed to change those methods completely since they cause unexpected behavior in the database and in the frontend, also needed to rewrite all the tests (commit #67)
 
 ### Jazz 
 - 24.04, [#36](https://github.com/sopra-fs24-group-36/client/issues/36) made sure the API is connected to the backend - is working
@@ -12,6 +15,8 @@
 ### Yujie
 
 ### Summer 
+
+### Marko 
 
 
 ## Week 3
