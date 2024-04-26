@@ -17,7 +17,10 @@
 ### Summer 
 
 ### Marko 
-
+- 23.04, a lot of bug fixes and also test writing.
+- 24.04, [#56](https://github.com/sopra-fs24-group-36/server/issues/56) and [#55](https://github.com/sopra-fs24-group-36/server/issues/55) needed to change the handling of invitations from the group side because of bugs in the database. Also had to change the already existing tests to accomodate for the changes.
+- 25.04, [#73](https://github.com/sopra-fs24-group-36/server/issues/73) and [#48](https://github.com/sopra-fs24-group-36/server/issues/48), The creation of a group caused a lot of problems due to bugs in the backend which lead to inconsistencies in the database. Had to rewrite all tests and write new ones to accomodate new exceptions.
+- 26.04, smaller bug fixes and preparing the necessary tests for the report.
 
 ## Week 3
 
