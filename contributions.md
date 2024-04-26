@@ -15,6 +15,8 @@
 ### Yujie
 
 ### Summer 
+-23.04, [#29](https://github.com/sopra-fs24-group-36/client/issues/29) Make that all members of a group can edit the group shopping list simultaneously.
+-24.04  [#7](https://github.com/sopra-fs24-group-36/client/issues/7) Create a Spinner Object (brokkoli) to display while users are waiting (optional)
 
 ### Marko 
 - 23.04, a lot of bug fixes and also test writing.
