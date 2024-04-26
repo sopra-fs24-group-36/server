@@ -299,7 +299,7 @@ public class GroupServiceTest {
         // do the action of inviting the user
         groupService.inviteUserToGroup(testGroup.getId(), userPostDTO);
 
-        // asserting that the groupid is in the invitations of the user
+        // asserting that the groupid is saved in the invitations of the user
         assertTrue(testUser.getInvitations().contains(testGroup.getId()));
     }
 
