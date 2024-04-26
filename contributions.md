@@ -2,6 +2,18 @@
 - manually append the two development tasks they completed during the week
 - entry should consist of the date, your name, links to the github issues you worked on and optionally a short description
 
+## Week 4
+### Sarina 
+
+### Jazz 
+- 24.04, [#36](https://github.com/sopra-fs24-group-36/client/issues/36) made sure the API is connected to the backend - is working
+- 25.04, [#15](https://github.com/sopra-fs24-group-36/client/issues/15) implemented all guards to make sure the user can only view the correct content 
+
+### Yujie
+
+### Summer 
+
+
 ## Week 3
 
 ### Sarina
