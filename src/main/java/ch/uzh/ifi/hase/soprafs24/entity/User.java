@@ -53,6 +53,9 @@ public class User implements Serializable {
     @OneToOne
     private ShoppingList shoppingList;
 
+    @OneToOne
+    private Calendar calendar;
+
     @ElementCollection
     @Column(name = "invitations")
     private List<Long> invitations;
@@ -145,4 +148,8 @@ public class User implements Serializable {
     public List<Long> getGroups(){return groups;}
 
     public void setGroups(List<Long> groups){this.groups = groups;}
+
+    public Calendar getCalendar() {return calendar; }
+
+    public void setCalendar(Calendar calendar) {this.calendar = calendar; }
 }

@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.Calendar;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
@@ -90,6 +91,10 @@ public class UserService {
 
     public void saveShoppingList(User user, ShoppingList shoppingList){
         user.setShoppingList(shoppingList);
+    }
+
+    public void saveCalendar(User user, Calendar calendar){
+        user.setCalendar(calendar);
     }
 
     public User getTheUser (Long userId) {

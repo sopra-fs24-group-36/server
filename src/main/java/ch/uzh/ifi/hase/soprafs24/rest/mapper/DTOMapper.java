@@ -1,20 +1,12 @@
 package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
+import ch.uzh.ifi.hase.soprafs24.entity.CalendarRequest;
+import ch.uzh.ifi.hase.soprafs24.entity.DateRecipe;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.ItemRequest;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.GroupPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.ItemPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.ItemPutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.ShoppingListDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -104,4 +96,8 @@ public interface DTOMapper {
     @Mapping (source = "email", target = "email")
     @Mapping(source = "profilePicture", target = "profilePicture")
     User convertUserPutDTOtoEntity(UserPutDTO userPutDTO);
+
+    @Mapping(source = "date", target = "date")
+    @Mapping(source = "recipeID", target = "recipeID")
+    CalendarRequest convertDateRecipePostDTOtoEntity(DateRecipePostDTO dateRecipePostDTO);
 }
