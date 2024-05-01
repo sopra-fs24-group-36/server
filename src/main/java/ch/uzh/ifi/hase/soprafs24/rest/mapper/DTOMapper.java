@@ -99,5 +99,5 @@ public interface DTOMapper {
 
     @Mapping(source = "date", target = "date")
     @Mapping(source = "recipeID", target = "recipeID")
-    CalendarRequest convertDateRecipePostDTOtoEntity(DateRecipePostDTO dateRecipePostDTO);
+    CalendarRequest convertDateRecipePostDTOtoEntity(DateRecipeDTO dateRecipePostDTO);
 }

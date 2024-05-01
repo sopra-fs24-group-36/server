@@ -3,13 +3,30 @@ package ch.uzh.ifi.hase.soprafs24.entity;
 import javax.persistence.*;
 import java.util.Date;
 
-@Embeddable
+@Entity
+@Table(name = "date_recipes")
 public class DateRecipe {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "calendar_id", nullable = false)
+    private Calendar calendar;
+
   @Temporal(TemporalType.DATE)
   private Date date;
 
-  @ManyToOne
-  private Recipe recipe;
+  private Long recipeID;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
   public Date getDate() {
       return date;
@@ -19,11 +36,19 @@ public class DateRecipe {
       this.date = date;
   }
 
-  public Recipe getRecipe() {
-      return recipe;
-  }
+    public Long getRecipeID() {
+        return recipeID;
+    }
 
-  public void setRecipe(Recipe recipe) {
-      this.recipe = recipe;
-  }
+    public void setRecipeID(Long recipeID) {
+        this.recipeID = recipeID;
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
+    }
 }

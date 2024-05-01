@@ -18,7 +18,6 @@ public class Calendar implements Serializable {
   private Long id;
 
   @ElementCollection
-  @CollectionTable(name = "date_recipes", joinColumns = @JoinColumn(name = "calendar_id"))
   private List<DateRecipe> dateRecipes;
 
   public Long getId() {

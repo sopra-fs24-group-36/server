@@ -8,7 +8,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.DateRecipePostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.DateRecipeDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.CalendarService;
 import ch.uzh.ifi.hase.soprafs24.service.ShoppingListService;
@@ -36,7 +36,7 @@ public class CalendarController {
 
   @PostMapping("/users/{userId}/calendars")
   @ResponseStatus(HttpStatus.OK)
-  public void addRecipeToCalendar(@RequestBody DateRecipePostDTO dateRecipePostDTO, @PathVariable("userId") Long userId) {
+  public void addRecipeToCalendar(@RequestBody DateRecipeDTO dateRecipePostDTO, @PathVariable("userId") Long userId) {
     
     CalendarRequest calendarRequest = DTOMapper.INSTANCE.convertDateRecipePostDTOtoEntity(dateRecipePostDTO);
 
@@ -55,7 +55,7 @@ public class CalendarController {
 
   @PostMapping("/groups/{groupId}/calendars")
   @ResponseStatus(HttpStatus.OK)
-  public void addRecipeToGroupCalendar(@RequestBody DateRecipePostDTO dateRecipePostDTO, @PathVariable("groupId") Long groupId) {
+  public void addRecipeToGroupCalendar(@RequestBody DateRecipeDTO dateRecipePostDTO, @PathVariable("groupId") Long groupId) {
     
     CalendarRequest calendarRequest = DTOMapper.INSTANCE.convertDateRecipePostDTOtoEntity(dateRecipePostDTO);
 
@@ -70,6 +70,44 @@ public class CalendarController {
     Date date = calendarRequest.getDate();
 
     calendarService.addRecipeToGroupCalendar(group, recipeID, date);
+  }
+
+  @DeleteMapping("/users/{userId}/calendars")
+  @ResponseStatus(HttpStatus.OK)
+  public void removeRecipeFromUserCalendar(@RequestBody DateRecipeDTO dateRecipePostDTO, @PathVariable("userId") Long userId) {
+    
+    CalendarRequest calendarRequest = DTOMapper.INSTANCE.convertDateRecipePostDTOtoEntity(dateRecipePostDTO);
+
+    User user = userRepository.findById(userId).orElse(null);
+
+    if(user == null){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+    }
+
+    Long recipeID = calendarRequest.getRecipeID();
+
+    Date date = calendarRequest.getDate();
+
+    calendarService.removeRecipeFromUserCalendar(user, recipeID, date);
+  }
+
+  @DeleteMapping("/groups/{groupId}/calendars")
+  @ResponseStatus(HttpStatus.OK)
+  public void removeRecipeFromGroupCalendar(@RequestBody DateRecipeDTO dateRecipePostDTO, @PathVariable("groupId") Long groupId) {
+    
+    CalendarRequest calendarRequest = DTOMapper.INSTANCE.convertDateRecipePostDTOtoEntity(dateRecipePostDTO);
+
+    Group group = groupRepository.findById(groupId).orElse(null);
+
+    if(group == null){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found.");
+    }
+
+    Long recipeID = calendarRequest.getRecipeID();
+
+    Date date = calendarRequest.getDate();
+
+    calendarService.removeRecipeFromGroupCalendar(group, recipeID, date);
   }
   
 
