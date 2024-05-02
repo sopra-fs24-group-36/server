@@ -2,6 +2,23 @@
 - manually append the two development tasks they completed during the week
 - entry should consist of the date, your name, links to the github issues you worked on and optionally a short description
 
+## Week 5
+### Sarina 
+
+### Jazz 
+- 30.04, [#76](https://github.com/sopra-fs24-group-36/client/issues/76) implemented so ingredients from API are automatically added to recipes. We wanted to implement for instructions too but the API didnt provide instructions despite it being in the documentation.
+- 30.04, [#73](https://github.com/sopra-fs24-group-36/client/issues/73) added a personal cookbook and a home button to the dashboard to make user interaction a bit easier.
+- 30.04, [#72](https://github.com/sopra-fs24-group-36/client/issues/72) broccoli spinner nicely displays full broccolis
+- 30.04, [#70](https://github.com/sopra-fs24-group-36/client/issues/70) made sure no empty fields can be added when creating or editing a recipe
+- 30.04, [#71](https://github.com/sopra-fs24-group-36/client/issues/71) made sure recipes on home page are displayed as the same size like in the cookbooks. 
+
+### Yujie
+
+### Summer 
+
+### Marko 
+
+
 ## Week 4
 ### Sarina 
 - deployed the persistence of database tables to google cloud (with almost no issues)
@@ -13,8 +30,12 @@
 - 25.04, [#15](https://github.com/sopra-fs24-group-36/client/issues/15) implemented all guards to make sure the user can only view the correct content 
 
 ### Yujie
+- 23.04, [#46](https://github.com/sopra-fs24-group-36/client/issues/46) implemented deleting/removing recipes from cookbook
+- 23.04, [#47](https://github.com/sopra-fs24-group-36/client/issues/47) finalize all image-related functions
 
 ### Summer 
+- 23.04, [#29](https://github.com/sopra-fs24-group-36/client/issues/29) Make that all members of a group can edit the group shopping list simultaneously.
+- 24.04,  [#7](https://github.com/sopra-fs24-group-36/client/issues/7) Create a Spinner Object (brokkoli) to display while users are waiting (optional)
 
 ### Marko 
 - 23.04, a lot of bug fixes and also test writing.
