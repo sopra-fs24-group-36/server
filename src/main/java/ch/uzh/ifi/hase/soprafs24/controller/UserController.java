@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
+import ch.uzh.ifi.hase.soprafs24.constant.RandomCookingFact;
 import ch.uzh.ifi.hase.soprafs24.entity.Calendar;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
@@ -201,6 +202,13 @@ public class UserController {
         returnlistofmaps.add(tuple);
       }
       return returnlistofmaps;
+    }
+
+    @GetMapping("/randomCookingFact")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String getRandomCookingFact() {
+      return RandomCookingFact.getRandomFact();
     }
     
 }
