@@ -17,6 +17,12 @@
 ### Summer 
 
 ### Marko 
+- 01.05, [#117](https://github.com/sopra-fs24-group-36/client/issues/117) Implemented a Database for Calendars.
+- 01.05, [#114](https://github.com/sopra-fs24-group-36/client/issues/114) Added the POST request for a user calendar by adding the necessary entities and mappers.
+- 01.05, [#119](https://github.com/sopra-fs24-group-36/client/issues/119) Added the POST request for a group calendar.
+- 02.05, [#115](https://github.com/sopra-fs24-group-36/client/issues/115) Added the DELETE request for a user calendar but had to change the post request a bit so it works better.
+- 02.05, [#120](https://github.com/sopra-fs24-group-36/client/issues/120) Added the DELETE request for a group calendar.
+- 02.05, [#143](https://github.com/sopra-fs24-group-36/client/issues/143) A random cooking-fact can now be requested with a new GET request.
 
 
 ## Week 4
