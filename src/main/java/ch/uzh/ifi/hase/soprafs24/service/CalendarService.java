@@ -77,6 +77,10 @@ public class CalendarService {
     dateRecipe.setCalendar(calendar);
     dateRecipe.setStatus(status);
 
+    if (dateRecipeRepository.findByDateAndRecipeIDAndCalendarAndStatus(date, recipeID, calendar, status).size() > 0) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Recipe already exists in Calendar.");
+    }
+
     dateRecipe = dateRecipeRepository.save(dateRecipe);
     recipes.add(dateRecipe);
 
@@ -105,6 +109,10 @@ public class CalendarService {
     dateRecipe.setRecipeID(recipeID);
     dateRecipe.setCalendar(calendar);
     dateRecipe.setStatus(status);
+
+    if (dateRecipeRepository.findByDateAndRecipeIDAndCalendarAndStatus(date, recipeID, calendar, status).size() > 0) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Recipe already exists in Calendar.");
+    }
 
     dateRecipe = dateRecipeRepository.save(dateRecipe);
     recipes.add(dateRecipe);
