@@ -32,6 +32,9 @@ public class GroupServiceTest {
     @Mock
     private ShoppingListService shoppingListService;
 
+    @Mock
+    private CalendarService calendarService;
+
     @InjectMocks
     private GroupService groupService;
 

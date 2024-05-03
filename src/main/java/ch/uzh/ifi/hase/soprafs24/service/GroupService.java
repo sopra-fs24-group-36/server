@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 
 import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.Calendar;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
@@ -35,13 +36,15 @@ public class GroupService {
   private final UserRepository userRepository;
   private final CookbookService cookbookService;
   private final ShoppingListService shoppingListService;
+  private final CalendarService calendarService;
 
   @Autowired
-  public GroupService(@Qualifier("groupRepository") GroupRepository groupRepository, UserRepository userRepository, CookbookService cookbookService, ShoppingListService shoppingListService) {
+  public GroupService(@Qualifier("groupRepository") GroupRepository groupRepository, UserRepository userRepository, CookbookService cookbookService, ShoppingListService shoppingListService, CalendarService calendarService) {
     this.groupRepository = groupRepository;
     this.userRepository = userRepository;
     this.cookbookService = cookbookService;
     this.shoppingListService = shoppingListService;
+    this.calendarService = calendarService;
   }
 
 
@@ -86,6 +89,12 @@ public class GroupService {
     ShoppingList shoppingList = new ShoppingList();
     ShoppingList newShoppingList = shoppingListService.createShoppingList(shoppingList);
 
+    Calendar calendar = new Calendar();
+    Calendar newCalendar = calendarService.createCalendar(calendar);
+    newGroup.setCalendar(calendar);
+
+    saveCalendar(newGroup, calendar);
+
     saveShoppingList(newGroup, newShoppingList);
     
     //set the ID of the cookbook to the GROUP it belongs to
@@ -105,6 +114,10 @@ public class GroupService {
 
   public void saveShoppingList(Group group, ShoppingList shoppingList){
     group.setShoppingList(shoppingList);
+  }
+
+  public void saveCalendar(Group group, Calendar calendar){
+    group.setCalendar(calendar);
   }
 
   public Group addUserToGroup(Long userID, Long groupID){

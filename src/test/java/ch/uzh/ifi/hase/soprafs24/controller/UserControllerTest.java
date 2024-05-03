@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
+import ch.uzh.ifi.hase.soprafs24.service.CalendarService;
 import ch.uzh.ifi.hase.soprafs24.service.CookbookService;
 import ch.uzh.ifi.hase.soprafs24.service.ShoppingListService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
@@ -59,6 +60,8 @@ public class UserControllerTest {
   @MockBean
   private ShoppingListService shoppingListService;
 
+  @MockBean
+  private CalendarService calendarService;
 
   //  test the /users POST Mapping  //
   @Test

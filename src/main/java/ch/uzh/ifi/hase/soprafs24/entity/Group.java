@@ -32,6 +32,9 @@ public class Group implements Serializable {
   @OneToOne
   private ShoppingList shoppingList;
 
+  @OneToOne
+  private Calendar calendar;
+
   @Lob
   @Column(name = "image")
   private String image;
@@ -75,5 +78,9 @@ public class Group implements Serializable {
   public List<String> getMembersNames(){return membersNames;}
 
   public void setMembersNames(List<String> membersNames){this.membersNames = membersNames;}
+
+  public Calendar getCalendar() {return calendar; }
+
+  public void setCalendar(Calendar calendar) {this.calendar = calendar; }
 
 }
