@@ -223,7 +223,7 @@ public class CalendarService {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found.");
       }
 
-      output.setRecipeName(recipe.getTitle());
+      output.setRecipeTitle(recipe.getTitle());
       output.setRecipeImage(recipe.getImage());
 
       calendarOutput.add(output);
@@ -256,7 +256,7 @@ public class CalendarService {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found.");
       }
 
-      output.setRecipeName(recipe.getTitle());
+      output.setRecipeTitle(recipe.getTitle());
       output.setRecipeImage(recipe.getImage());
 
       calendarOutput.add(output);

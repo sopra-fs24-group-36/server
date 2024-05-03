@@ -27,11 +27,11 @@ public class CalendarOutput {
     this.recipeID = recipeID;
   }
 
-  public String getRecipeName() {
+  public String getRecipeTitle() {
     return recipeTitle;
   }
 
-  public void setRecipeName(String recipeTitle) {
+  public void setRecipeTitle(String recipeTitle) {
     this.recipeTitle = recipeTitle;
   }
 
