@@ -148,11 +148,11 @@ public class CalendarService {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found in Calendar.");
     }
 
-    dateRecipeRepository.delete(dateRecipeToRemove);
-    dateRecipeRepository.flush();
-
     recipes.remove(dateRecipeToRemove);
     calendar.setDateRecipes(recipes);
+
+    dateRecipeRepository.delete(dateRecipeToRemove);
+    dateRecipeRepository.flush();
 
     calendarRepository.save(calendar);
     calendarRepository.flush();
@@ -185,11 +185,11 @@ public class CalendarService {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found in Calendar.");
     }
 
-    dateRecipeRepository.delete(dateRecipeToRemove);
-    dateRecipeRepository.flush();
-
     recipes.remove(dateRecipeToRemove);
     calendar.setDateRecipes(recipes);
+
+    dateRecipeRepository.delete(dateRecipeToRemove);
+    dateRecipeRepository.flush();
 
     calendarRepository.save(calendar);
     calendarRepository.flush();
