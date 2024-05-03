@@ -1,6 +1,10 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
+import ch.uzh.ifi.hase.soprafs24.constant.CalendarStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.Calendar;
+import ch.uzh.ifi.hase.soprafs24.entity.CalendarOutput;
 import ch.uzh.ifi.hase.soprafs24.entity.CalendarRequest;
+import ch.uzh.ifi.hase.soprafs24.entity.DateRecipe;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.ItemRequest;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
@@ -13,13 +17,20 @@ import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.CalendarService;
 import ch.uzh.ifi.hase.soprafs24.service.ShoppingListService;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.HashMap;
 
+import org.hibernate.mapping.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -50,7 +61,9 @@ public class CalendarController {
 
     Date date = calendarRequest.getDate();
 
-    calendarService.addRecipeToUserCalendar(user, recipeID, date);
+    CalendarStatus status = calendarRequest.getStatus();
+
+    calendarService.addRecipeToUserCalendar(user, recipeID, date, status);
   }
 
   @PostMapping("/groups/{groupId}/calendars")
@@ -69,7 +82,9 @@ public class CalendarController {
 
     Date date = calendarRequest.getDate();
 
-    calendarService.addRecipeToGroupCalendar(group, recipeID, date);
+    CalendarStatus status = calendarRequest.getStatus();
+
+    calendarService.addRecipeToGroupCalendar(group, recipeID, date, status);
   }
 
   @DeleteMapping("/users/{userId}/calendars")
@@ -88,7 +103,9 @@ public class CalendarController {
 
     Date date = calendarRequest.getDate();
 
-    calendarService.removeRecipeFromUserCalendar(user, recipeID, date);
+    CalendarStatus status = calendarRequest.getStatus();
+
+    calendarService.removeRecipeFromUserCalendar(user, recipeID, date, status);
   }
 
   @DeleteMapping("/groups/{groupId}/calendars")
@@ -107,8 +124,38 @@ public class CalendarController {
 
     Date date = calendarRequest.getDate();
 
-    calendarService.removeRecipeFromGroupCalendar(group, recipeID, date);
-  }
-  
+    CalendarStatus status = calendarRequest.getStatus();
 
+    calendarService.removeRecipeFromGroupCalendar(group, recipeID, date, status);
+  }
+
+  @GetMapping("/users/{userId}/calendars")
+  @ResponseStatus(HttpStatus.OK)
+  public List<CalendarOutput> getUserCalendar(@PathVariable("userId") Long userId) {
+    
+    User user = userRepository.findById(userId).orElse(null);
+
+    if(user == null){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+    }
+
+    List<CalendarOutput> calendarOutputs = calendarService.getUserCalendar(user);
+    
+    return calendarOutputs;
+  }
+
+  @GetMapping("/groups/{groupId}/calendars")
+  @ResponseStatus(HttpStatus.OK)
+  public List<CalendarOutput> getGroupCalendar(@PathVariable("groupId") Long groupId) {
+    
+    Group group = groupRepository.findById(groupId).orElse(null);
+
+    if(group == null){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found.");
+    }
+
+    List<CalendarOutput> calendarOutputs = calendarService.getGroupCalendar(group);
+    
+    return calendarOutputs;
+  }
 }

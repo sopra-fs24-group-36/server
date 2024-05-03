@@ -1,7 +1,9 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 
+import ch.uzh.ifi.hase.soprafs24.constant.CalendarStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Calendar;
+import ch.uzh.ifi.hase.soprafs24.entity.CalendarOutput;
 import ch.uzh.ifi.hase.soprafs24.entity.DateRecipe;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
@@ -57,7 +59,7 @@ public class CalendarService {
     return calendar;
   }
 
-  public Calendar addRecipeToUserCalendar(User user, Long recipeID, Date date) {
+  public Calendar addRecipeToUserCalendar(User user, Long recipeID, Date date, CalendarStatus status) {
 
     Calendar calendar = user.getCalendar();
 
@@ -73,6 +75,7 @@ public class CalendarService {
     dateRecipe.setDate(date);
     dateRecipe.setRecipeID(recipeID);
     dateRecipe.setCalendar(calendar);
+    dateRecipe.setStatus(status);
 
     dateRecipe = dateRecipeRepository.save(dateRecipe);
     recipes.add(dateRecipe);
@@ -85,7 +88,7 @@ public class CalendarService {
     return calendar;
   }
 
-  public Calendar addRecipeToGroupCalendar(Group group, Long recipeID, Date date) {
+  public Calendar addRecipeToGroupCalendar(Group group, Long recipeID, Date date, CalendarStatus status) {
 
     Calendar calendar = group.getCalendar();
 
@@ -101,6 +104,7 @@ public class CalendarService {
     dateRecipe.setDate(date);
     dateRecipe.setRecipeID(recipeID);
     dateRecipe.setCalendar(calendar);
+    dateRecipe.setStatus(status);
 
     dateRecipe = dateRecipeRepository.save(dateRecipe);
     recipes.add(dateRecipe);
@@ -113,7 +117,7 @@ public class CalendarService {
     return calendar;
   }
 
-  public Calendar removeRecipeFromUserCalendar(User user, Long recipeID, Date date) {
+  public Calendar removeRecipeFromUserCalendar(User user, Long recipeID, Date date, CalendarStatus status) {
 
     Calendar calendar = user.getCalendar();
 
@@ -127,7 +131,7 @@ public class CalendarService {
 
     DateRecipe dateRecipeToRemove = null;
 
-    List<DateRecipe> recipesToRemove = dateRecipeRepository.findByDateAndRecipeIDAndCalendar(date, recipeID, calendar);
+    List<DateRecipe> recipesToRemove = dateRecipeRepository.findByDateAndRecipeIDAndCalendarAndStatus(date, recipeID, calendar, status);
     if (recipesToRemove.size() > 0) {
       dateRecipeToRemove = recipesToRemove.get(0);
     }
@@ -150,7 +154,7 @@ public class CalendarService {
     return calendar;
   }
 
-  public Calendar removeRecipeFromGroupCalendar(Group group, Long recipeID, Date date) {
+  public Calendar removeRecipeFromGroupCalendar(Group group, Long recipeID, Date date, CalendarStatus status) {
 
     Calendar calendar = group.getCalendar();
 
@@ -164,7 +168,7 @@ public class CalendarService {
 
     DateRecipe dateRecipeToRemove = null;
 
-    List<DateRecipe> recipesToRemove = dateRecipeRepository.findByDateAndRecipeIDAndCalendar(date, recipeID, calendar);
+    List<DateRecipe> recipesToRemove = dateRecipeRepository.findByDateAndRecipeIDAndCalendarAndStatus(date, recipeID, calendar, status);
     if (recipesToRemove.size() > 0) {
       dateRecipeToRemove = recipesToRemove.get(0);
     }
@@ -185,6 +189,72 @@ public class CalendarService {
     log.debug("Removed recipe from Calendar: {}", calendar);
 
     return calendar;
+  }
+
+  public List<CalendarOutput> getUserCalendar(User user) {
+
+    Calendar calendar = user.getCalendar();
+
+    if (calendar == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Calendar not found.");
+    }
+
+    List<DateRecipe> recipes = calendar.getDateRecipes();
+
+    List<CalendarOutput> calendarOutput = new ArrayList<>();
+
+    for (DateRecipe dateRecipe : recipes) {
+      CalendarOutput output = new CalendarOutput();
+      output.setDate(dateRecipe.getDate());
+      output.setRecipeID(dateRecipe.getRecipeID());
+      output.setStatus(dateRecipe.getStatus());
+
+      Recipe recipe = recipeRepository.findById(dateRecipe.getRecipeID()).orElse(null);
+
+      if (recipe == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found.");
+      }
+
+      output.setRecipeName(recipe.getTitle());
+      output.setRecipeImage(recipe.getImage());
+
+      calendarOutput.add(output);
+    }
+
+    return calendarOutput;
+  }
+
+  public List<CalendarOutput> getGroupCalendar(Group group) {
+
+    Calendar calendar = group.getCalendar();
+
+    if (calendar == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Calendar not found.");
+    }
+
+    List<DateRecipe> recipes = calendar.getDateRecipes();
+
+    List<CalendarOutput> calendarOutput = new ArrayList<>();
+
+    for (DateRecipe dateRecipe : recipes) {
+      CalendarOutput output = new CalendarOutput();
+      output.setDate(dateRecipe.getDate());
+      output.setRecipeID(dateRecipe.getRecipeID());
+      output.setStatus(dateRecipe.getStatus());
+
+      Recipe recipe = recipeRepository.findById(dateRecipe.getRecipeID()).orElse(null);
+
+      if (recipe == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found.");
+      }
+
+      output.setRecipeName(recipe.getTitle());
+      output.setRecipeImage(recipe.getImage());
+
+      calendarOutput.add(output);
+    }
+
+    return calendarOutput;
   }
 
 }

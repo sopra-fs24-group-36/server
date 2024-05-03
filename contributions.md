@@ -23,7 +23,8 @@
 - 02.05, [#115](https://github.com/sopra-fs24-group-36/client/issues/115) Added the DELETE request for a user calendar but had to change the post request a bit so it works better.
 - 02.05, [#120](https://github.com/sopra-fs24-group-36/client/issues/120) Added the DELETE request for a group calendar.
 - 02.05, [#143](https://github.com/sopra-fs24-group-36/client/issues/143) A random cooking-fact can now be requested with a new GET request.
-
+- 03.05, [#118](https://github.com/sopra-fs24-group-36/client/issues/118) Added the GET request for a user calendar but had to change the post and delete request a bit so it works better.
+- 03.05, [#113](https://github.com/sopra-fs24-group-36/client/issues/113) Added the GET request for a group calendar.
 
 ## Week 4
 ### Sarina 

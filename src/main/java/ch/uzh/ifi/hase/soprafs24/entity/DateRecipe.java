@@ -1,6 +1,9 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
 import javax.persistence.*;
+
+import ch.uzh.ifi.hase.soprafs24.constant.CalendarStatus;
+
 import java.util.Date;
 
 @Entity
@@ -19,6 +22,8 @@ public class DateRecipe {
   private Date date;
 
   private Long recipeID;
+
+  private CalendarStatus status;
 
     public Long getId() {
         return id;
@@ -50,5 +55,13 @@ public class DateRecipe {
 
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
+    }
+
+    public CalendarStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CalendarStatus status) {
+        this.status = status;
     }
 }

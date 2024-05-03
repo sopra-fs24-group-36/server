@@ -7,12 +7,14 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import ch.uzh.ifi.hase.soprafs24.constant.CalendarStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Calendar;
 
 
 @Repository("dateRecipeRepository")
 public interface DateRecipeRepository extends JpaRepository<DateRecipe, Long> {
 
-  List<DateRecipe> findByDateAndRecipeIDAndCalendar(Date date, Long recipeID, Calendar calendar);
+  List<DateRecipe> findByDateAndRecipeIDAndCalendarAndStatus(Date date, Long recipeID, Calendar calendar, CalendarStatus status);
 
 }
