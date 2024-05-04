@@ -8,6 +8,8 @@ import ch.uzh.ifi.hase.soprafs24.constant.CalendarStatus;
 
 public class CalendarOutput {
 
+  private Long eventId;
+
   private Long recipeID;
 
   private String recipeTitle;
@@ -18,6 +20,14 @@ public class CalendarOutput {
   private Date date;
 
   private CalendarStatus status;
+
+  public Long getEventId() {
+    return eventId;
+  }
+
+  public void setEventId(Long eventId) {
+    this.eventId = eventId;
+  }
 
   public Long getRecipeID() {
     return recipeID;

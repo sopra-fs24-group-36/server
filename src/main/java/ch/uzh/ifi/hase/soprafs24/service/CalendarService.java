@@ -125,25 +125,14 @@ public class CalendarService {
     return calendar;
   }
 
-  public Calendar removeRecipeFromUserCalendar(User user, Long recipeID, Date date, CalendarStatus status) {
+  public Calendar removeRecipeFromUserCalendar(User user, Long eventId) {
 
     Calendar calendar = user.getCalendar();
 
     List<DateRecipe> recipes = calendar.getDateRecipes();
 
-    Recipe recipe = recipeRepository.findById(recipeID).orElse(null);
-
-    if (recipe == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found.");
-    }
-
-    DateRecipe dateRecipeToRemove = null;
-
-    List<DateRecipe> recipesToRemove = dateRecipeRepository.findByDateAndRecipeIDAndCalendarAndStatus(date, recipeID, calendar, status);
-    if (recipesToRemove.size() > 0) {
-      dateRecipeToRemove = recipesToRemove.get(0);
-    }
-
+    DateRecipe dateRecipeToRemove = dateRecipeRepository.findById(eventId).orElse(null);
+    
     if (dateRecipeToRemove == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found in Calendar.");
     }
@@ -162,25 +151,14 @@ public class CalendarService {
     return calendar;
   }
 
-  public Calendar removeRecipeFromGroupCalendar(Group group, Long recipeID, Date date, CalendarStatus status) {
+  public Calendar removeRecipeFromGroupCalendar(Group group, Long eventId) {
 
     Calendar calendar = group.getCalendar();
 
     List<DateRecipe> recipes = calendar.getDateRecipes();
 
-    Recipe recipe = recipeRepository.findById(recipeID).orElse(null);
-
-    if (recipe == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found.");
-    }
-
-    DateRecipe dateRecipeToRemove = null;
-
-    List<DateRecipe> recipesToRemove = dateRecipeRepository.findByDateAndRecipeIDAndCalendarAndStatus(date, recipeID, calendar, status);
-    if (recipesToRemove.size() > 0) {
-      dateRecipeToRemove = recipesToRemove.get(0);
-    }
-
+    DateRecipe dateRecipeToRemove = dateRecipeRepository.findById(eventId).orElse(null);
+    
     if (dateRecipeToRemove == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found in Calendar.");
     }
@@ -213,6 +191,7 @@ public class CalendarService {
 
     for (DateRecipe dateRecipe : recipes) {
       CalendarOutput output = new CalendarOutput();
+      output.setEventId(dateRecipe.getId());
       output.setDate(dateRecipe.getDate());
       output.setRecipeID(dateRecipe.getRecipeID());
       output.setStatus(dateRecipe.getStatus());
@@ -246,6 +225,7 @@ public class CalendarService {
 
     for (DateRecipe dateRecipe : recipes) {
       CalendarOutput output = new CalendarOutput();
+      output.setEventId(dateRecipe.getId());
       output.setDate(dateRecipe.getDate());
       output.setRecipeID(dateRecipe.getRecipeID());
       output.setStatus(dateRecipe.getStatus());
