@@ -6,7 +6,7 @@ public class CommentDTO {
 
   private String text;
 
-  private Long userID;
+  private String username;
 
 
   public Long getId() {
@@ -23,11 +23,11 @@ public class CommentDTO {
         this.text = text;
     }
 
-  public Long getUserID() {
-        return userID;
+  public String getUsername() {
+        return username;
     }
-  public void setUserID(Long userID) {
-        this.userID = userID;
+  public void setUsername(String username) {
+        this.username = username;
     }
 
 }

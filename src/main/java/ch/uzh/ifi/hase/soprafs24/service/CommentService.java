@@ -3,8 +3,10 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Comment;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
+import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.CommentRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.CookbookRepository;
+import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +27,24 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
+    private final UserRepository userRepository;
+
     @Autowired
-    public CommentService(@Qualifier("commentRepository") CommentRepository commentRepository) {
+    public CommentService(@Qualifier("commentRepository") CommentRepository commentRepository, UserRepository userRepository) {
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
     }
 
 
     public Comment createComment (Comment newComment) {
+
+        Long userID = newComment.getUserID();
+
+        User user = userRepository.findById(userID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        String username = user.getUsername();
+        newComment.setUsername(username);
 
         newComment = commentRepository.save(newComment);
         commentRepository.flush();
