@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.entity.*;
-import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
@@ -13,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -22,11 +22,14 @@ public class CommentController {
 
   private final RecipeService recipeService;
 
+  private final RecipeRepository recipeRepository;
 
-    CommentController(CommentService commentService, RecipeService recipeService)
+
+    CommentController(CommentService commentService, RecipeService recipeService, RecipeRepository recipeRepository)
   {
       this.commentService = commentService;
       this.recipeService = recipeService;
+      this.recipeRepository = recipeRepository;
   }
 
 
@@ -37,9 +40,13 @@ public class CommentController {
 
       Comment commentInput = DTOMapper.INSTANCE.convertCommentPostDTOtoEntity(commentPostDTO);
 
+      Optional<Recipe> recipeOptional = recipeRepository.findById(recipeID);
+      if (!recipeOptional.isPresent()) {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found");
+      }
+
       //create comment and save it
       Comment createdComment = commentService.createComment(commentInput);
-
 
       //save comment to recipe it belongs to
       recipeService.addComment(recipeID, createdComment);

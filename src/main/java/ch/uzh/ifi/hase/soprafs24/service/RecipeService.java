@@ -306,11 +306,7 @@ public class RecipeService {
 
       //check that recipe exists, otherwise exception and delete comment
       Recipe recipe = recipeRepository.findById(recipeID)
-              .orElseThrow(() -> {
-                  commentRepository.delete(comment);
-                  commentRepository.flush();
-                  return new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found, Comment could not be created");
-              });
+              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found, Comment could not be created"));
 
       //save commentID to recipe
       List<Long> comments = recipe.getComments();
