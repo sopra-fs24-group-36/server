@@ -88,12 +88,10 @@ public class CalendarController {
     calendarService.addRecipeToGroupCalendar(group, recipeID, date, status);
   }
 
-  @DeleteMapping("/users/{userId}/calendars")
+  @DeleteMapping("/users/{userId}/calendars/{eventId}")
   @ResponseStatus(HttpStatus.OK)
-  public void removeRecipeFromUserCalendar(@RequestBody CalendarDeleteDTO calendarDeleteDTO, @PathVariable("userId") Long userId) {
-    
-    Long eventId = calendarDeleteDTO.getEventId();
-    
+  public void removeRecipeFromUserCalendar(@PathVariable("eventId") Long eventId, @PathVariable("userId") Long userId) {
+        
     User user = userRepository.findById(userId).orElse(null);
 
     if(user == null){
@@ -103,12 +101,10 @@ public class CalendarController {
     calendarService.removeRecipeFromUserCalendar(user, eventId);
   }
 
-  @DeleteMapping("/groups/{groupId}/calendars")
+  @DeleteMapping("/groups/{groupId}/calendars/{eventId}")
   @ResponseStatus(HttpStatus.OK)
-  public void removeRecipeFromGroupCalendar(@RequestBody CalendarDeleteDTO calendarDeleteDTO, @PathVariable("groupId") Long groupId) {
-    
-    Long eventId = calendarDeleteDTO.getEventId();
-    
+  public void removeRecipeFromGroupCalendar(@PathVariable("eventId") Long eventId, @PathVariable("groupId") Long groupId) {
+        
     Group group = groupRepository.findById(groupId).orElse(null);
 
     if(group == null){
