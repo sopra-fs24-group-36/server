@@ -2,14 +2,8 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
-import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
-import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.repository.CookbookRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs24.entity.*;
+import ch.uzh.ifi.hase.soprafs24.repository.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +34,15 @@ public class RecipeService {
 
   private final UserRepository userRepository;
 
+  private final CommentRepository commentRepository;
+
   @Autowired
-  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository, CookbookRepository cookbookRepository, GroupRepository groupRepository, UserRepository userRepository) {
+  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository, CookbookRepository cookbookRepository, GroupRepository groupRepository, UserRepository userRepository, CommentRepository commentRepository) {
     this.recipeRepository = recipeRepository;
     this.cookbookRepository = cookbookRepository;
     this.groupRepository = groupRepository;
     this.userRepository = userRepository;
+    this.commentRepository = commentRepository;
   }
 
   public Recipe createUserRecipe(Long userID, Recipe newRecipe) {
@@ -147,6 +144,7 @@ public class RecipeService {
     return recipes;
   }
 
+
   public void updateRecipe(long recipeID, Recipe recipeToUpdate){
     String title = recipeToUpdate.getTitle();
     
@@ -247,6 +245,7 @@ public class RecipeService {
 
   }
 
+
   public void deleteRecipe(Recipe recipe) {
     for (Long id:recipe.getGroups()){
       Group g = groupRepository.findById(id).orElse(null);
@@ -263,6 +262,7 @@ public class RecipeService {
     recipeRepository.delete(recipe);
     recipeRepository.flush();
   }
+
 
 
   //need to also remove the group from the recipe otherwise remains in database
@@ -301,4 +301,26 @@ public class RecipeService {
     return group;
   }
 
+
+  public void addComment (Long recipeID, Comment comment) {
+
+      //check that recipe exists, otherwise exception and delete comment
+      Recipe recipe = recipeRepository.findById(recipeID)
+              .orElseThrow(() -> {
+                  commentRepository.delete(comment);
+                  commentRepository.flush();
+                  return new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found, Comment could not be created");
+              });
+
+      //save commentID to recipe
+      List<Long> comments = recipe.getComments();
+
+      comments.add(comment.getId());
+
+      recipe.setComments(comments);
+
+      recipeRepository.save(recipe);
+      recipeRepository.flush();
+
+  }
 }

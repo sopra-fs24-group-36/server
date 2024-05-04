@@ -53,6 +53,10 @@ public class Recipe implements Serializable {
   @Column(name = "groupIDs")
   private List<Long> groupIDs;
 
+  @ElementCollection
+  @Column(name = "commentIDs")
+  private List<Long> commentIDs;
+
   private Long authorID;
 
   public Long getId() {
@@ -149,4 +153,7 @@ public class Recipe implements Serializable {
   public void setAuthorID(Long authorID) {
     this.authorID = authorID;
   }
+
+  public List<Long> getComments(){return commentIDs;}
+  public void setComments(List<Long> commentIDs){this.commentIDs = commentIDs;}
 }
