@@ -47,9 +47,16 @@ public class CommentService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
         //update comment
-        comment.setText(commentUpdate.getText());
-        commentRepository.save(comment);
-        commentRepository.flush();
+        String newText = commentUpdate.getText().trim();
+
+        if (!newText.isEmpty()) {
+            comment.setText(commentUpdate.getText());
+            commentRepository.save(comment);
+            commentRepository.flush();
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Need to have at least length 1");
+        }
+
 
     }
 

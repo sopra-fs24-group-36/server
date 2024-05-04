@@ -53,7 +53,12 @@ public class CommentController {
       Comment createdComment = commentService.createComment(commentInput);
 
       //save comment to recipe it belongs to
-      recipeService.addComment(recipeID, createdComment);
+      String text = createdComment.getText().trim();
+      if (!text.isEmpty()) {
+          recipeService.addComment(recipeID, createdComment);
+      } else {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "text needs to have at least length 1");
+      }
 
       return DTOMapper.INSTANCE.convertEntityToCommentDTO(createdComment);
 
@@ -62,7 +67,7 @@ public class CommentController {
     @PutMapping("/comments/{commentID}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void createComment(@RequestBody CommentPutDTO commentPutDTO, @PathVariable Long commentID) {
+    public void updateComment(@RequestBody CommentPutDTO commentPutDTO, @PathVariable Long commentID) {
 
         Comment commentUpdate = DTOMapper.INSTANCE.convertCommentPutDTOtoEntity(commentPutDTO);
 
