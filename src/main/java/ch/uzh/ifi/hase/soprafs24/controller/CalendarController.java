@@ -12,6 +12,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.CalendarDeleteDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.DateRecipeDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.CalendarService;
@@ -89,44 +90,32 @@ public class CalendarController {
 
   @DeleteMapping("/users/{userId}/calendars")
   @ResponseStatus(HttpStatus.OK)
-  public void removeRecipeFromUserCalendar(@RequestBody DateRecipeDTO dateRecipePostDTO, @PathVariable("userId") Long userId) {
+  public void removeRecipeFromUserCalendar(@RequestBody CalendarDeleteDTO calendarDeleteDTO, @PathVariable("userId") Long userId) {
     
-    CalendarRequest calendarRequest = DTOMapper.INSTANCE.convertDateRecipePostDTOtoEntity(dateRecipePostDTO);
-
+    Long eventId = calendarDeleteDTO.getEventId();
+    
     User user = userRepository.findById(userId).orElse(null);
 
     if(user == null){
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
     }
 
-    Long recipeID = calendarRequest.getRecipeID();
-
-    Date date = calendarRequest.getDate();
-
-    CalendarStatus status = calendarRequest.getStatus();
-
-    calendarService.removeRecipeFromUserCalendar(user, recipeID, date, status);
+    calendarService.removeRecipeFromUserCalendar(user, eventId);
   }
 
   @DeleteMapping("/groups/{groupId}/calendars")
   @ResponseStatus(HttpStatus.OK)
-  public void removeRecipeFromGroupCalendar(@RequestBody DateRecipeDTO dateRecipePostDTO, @PathVariable("groupId") Long groupId) {
+  public void removeRecipeFromGroupCalendar(@RequestBody CalendarDeleteDTO calendarDeleteDTO, @PathVariable("groupId") Long groupId) {
     
-    CalendarRequest calendarRequest = DTOMapper.INSTANCE.convertDateRecipePostDTOtoEntity(dateRecipePostDTO);
-
+    Long eventId = calendarDeleteDTO.getEventId();
+    
     Group group = groupRepository.findById(groupId).orElse(null);
 
     if(group == null){
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found.");
     }
 
-    Long recipeID = calendarRequest.getRecipeID();
-
-    Date date = calendarRequest.getDate();
-
-    CalendarStatus status = calendarRequest.getStatus();
-
-    calendarService.removeRecipeFromGroupCalendar(group, recipeID, date, status);
+    calendarService.removeRecipeFromGroupCalendar(group, eventId);
   }
 
   @GetMapping("/users/{userId}/calendars")
