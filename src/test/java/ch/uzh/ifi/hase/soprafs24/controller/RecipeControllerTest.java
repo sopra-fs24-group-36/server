@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
+import ch.uzh.ifi.hase.soprafs24.repository.CommentRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
@@ -60,6 +61,9 @@ public class RecipeControllerTest {
 
   @MockBean
   private GroupRepository groupRepository;
+
+  @MockBean
+  private CommentRepository commentRepository;
 
   //  test the /recipes POST Mapping  //
   @Test

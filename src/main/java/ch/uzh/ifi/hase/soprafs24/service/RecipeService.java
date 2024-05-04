@@ -36,13 +36,16 @@ public class RecipeService {
 
   private final CommentRepository commentRepository;
 
+  private final CommentService commentService;
+
   @Autowired
-  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository, CookbookRepository cookbookRepository, GroupRepository groupRepository, UserRepository userRepository, CommentRepository commentRepository) {
+  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository, CommentService commentService, CookbookRepository cookbookRepository, GroupRepository groupRepository, UserRepository userRepository, CommentRepository commentRepository) {
     this.recipeRepository = recipeRepository;
     this.cookbookRepository = cookbookRepository;
     this.groupRepository = groupRepository;
     this.userRepository = userRepository;
     this.commentRepository = commentRepository;
+    this.commentService = commentService;
   }
 
   public Recipe createUserRecipe(Long userID, Recipe newRecipe) {
@@ -247,18 +250,34 @@ public class RecipeService {
 
 
   public void deleteRecipe(Recipe recipe) {
-    for (Long id:recipe.getGroups()){
-      Group g = groupRepository.findById(id).orElse(null);
-      if(g == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");}
-      Cookbook c = g.getCookbook();
-      List<Long> recipes = c.getRecipes();
-      if (recipes.contains(recipe.getId())){
-        recipes.remove(recipe.getId());
-        c.setRecipes(recipes);
-        cookbookRepository.save(c);
-        cookbookRepository.flush();
-      } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe is not part of one of these groups");}
+
+      //remove recipe from groups it belongs to
+      if (recipe.getGroups() != null) {
+          for (Long id:recipe.getGroups()){
+              Group g = groupRepository.findById(id).orElse(null);
+              if(g == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");}
+              Cookbook c = g.getCookbook();
+              List<Long> recipes = c.getRecipes();
+              if (recipes.contains(recipe.getId())){
+                  recipes.remove(recipe.getId());
+                  c.setRecipes(recipes);
+                  cookbookRepository.save(c);
+                  cookbookRepository.flush();
+              } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe is not part of one of these groups");}
+          }
+      }
+
+    //delete comments that belonged to recipe
+    if (recipe.getComments() != null){
+        for (Long commentID: recipe.getComments()) {
+            Comment comment = commentRepository.findById(commentID).orElse(null);
+            if (comment == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found");
+            }
+            commentService.deleteComment(comment);
+        }
     }
+
     recipeRepository.delete(recipe);
     recipeRepository.flush();
   }
@@ -308,15 +327,34 @@ public class RecipeService {
       Recipe recipe = recipeRepository.findById(recipeID)
               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found, Comment could not be created"));
 
-      //save commentID to recipe
+      //save commentID to recipe if not already exists
+      List<Long> comments = recipe.getComments();
+      if(!comments.contains(comment.getId())) {
+
+          comments.add(comment.getId());
+          recipe.setComments(comments);
+
+          recipeRepository.save(recipe);
+          recipeRepository.flush();
+      } else {
+          new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment already ");
+      }
+
+  }
+
+  public void deleteComment (Recipe recipe, Comment comment) {
+
       List<Long> comments = recipe.getComments();
 
-      comments.add(comment.getId());
+      if(comments.contains(comment.getId())) {
 
-      recipe.setComments(comments);
+          comments.remove(comment.getId());
+          recipe.setComments(comments);
 
-      recipeRepository.save(recipe);
-      recipeRepository.flush();
-
+          recipeRepository.save(recipe);
+          recipeRepository.flush();
+      } else {
+          new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment does not belong to recipe");
+      }
   }
 }

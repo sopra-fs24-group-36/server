@@ -9,9 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 
 @Service
@@ -37,5 +40,23 @@ public class CommentService {
         return newComment;
     }
 
+    public void updateComment(Long commentID, Comment commentUpdate) {
+
+        //check if comment with this ID exists
+        Comment comment = commentRepository.findById(commentID)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+
+        //update comment
+        comment.setText(commentUpdate.getText());
+        commentRepository.save(comment);
+        commentRepository.flush();
+
+    }
+
+    public void deleteComment(Comment comment) {
+
+        commentRepository.delete(comment);
+        commentRepository.flush();
+    }
 }
 

@@ -6,10 +6,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.repository.CookbookRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs24.repository.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,6 +41,12 @@ public class RecipeServiceTest {
 
   @Mock
   private UserRepository userRepository;
+
+  @Mock
+  private CommentRepository commentRepository;
+
+  @Mock
+  private CommentService commentService;
 
   @InjectMocks
   private RecipeService recipeService;

@@ -104,4 +104,7 @@ public interface DTOMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "userID", target = "userID")
     CommentDTO convertEntityToCommentDTO(Comment comment);
+
+    @Mapping(source = "text", target = "text")
+    Comment convertCommentPutDTOtoEntity(CommentPutDTO commentPutDTO);
 }
