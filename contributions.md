@@ -13,6 +13,10 @@
 - 30.04, [#71](https://github.com/sopra-fs24-group-36/client/issues/71) made sure recipes on home page are displayed as the same size like in the cookbooks. 
 
 ### Yujie
+- 04.05, [#58](https://github.com/sopra-fs24-group-36/client/issues/58) add the ensure modal to delete/remove recipes and leave group
+- 04.05, [#60](https://github.com/sopra-fs24-group-36/client/issues/60) changed the UI of the recipe to display comments
+- 04.05, [#59](https://github.com/sopra-fs24-group-36/client/issues/59) connected the UI of recipe and comments with the backend
+- 05.05, [#61](https://github.com/sopra-fs24-group-36/client/issues/61) createed the UI for voting on a recipe
 
 ### Summer 
 
