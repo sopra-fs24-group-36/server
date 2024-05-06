@@ -27,6 +27,9 @@
 - 05.05, [#61](https://github.com/sopra-fs24-group-36/client/issues/61) createed the UI for voting on a recipe
 
 ### Summer 
+- 05.05，[#57](https://github.com/sopra-fs24-group-36/client/issues/57) finish the UI personal calendar with the functionality from the backend
+- 05.05，[#56](https://github.com/sopra-fs24-group-36/client/issues/56) finish the UI group calendar with the functionality from the backend
+- 06.05，[#8](https://github.com/sopra-fs24-group-36/client/issues/8) Display a random cooking fact on the login page
 
 ### Marko 
 - 01.05, [#117](https://github.com/sopra-fs24-group-36/client/issues/117) Implemented a Database for Calendars.
