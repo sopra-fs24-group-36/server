@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.repository.*;
 
+import ch.uzh.ifi.hase.soprafs24.rest.dto.VotingDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -357,4 +358,47 @@ public class RecipeService {
           new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment does not belong to recipe");
       }
   }
+
+    public void voteOnRecipe(Long recipeID, VotingDTO votingInput) {
+
+      //check if recipe exists
+      Recipe recipe = recipeRepository.findById(recipeID)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found, Comment could not be created"));
+
+      //if recipe has no voting yet
+      if (recipe.getCount() == null) {
+
+          recipe.setCount(1);
+
+          double doubleValue = votingInput.getVote().doubleValue(); // Extract the primitive double value
+          Long newSum = (long) doubleValue;
+
+          recipe.setSum(newSum);
+
+          recipe.setVote(votingInput.getVote());
+      }
+      //recipe already has voting
+      else {
+
+          Integer newCount = recipe.getCount() + 1;
+          recipe.setCount(newCount);
+
+          double doubleValue = votingInput.getVote().doubleValue();
+          Long summing = (long) doubleValue;
+
+          Long newSum = recipe.getSum() + summing;
+          recipe.setSum(newSum);
+
+          Double sumDouble = recipe.getSum().doubleValue();
+          Double countDouble = recipe.getCount().doubleValue();
+
+          Double newVote = sumDouble / countDouble;
+          Double roundedNum = Math.round(newVote * 2) / 2.0;
+
+          recipe.setVote(roundedNum);
+      }
+
+      recipeRepository.save(recipe);
+      recipeRepository.flush();
+    }
 }

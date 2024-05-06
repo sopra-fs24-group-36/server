@@ -107,4 +107,8 @@ public interface DTOMapper {
 
     @Mapping(source = "text", target = "text")
     Comment convertCommentPutDTOtoEntity(CommentPutDTO commentPutDTO);
+
+    @Mapping(source = "vote", target = "vote")
+    @Mapping(source = "count", target = "count")
+    VoteRequestDTO convertEntityToVoteRequestDTO(Recipe recipe);
 }

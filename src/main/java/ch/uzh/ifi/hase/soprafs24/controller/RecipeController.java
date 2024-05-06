@@ -7,10 +7,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
 import ch.uzh.ifi.hase.soprafs24.repository.CommentRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.CommentDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.RecipeService;
 
@@ -224,6 +221,27 @@ public class RecipeController {
 
       return returnComments;
 
+  }
+
+
+  @PostMapping("/votes/recipes/{recipeID}")
+  @ResponseStatus(HttpStatus.CREATED)
+  public void voteOnRecipe (@PathVariable Long recipeID, @RequestBody VotingDTO votingDTO) {
+
+      recipeService.voteOnRecipe(recipeID, votingDTO);
+  }
+
+
+  @GetMapping("/votes/recipes/{recipeID}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public VoteRequestDTO getVote (@PathVariable Long recipeID) {
+
+      //check if recipe exists
+      Recipe recipe = recipeRepository.findById(recipeID)
+              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found, Comment could not be created"));
+
+      return DTOMapper.INSTANCE.convertEntityToVoteRequestDTO(recipe);
   }
 
 }
