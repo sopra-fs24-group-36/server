@@ -2,15 +2,10 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
-import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
-import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.repository.CookbookRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs24.entity.*;
+import ch.uzh.ifi.hase.soprafs24.repository.*;
 
+import ch.uzh.ifi.hase.soprafs24.rest.dto.VotingDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +35,18 @@ public class RecipeService {
 
   private final UserRepository userRepository;
 
+  private final CommentRepository commentRepository;
+
+  private final CommentService commentService;
+
   @Autowired
-  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository, CookbookRepository cookbookRepository, GroupRepository groupRepository, UserRepository userRepository) {
+  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository, CommentService commentService, CookbookRepository cookbookRepository, GroupRepository groupRepository, UserRepository userRepository, CommentRepository commentRepository) {
     this.recipeRepository = recipeRepository;
     this.cookbookRepository = cookbookRepository;
     this.groupRepository = groupRepository;
     this.userRepository = userRepository;
+    this.commentRepository = commentRepository;
+    this.commentService = commentService;
   }
 
   public Recipe createUserRecipe(Long userID, Recipe newRecipe) {
@@ -147,6 +148,7 @@ public class RecipeService {
     return recipes;
   }
 
+
   public void updateRecipe(long recipeID, Recipe recipeToUpdate){
     String title = recipeToUpdate.getTitle();
     
@@ -247,22 +249,40 @@ public class RecipeService {
 
   }
 
+
   public void deleteRecipe(Recipe recipe) {
-    for (Long id:recipe.getGroups()){
-      Group g = groupRepository.findById(id).orElse(null);
-      if(g == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");}
-      Cookbook c = g.getCookbook();
-      List<Long> recipes = c.getRecipes();
-      if (recipes.contains(recipe.getId())){
-        recipes.remove(recipe.getId());
-        c.setRecipes(recipes);
-        cookbookRepository.save(c);
-        cookbookRepository.flush();
-      } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe is not part of one of these groups");}
+
+      //remove recipe from groups it belongs to
+      if (recipe.getGroups() != null) {
+          for (Long id:recipe.getGroups()){
+              Group g = groupRepository.findById(id).orElse(null);
+              if(g == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");}
+              Cookbook c = g.getCookbook();
+              List<Long> recipes = c.getRecipes();
+              if (recipes.contains(recipe.getId())){
+                  recipes.remove(recipe.getId());
+                  c.setRecipes(recipes);
+                  cookbookRepository.save(c);
+                  cookbookRepository.flush();
+              } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe is not part of one of these groups");}
+          }
+      }
+
+    //delete comments that belonged to recipe
+    if (recipe.getComments() != null){
+        for (Long commentID: recipe.getComments()) {
+            Comment comment = commentRepository.findById(commentID).orElse(null);
+            if (comment == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found");
+            }
+            commentService.deleteComment(comment);
+        }
     }
+
     recipeRepository.delete(recipe);
     recipeRepository.flush();
   }
+
 
 
   //need to also remove the group from the recipe otherwise remains in database
@@ -301,4 +321,84 @@ public class RecipeService {
     return group;
   }
 
+
+  public void addComment (Long recipeID, Comment comment) {
+
+      //check that recipe exists, otherwise exception and delete comment
+      Recipe recipe = recipeRepository.findById(recipeID)
+              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found, Comment could not be created"));
+
+      //save commentID to recipe if not already exists
+      List<Long> comments = recipe.getComments();
+      if(!comments.contains(comment.getId())) {
+
+          comments.add(comment.getId());
+          recipe.setComments(comments);
+
+          recipeRepository.save(recipe);
+          recipeRepository.flush();
+      } else {
+          new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment already ");
+      }
+
+  }
+
+  public void deleteComment (Recipe recipe, Comment comment) {
+
+      List<Long> comments = recipe.getComments();
+
+      if(comments.contains(comment.getId())) {
+
+          comments.remove(comment.getId());
+          recipe.setComments(comments);
+
+          recipeRepository.save(recipe);
+          recipeRepository.flush();
+      } else {
+          new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment does not belong to recipe");
+      }
+  }
+
+    public void voteOnRecipe(Long recipeID, VotingDTO votingInput) {
+
+      //check if recipe exists
+      Recipe recipe = recipeRepository.findById(recipeID)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found, Comment could not be created"));
+
+      //if recipe has no voting yet
+      if (recipe.getCount() == null) {
+
+          recipe.setCount(1);
+
+          double doubleValue = votingInput.getVote().doubleValue(); // Extract the primitive double value
+          Long newSum = (long) doubleValue;
+
+          recipe.setSum(newSum);
+
+          recipe.setVote(votingInput.getVote());
+      }
+      //recipe already has voting
+      else {
+
+          Integer newCount = recipe.getCount() + 1;
+          recipe.setCount(newCount);
+
+          double doubleValue = votingInput.getVote().doubleValue();
+          Long summing = (long) doubleValue;
+
+          Long newSum = recipe.getSum() + summing;
+          recipe.setSum(newSum);
+
+          Double sumDouble = recipe.getSum().doubleValue();
+          Double countDouble = recipe.getCount().doubleValue();
+
+          Double newVote = sumDouble / countDouble;
+          Double roundedNum = Math.round(newVote * 2) / 2.0;
+
+          recipe.setVote(roundedNum);
+      }
+
+      recipeRepository.save(recipe);
+      recipeRepository.flush();
+    }
 }

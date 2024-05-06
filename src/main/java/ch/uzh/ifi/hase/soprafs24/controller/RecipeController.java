@@ -1,13 +1,13 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
+import ch.uzh.ifi.hase.soprafs24.entity.Comment;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
+import ch.uzh.ifi.hase.soprafs24.repository.CommentRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.RecipeService;
 
@@ -27,7 +27,14 @@ public class RecipeController {
   private final RecipeRepository recipeRepository;
   private final GroupRepository groupRepository;
 
-  RecipeController(RecipeService recipeService, RecipeRepository recipeRepository, GroupRepository groupRepository) {this.recipeService = recipeService; this.recipeRepository = recipeRepository; this.groupRepository = groupRepository;}
+  private final CommentRepository commentRepository;
+
+  RecipeController(RecipeService recipeService, RecipeRepository recipeRepository, GroupRepository groupRepository, CommentRepository commentRepository) {
+      this.recipeService = recipeService;
+      this.recipeRepository = recipeRepository;
+      this.groupRepository = groupRepository;
+      this.commentRepository = commentRepository;
+  }
 
   @PostMapping("/users/{userID}/cookbooks")
   @ResponseStatus(HttpStatus.CREATED)
@@ -181,5 +188,60 @@ public class RecipeController {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group or Recipe not found", e);
     }
   }
-  
+
+  @GetMapping("comments/recipes/{recipeID}")
+  @ResponseStatus(HttpStatus.OK)
+  public List<CommentDTO> getRecipeComments (@PathVariable Long recipeID) {
+
+      //check that recipe exists
+      Recipe recipe = recipeRepository.findById(recipeID).orElse(null);
+      if (recipe == null){
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found");
+      }
+
+      //get commentList
+      List<Long> commentIDs = recipe.getComments();
+
+      //new list to return
+      List<Comment> comments = new ArrayList<>();
+
+      //iterate through all comments and add to new list to return
+      for (Long id: commentIDs){
+          Comment comment = commentRepository.findById(id).orElse(null);
+          if (comment == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND);}
+          else {comments.add(comment);}
+      }
+
+      List<CommentDTO> returnComments = new ArrayList<>();
+
+      for (Comment c:comments){
+          CommentDTO returncomment = DTOMapper.INSTANCE.convertEntityToCommentDTO(c);
+          returnComments.add(returncomment);
+      }
+
+      return returnComments;
+
+  }
+
+
+  @PostMapping("/votes/recipes/{recipeID}")
+  @ResponseStatus(HttpStatus.CREATED)
+  public void voteOnRecipe (@PathVariable Long recipeID, @RequestBody VotingDTO votingDTO) {
+
+      recipeService.voteOnRecipe(recipeID, votingDTO);
+  }
+
+
+  @GetMapping("/votes/recipes/{recipeID}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public VoteRequestDTO getVote (@PathVariable Long recipeID) {
+
+      //check if recipe exists
+      Recipe recipe = recipeRepository.findById(recipeID)
+              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found, Comment could not be created"));
+
+      return DTOMapper.INSTANCE.convertEntityToVoteRequestDTO(recipe);
+  }
+
 }

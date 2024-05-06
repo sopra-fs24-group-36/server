@@ -1,12 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
-import ch.uzh.ifi.hase.soprafs24.entity.CalendarRequest;
-import ch.uzh.ifi.hase.soprafs24.entity.DateRecipe;
-import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.ItemRequest;
-import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
-import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -100,4 +94,21 @@ public interface DTOMapper {
     @Mapping(source = "date", target = "date")
     @Mapping(source = "recipeID", target = "recipeID")
     CalendarRequest convertDateRecipePostDTOtoEntity(DateRecipeDTO dateRecipePostDTO);
+
+    @Mapping(source = "text", target = "text")
+    @Mapping(source = "userID", target = "userID")
+    Comment convertCommentPostDTOtoEntity(CommentPostDTO commentPostDTO);
+
+
+    @Mapping(source = "text", target = "text")
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "username", target = "username")
+    CommentDTO convertEntityToCommentDTO(Comment comment);
+
+    @Mapping(source = "text", target = "text")
+    Comment convertCommentPutDTOtoEntity(CommentPutDTO commentPutDTO);
+
+    @Mapping(source = "vote", target = "vote")
+    @Mapping(source = "count", target = "count")
+    VoteRequestDTO convertEntityToVoteRequestDTO(Recipe recipe);
 }

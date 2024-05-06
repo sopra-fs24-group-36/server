@@ -53,7 +53,21 @@ public class Recipe implements Serializable {
   @Column(name = "groupIDs")
   private List<Long> groupIDs;
 
+  @ElementCollection
+  @Column(name = "commentIDs")
+  private List<Long> commentIDs;
+
+  @Column
   private Long authorID;
+
+  @Column
+  private Double vote;
+
+  @Column
+  private Long sum;
+
+  @Column
+  private Integer count;
 
   public Long getId() {
     return id;
@@ -149,4 +163,33 @@ public class Recipe implements Serializable {
   public void setAuthorID(Long authorID) {
     this.authorID = authorID;
   }
+
+  public List<Long> getComments(){return commentIDs;}
+  public void setComments(List<Long> commentIDs){this.commentIDs = commentIDs;}
+
+  public Double getVote() {
+        return vote;
+    }
+
+  public void setVote(Double vote) {
+        this.vote = vote;
+    }
+
+  public Long getSum() {
+        return sum;
+    }
+
+  public void setSum(Long sum) {
+        this.sum = sum;
+    }
+
+
+  public Integer getCount() {
+        return count;
+    }
+
+  public void setCount(Integer count) {
+        this.count = count;
+    }
+
 }
