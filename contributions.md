@@ -3,7 +3,15 @@
 - entry should consist of the date, your name, links to the github issues you worked on and optionally a short description
 
 ## Week 5
+
 ### Sarina 
+- 06.05, [#154](https://github.com/sopra-fs24-group-36/client/issues/154), created a GET request to get the voting of a recipe
+- 06.05, [#128](https://github.com/sopra-fs24-group-36/client/issues/128), created a POST request to vote on a recipe
+- 04.05, [#16](https://github.com/sopra-fs24-group-36/client/issues/16), created a new database table for the comments and set everything up 
+- 04.05, [#124](https://github.com/sopra-fs24-group-36/client/issues/124), added the GET request for comments
+- 04.05,[#126](https://github.com/sopra-fs24-group-36/client/issues/126), added the PUt request to edit a comment
+- 04.05, [#151](https://github.com/sopra-fs24-group-36/client/issues/151), added the DELETE request to delete a comment
+- 04.05, [#123](https://github.com/sopra-fs24-group-36/client/issues/123), added the POST request to create a comment for a recipe
 
 ### Jazz 
 - 30.04, [#76](https://github.com/sopra-fs24-group-36/client/issues/76) implemented so ingredients from API are automatically added to recipes. We wanted to implement for instructions too but the API didnt provide instructions despite it being in the documentation.
