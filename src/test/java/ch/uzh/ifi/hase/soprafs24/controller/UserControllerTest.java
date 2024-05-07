@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
+import ch.uzh.ifi.hase.soprafs24.constant.RandomCookingFact;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
@@ -28,7 +29,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
@@ -482,6 +485,18 @@ public class UserControllerTest {
     
             mockMvc.perform(getRequest)
                     .andExpect(status().isNotFound());
+        }
+
+        @Test
+        public void testRandomFact() throws Exception {
+                // Collect all facts from the enum into an array of String
+                String[] allFacts = Arrays.stream(RandomCookingFact.values())
+                                        .map(RandomCookingFact::getFact)
+                                        .toArray(String[]::new);
+
+                mockMvc.perform(get("/randomCookingFact"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", is(oneOf(allFacts))));
         }
 
   private String asJsonString(final Object object) {
