@@ -5,13 +5,13 @@
 ## Week 5
 
 ### Sarina 
-- 06.05, [#154](https://github.com/sopra-fs24-group-36/client/issues/154), created a GET request to get the voting of a recipe
-- 06.05, [#128](https://github.com/sopra-fs24-group-36/client/issues/128), created a POST request to vote on a recipe
-- 04.05, [#16](https://github.com/sopra-fs24-group-36/client/issues/16), created a new database table for the comments and set everything up 
-- 04.05, [#124](https://github.com/sopra-fs24-group-36/client/issues/124), added the GET request for comments
-- 04.05,[#126](https://github.com/sopra-fs24-group-36/client/issues/126), added the PUt request to edit a comment
-- 04.05, [#151](https://github.com/sopra-fs24-group-36/client/issues/151), added the DELETE request to delete a comment
-- 04.05, [#123](https://github.com/sopra-fs24-group-36/client/issues/123), added the POST request to create a comment for a recipe
+- 06.05, [#154](https://github.com/sopra-fs24-group-36/server/issues/154), created a GET request to get the voting of a recipe
+- 06.05, [#128](https://github.com/sopra-fs24-group-36/server/issues/128), created a POST request to vote on a recipe
+- 04.05, [#16](https://github.com/sopra-fs24-group-36/server/issues/16), created a new database table for the comments and set everything up 
+- 04.05, [#124](https://github.com/sopra-fs24-group-36/server/issues/124), added the GET request for comments
+- 04.05,[#126](https://github.com/sopra-fs24-group-36/server/issues/126), added the PUt request to edit a comment
+- 04.05, [#151](https://github.com/sopra-fs24-group-36/server/issues/151), added the DELETE request to delete a comment
+- 04.05, [#123](https://github.com/sopra-fs24-group-36/server/issues/123), added the POST request to create a comment for a recipe
 
 ### Jazz 
 - 30.04, [#76](https://github.com/sopra-fs24-group-36/client/issues/76) implemented so ingredients from API are automatically added to recipes. We wanted to implement for instructions too but the API didnt provide instructions despite it being in the documentation.
@@ -32,14 +32,14 @@
 - 06.05，[#8](https://github.com/sopra-fs24-group-36/client/issues/8) Display a random cooking fact on the login page
 
 ### Marko 
-- 01.05, [#117](https://github.com/sopra-fs24-group-36/client/issues/117) Implemented a Database for Calendars.
-- 01.05, [#114](https://github.com/sopra-fs24-group-36/client/issues/114) Added the POST request for a user calendar by adding the necessary entities and mappers.
-- 01.05, [#119](https://github.com/sopra-fs24-group-36/client/issues/119) Added the POST request for a group calendar.
-- 02.05, [#115](https://github.com/sopra-fs24-group-36/client/issues/115) Added the DELETE request for a user calendar but had to change the post request a bit so it works better.
-- 02.05, [#120](https://github.com/sopra-fs24-group-36/client/issues/120) Added the DELETE request for a group calendar.
-- 02.05, [#143](https://github.com/sopra-fs24-group-36/client/issues/143) A random cooking-fact can now be requested with a new GET request.
-- 03.05, [#118](https://github.com/sopra-fs24-group-36/client/issues/118) Added the GET request for a user calendar but had to change the post and delete request a bit so it works better.
-- 03.05, [#113](https://github.com/sopra-fs24-group-36/client/issues/113) Added the GET request for a group calendar.
+- 01.05, [#117](https://github.com/sopra-fs24-group-36/server/issues/117) Implemented a Database for Calendars.
+- 01.05, [#114](https://github.com/sopra-fs24-group-36/server/issues/114) Added the POST request for a user calendar by adding the necessary entities and mappers.
+- 01.05, [#119](https://github.com/sopra-fs24-group-36/server/issues/119) Added the POST request for a group calendar.
+- 02.05, [#115](https://github.com/sopra-fs24-group-36/server/issues/115) Added the DELETE request for a user calendar but had to change the post request a bit so it works better.
+- 02.05, [#120](https://github.com/sopra-fs24-group-36/server/issues/120) Added the DELETE request for a group calendar.
+- 02.05, [#143](https://github.com/sopra-fs24-group-36/server/issues/143) A random cooking-fact can now be requested with a new GET request.
+- 03.05, [#118](https://github.com/sopra-fs24-group-36/server/issues/118) Added the GET request for a user calendar but had to change the post and delete request a bit so it works better.
+- 03.05, [#113](https://github.com/sopra-fs24-group-36/server/issues/113) Added the GET request for a group calendar.
 
 ## Week 4
 ### Sarina 
