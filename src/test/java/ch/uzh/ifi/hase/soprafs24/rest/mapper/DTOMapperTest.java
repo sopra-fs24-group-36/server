@@ -1,7 +1,9 @@
 package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
+import ch.uzh.ifi.hase.soprafs24.constant.CalendarStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.CalendarRequest;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.ItemRequest;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
@@ -333,6 +335,21 @@ public class DTOMapperTest {
         ItemRequest itemRequest = DTOMapper.INSTANCE.convertItemPutDTOtoEntity(itemPutDTO);
 
         assertEquals(itemPutDTO.getItem(), itemRequest.getItem());
+    }
+
+    @Test
+    public void testConvertDateRecipePostDTO_toCalendarRequest_success(){
+        DateRecipeDTO dateRecipeDTO = new DateRecipeDTO();
+        dateRecipeDTO.setDate(new Date());
+        dateRecipeDTO.setRecipeID(1L);
+        dateRecipeDTO.setStatus(CalendarStatus.BREAKFAST);
+
+        // MAP
+        CalendarRequest calendarRequest = DTOMapper.INSTANCE.convertDateRecipePostDTOtoEntity(dateRecipeDTO);
+
+        assertEquals(dateRecipeDTO.getDate(), calendarRequest.getDate());
+        assertEquals(dateRecipeDTO.getRecipeID(), calendarRequest.getRecipeID());
+        assertEquals(dateRecipeDTO.getStatus(), calendarRequest.getStatus());
     }
 
 
