@@ -46,6 +46,10 @@ public class UserService {
       newUser.setCreationDate(creationDate);
       checkIfUserExists(newUser);
 
+      if (newUser.getEmail().trim().isEmpty() || newUser.getUsername().trim().isEmpty() || newUser.getPassword().trim().isEmpty()) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameters need to have at least length 1");
+      }
+
       newUser = userRepository.save(newUser);
       userRepository.flush();
 
@@ -124,6 +128,11 @@ public class UserService {
             //check if new email is unique
             User userByEmail = userRepository.findByEmail(userUpdate.getEmail());
             if (userByEmail == null) {
+
+                if (userUpdate.getEmail().trim().isEmpty()) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameters need to have at least length 1");
+                }
+
                 user.setEmail(userUpdate.getEmail());
                 userRepository.flush();
                 log.debug("Email changed for User: {}", user);
@@ -137,6 +146,10 @@ public class UserService {
             //check if new username is unique
             User userByUsername = userRepository.findByUsername(userUpdate.getUsername());
             if (userByUsername == null) {
+
+                if (userUpdate.getUsername().trim().isEmpty()) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameters need to have at least length 1");
+                }
                 user.setUsername(userUpdate.getUsername());
                 userRepository.flush();
                 log.debug("Username changed for User: {}", user);
@@ -147,6 +160,11 @@ public class UserService {
 
         //check if name has been updated
         if (userUpdate.getName() != null) {
+
+            if (userUpdate.getName().trim().isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameters need to have at least length 1");
+            }
+
             user.setName(userUpdate.getName());
             userRepository.flush();
             log.debug("Name changed for User: {}", user);

@@ -53,6 +53,10 @@ public class GroupService {
     User u = userRepository.findById(creator).orElse(null);
     if (u == null) {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Creator with ID: "+creator+" was not found");}
 
+      if (newGroup.getName().trim().isEmpty()) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameter need to have at least length 1");
+      }
+
     newGroup = groupRepository.save(newGroup);
 
     List<Long> groups = u.getGroups();
@@ -199,12 +203,16 @@ public class GroupService {
     if (user == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
     }
-    
-    List<Long> invitations = user.getInvitations();
-    invitations.add(groupID);
-    user.setInvitations(invitations);
 
-    userRepository.save(user);
-    userRepository.flush();
+    //check that user not already has invitation from group and not already part of group
+    if (!user.getInvitations().contains(group.getId()) && !user.getGroups().contains(group.getId())) {
+        List<Long> invitations = user.getInvitations();
+        invitations.add(groupID);
+        user.setInvitations(invitations);
+
+        userRepository.save(user);
+        userRepository.flush();
+    }
+
   }
 }

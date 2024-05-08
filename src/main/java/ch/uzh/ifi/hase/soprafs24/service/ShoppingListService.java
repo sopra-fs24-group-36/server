@@ -48,9 +48,14 @@ public class ShoppingListService {
 
     List<String> items = shoppingList.getItems();
     if(!items.contains(item)){
-      items.add(item);
-      shoppingListRepository.save(shoppingList);
-      shoppingListRepository.flush();
+
+        if (item.trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameter need to have at least length 1");
+        }
+
+        items.add(item);
+        shoppingListRepository.save(shoppingList);
+        shoppingListRepository.flush();
     }
   }
 
@@ -59,6 +64,9 @@ public class ShoppingListService {
 
     List<String> items = shoppingList.getItems();
     if(!items.contains(item)){
+        if (item.trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parameter need to have at least length 1");
+        }
       items.add(item);
       shoppingListRepository.save(shoppingList);
       shoppingListRepository.flush();
