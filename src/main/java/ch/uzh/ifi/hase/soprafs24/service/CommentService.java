@@ -2,10 +2,8 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 
 import ch.uzh.ifi.hase.soprafs24.entity.Comment;
-import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.CommentRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.CookbookRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 
 @Service
@@ -69,8 +66,6 @@ public class CommentService {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Need to have at least length 1");
         }
-
-
     }
 
     public void deleteComment(Comment comment) {

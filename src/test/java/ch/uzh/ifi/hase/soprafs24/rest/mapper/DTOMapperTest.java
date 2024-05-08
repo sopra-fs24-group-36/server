@@ -3,12 +3,9 @@ package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 import ch.uzh.ifi.hase.soprafs24.constant.CalendarStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
-import ch.uzh.ifi.hase.soprafs24.entity.CalendarRequest;
-import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.ItemRequest;
-import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
-import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
+
+import ch.uzh.ifi.hase.soprafs24.entity.*;
+
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.junit.jupiter.api.Test;
 
@@ -302,6 +299,61 @@ public class DTOMapperTest {
         assertEquals(userPutDTO.getUsername(), user.getUsername());
         assertEquals(userPutDTO.getEmail(), user.getEmail());
         assertEquals(userPutDTO.getProfilePicture(), user.getProfilePicture());
+    }
+
+    @Test
+    public void testCreateComment_fromCommentPostDTO_toComment_success() {
+
+        CommentPostDTO commentPostDTO = new CommentPostDTO();
+        commentPostDTO.setText("text");
+        commentPostDTO.setUserID(3L);
+
+        Comment comment = DTOMapper.INSTANCE.convertCommentPostDTOtoEntity(commentPostDTO);
+
+        assertEquals(commentPostDTO.getText(), comment.getText());
+        assertEquals(commentPostDTO.getUserID(), comment.getUserID());
+    }
+
+
+    @Test
+    public void testGetComment_fromComment_toCommentDTO_success() {
+
+        Comment comment = new Comment();
+        comment.setText("text");
+        comment.setUserID(3L);
+        comment.setUsername("name");
+        comment.setId(1L);
+
+        CommentDTO commentDTO = DTOMapper.INSTANCE.convertEntityToCommentDTO(comment);
+
+        assertEquals(commentDTO.getText(), comment.getText());
+        assertEquals(commentDTO.getId(), comment.getId());
+        assertEquals(commentDTO.getUsername(), comment.getUsername());
+    }
+
+    @Test
+    public void testChangeComment_fromCommentPutDTO_toComment_success() {
+
+        CommentPutDTO commentPutDTO = new CommentPutDTO();
+        commentPutDTO.setText("text");
+
+        Comment comment = DTOMapper.INSTANCE.convertCommentPutDTOtoEntity(commentPutDTO);
+
+        assertEquals(commentPutDTO.getText(), comment.getText());
+    }
+
+    @Test
+    public void testGetVoting_fromRecipe_toVoteRequestDTO_success() {
+
+        Recipe recipe = new Recipe();
+        recipe.setVote(4.5);
+        recipe.setCount(27);
+        recipe.setId(3L);
+
+        VoteRequestDTO voteRequestDTO = DTOMapper.INSTANCE.convertEntityToVoteRequestDTO(recipe);
+
+        assertEquals(recipe.getVote(), voteRequestDTO.getVote());
+        assertEquals(recipe.getCount(), voteRequestDTO.getCount());
     }
 
     @Test

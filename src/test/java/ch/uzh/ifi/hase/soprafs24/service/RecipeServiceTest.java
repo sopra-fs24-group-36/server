@@ -2,12 +2,10 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
-import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
-import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.repository.*;
 
+import ch.uzh.ifi.hase.soprafs24.rest.dto.VotingDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -720,6 +718,193 @@ public class RecipeServiceTest {
         //call method
         assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(1L, recipeId));
 
+    }
+
+
+    //      voteOnRecipe    //
+    @Test
+    public void voteOnRecipe_SuccessfullyVotesFirstTime() {
+
+        Mockito.when(recipeRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testRecipe));
+
+        //create votingDTO
+        VotingDTO votingDTO = new VotingDTO();
+        votingDTO.setVote(3.0);
+
+        recipeService.voteOnRecipe(testRecipe.getId(), votingDTO);
+
+        Mockito.verify(recipeRepository, Mockito.times(2)).save(Mockito.any());
+    }
+
+    @Test
+    public void voteOnRecipe_SuccessfullyVotesSecondTime() {
+
+        testRecipe.setCount(1);
+        testRecipe.setSum(3L);
+        testRecipe.setVote(3.0);
+
+      Mockito.when(recipeRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testRecipe));
+
+        //create votingDTO
+        VotingDTO votingDTO = new VotingDTO();
+        votingDTO.setVote(3.0);
+
+        recipeService.voteOnRecipe(testRecipe.getId(), votingDTO);
+
+        Mockito.verify(recipeRepository, Mockito.times(2)).save(Mockito.any());
+    }
+
+    @Test
+    public void voteOnRecipe_throwsException_RecipeNotFound() {
+
+        testRecipe.setCount(1);
+        testRecipe.setSum(3L);
+        testRecipe.setVote(3.0);
+
+        Mockito.when(recipeRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+
+        //create votingDTO
+        VotingDTO votingDTO = new VotingDTO();
+        votingDTO.setVote(3.0);
+
+        //call method
+        assertThrows(ResponseStatusException.class, () -> recipeService.voteOnRecipe(testRecipe.getId(), votingDTO));
+    }
+
+
+    //      deleteComment   //
+    @Test
+    public void deleteComment_SuccessfullyDeletesComment() {
+
+        Comment testComment = new Comment();
+        testComment.setId(1L);
+        testComment.setUsername("username");
+        testComment.setText("text");
+        testComment.setUserID(3L);
+
+        Comment testComment2 = new Comment();
+        testComment2.setId(7L);
+        testComment2.setUsername("username");
+        testComment2.setText("text");
+        testComment2.setUserID(3L);
+
+        List<Long> comments = new ArrayList<>();
+        comments.add(testComment.getId());
+        comments.add(testComment2.getId());
+
+        testRecipe.setComments(comments);
+        recipeRepository.save(testRecipe);
+
+        recipeService.deleteComment(testRecipe, testComment);
+
+        Mockito.verify(recipeRepository, Mockito.times(3)).save(Mockito.any());
+    }
+
+    @Test
+    public void deleteComment_throwsException_CommentNotInRecipe() {
+
+        Comment testComment = new Comment();
+        testComment.setId(1L);
+        testComment.setUsername("username");
+        testComment.setText("text");
+        testComment.setUserID(3L);
+
+        Comment testComment2 = new Comment();
+        testComment2.setId(7L);
+        testComment2.setUsername("username");
+        testComment2.setText("text");
+        testComment2.setUserID(3L);
+
+        List<Long> comments = new ArrayList<>();
+        comments.add(testComment.getId());
+
+        testRecipe.setComments(comments);
+        recipeRepository.save(testRecipe);
+
+        assertThrows(ResponseStatusException.class, () -> recipeService.deleteComment(testRecipe, testComment2));
+    }
+
+
+    //      addComment      //
+    @Test
+    public void addComment_SuccessfullyAddsComment() {
+
+        Mockito.when(recipeRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testRecipe));
+
+        Comment testComment = new Comment();
+        testComment.setId(1L);
+        testComment.setUsername("username");
+        testComment.setText("text");
+        testComment.setUserID(3L);
+
+        Comment testComment2 = new Comment();
+        testComment2.setId(7L);
+        testComment2.setUsername("username");
+        testComment2.setText("text");
+        testComment2.setUserID(3L);
+
+        List<Long> comments = new ArrayList<>();
+        comments.add(testComment.getId());
+
+        testRecipe.setComments(comments);
+        recipeRepository.save(testRecipe);
+
+        recipeService.addComment(testRecipe.getId(), testComment2);
+
+        Mockito.verify(recipeRepository, Mockito.times(3)).save(Mockito.any());
+    }
+
+    @Test
+    public void addComment_RecipeNotFound() {
+
+        Mockito.when(recipeRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+
+        Comment testComment = new Comment();
+        testComment.setId(1L);
+        testComment.setUsername("username");
+        testComment.setText("text");
+        testComment.setUserID(3L);
+
+        Comment testComment2 = new Comment();
+        testComment2.setId(7L);
+        testComment2.setUsername("username");
+        testComment2.setText("text");
+        testComment2.setUserID(3L);
+
+        List<Long> comments = new ArrayList<>();
+        comments.add(testComment.getId());
+
+        testRecipe.setComments(comments);
+        recipeRepository.save(testRecipe);
+
+        assertThrows(ResponseStatusException.class, () -> recipeService.addComment(testRecipe.getId(), testComment2));
+    }
+
+    @Test
+    public void addComment_CommentAlreadyInRecipe() {
+
+        Mockito.when(recipeRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testRecipe));
+
+        Comment testComment = new Comment();
+        testComment.setId(1L);
+        testComment.setUsername("username");
+        testComment.setText("text");
+        testComment.setUserID(3L);
+
+        Comment testComment2 = new Comment();
+        testComment2.setId(7L);
+        testComment2.setUsername("username");
+        testComment2.setText("text");
+        testComment2.setUserID(3L);
+
+        List<Long> comments = new ArrayList<>();
+        comments.add(testComment.getId());
+        comments.add(testComment2.getId());
+
+        testRecipe.setComments(comments);
+        recipeRepository.save(testRecipe);
+
+        assertThrows(ResponseStatusException.class, () -> recipeService.addComment(testRecipe.getId(), testComment2));
     }
 
 
