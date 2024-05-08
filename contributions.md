@@ -2,6 +2,21 @@
 - manually append the two development tasks they completed during the week
 - entry should consist of the date, your name, links to the github issues you worked on and optionally a short description
 
+## Week 6
+
+### Sarina 
+- 08.05, [#154](https://github.com/sopra-fs24-group-36/server/issues/154), [#128](https://github.com/sopra-fs24-group-36/server/issues/128), [#123](https://github.com/sopra-fs24-group-36/server/issues/123), [#151](https://github.com/sopra-fs24-group-36/server/issues/151), [#126](https://github.com/sopra-fs24-group-36/server/issues/126), [#124](https://github.com/sopra-fs24-group-36/server/issues/124), added the tests for all this issues
+
+### Jazz 
+
+### Yujie
+
+### Summer 
+
+### Marko
+
+
+
 ## Week 5
 
 ### Sarina 
