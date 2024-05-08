@@ -6,6 +6,8 @@
 
 ### Sarina 
 - 08.05, [#154](https://github.com/sopra-fs24-group-36/server/issues/154), [#128](https://github.com/sopra-fs24-group-36/server/issues/128), [#123](https://github.com/sopra-fs24-group-36/server/issues/123), [#151](https://github.com/sopra-fs24-group-36/server/issues/151), [#126](https://github.com/sopra-fs24-group-36/server/issues/126), [#124](https://github.com/sopra-fs24-group-36/server/issues/124), added the tests for all this issues
+- 09.05, [#138](https://github.com/sopra-fs24-group-36/server/issues/138), [#157](https://github.com/sopra-fs24-group-36/server/issues/157), [#156](https://github.com/sopra-fs24-group-36/server/issues/156), [#180](https://github.com/sopra-fs24-group-36/server/issues/180), fixed all those bugs
+
 
 ### Jazz 
 
