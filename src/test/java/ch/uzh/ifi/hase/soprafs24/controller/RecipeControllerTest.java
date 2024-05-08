@@ -4,12 +4,11 @@ import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
+import ch.uzh.ifi.hase.soprafs24.entity.Comment;
 import ch.uzh.ifi.hase.soprafs24.repository.CommentRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipeDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.RecipePutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.CookbookService;
 import ch.uzh.ifi.hase.soprafs24.service.RecipeService;
@@ -702,7 +701,122 @@ public class RecipeControllerTest {
       mockMvc.perform(put("/groups/1/cookbooks/2"))
               .andExpect(status().isNotFound());
   }
-  
+
+    @Test
+    public void getRecipeComments_inValidInput_recipeNotFound() throws Exception {
+
+        Mockito.doThrow(new RuntimeException("Recipe not found")).when(recipeRepository).findById(Mockito.anyLong());
+
+        // When/Then
+        mockMvc.perform(get("/comments/recipes/5"))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    public void getRecipeComments_validInput_returnListOfCommentDTO() throws Exception {
+
+        // Create a list of comments
+        Comment comment1 = new Comment();
+        comment1.setId(1L);
+        comment1.setText("text1");
+        comment1.setUsername("username1");
+
+        Comment comment2 = new Comment();
+        comment2.setId(2L);
+        comment2.setText("text2");
+        comment2.setUsername("username2");
+
+        List<Long> comments = new ArrayList<>();
+        comments.add(comment1.getId());
+        comments.add(comment2.getId());
+
+        Recipe recipe = new Recipe();
+        recipe.setId(5L);
+        recipe.setTitle("testRecipeName");
+        recipe.setShortDescription("testDescription");
+        recipe.setLink("testLink");
+        recipe.setCookingTime("testTime");
+        recipe.setComments(comments);
+
+        // Mock the behavior
+        Mockito.when(commentRepository.findById(comment1.getId())).thenReturn(Optional.of(comment1));
+        Mockito.when(commentRepository.findById(comment2.getId())).thenReturn(Optional.of(comment2));
+        given(recipeRepository.findById(recipe.getId())).willReturn(Optional.of(recipe));
+
+        // create expected list of expected CommentDTOs
+        List<CommentDTO> expectedCommentDTOs = new ArrayList<>();
+        expectedCommentDTOs.add(DTOMapper.INSTANCE.convertEntityToCommentDTO(comment1));
+        expectedCommentDTOs.add(DTOMapper.INSTANCE.convertEntityToCommentDTO(comment2));
+
+        // When/Then
+        mockMvc.perform(get("/comments/recipes/5"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(expectedCommentDTOs.get(0).getId().intValue())))
+                .andExpect(jsonPath("$[1].id", is(expectedCommentDTOs.get(1).getId().intValue())))
+                .andExpect(jsonPath("$[0].text", is(expectedCommentDTOs.get(0).getText())))
+                .andExpect(jsonPath("$[1].text", is(expectedCommentDTOs.get(1).getText())))
+                .andExpect(jsonPath("$[0].username", is(expectedCommentDTOs.get(0).getUsername())))
+                .andExpect(jsonPath("$[1].username", is(expectedCommentDTOs.get(1).getUsername())));
+    }
+
+
+    @Test
+    public void voteOnRecipe_validInput() throws Exception {
+
+        VotingDTO votingDTO = new VotingDTO();
+        votingDTO.setVote(3.0);
+
+        MockHttpServletRequestBuilder postRequest = post("/votes/recipes/3")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(votingDTO));
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated());
+    }
+
+
+    @Test
+    public void getVoteOnRecipe_validInput() throws Exception {
+
+        VoteRequestDTO voteRequestDTO = new VoteRequestDTO();
+        voteRequestDTO.setVote(3.0);
+        voteRequestDTO.setCount(1);
+
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        recipe.setTitle("testRecipeName");
+        recipe.setShortDescription("testDescription");
+        recipe.setLink("testLink");
+        recipe.setCookingTime("testTime");
+        recipe.setVote(3.0);
+        recipe.setCount(1);
+
+        given(recipeRepository.findById(recipe.getId())).willReturn(Optional.of(recipe));
+
+        MockHttpServletRequestBuilder getRequest = get("/votes/recipes/1");
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.vote", is(voteRequestDTO.getVote())))
+                .andExpect(jsonPath("$.count", is(voteRequestDTO.getCount())));
+    }
+
+    @Test
+    public void getVoteOnRecipe_inValidInput() throws Exception {
+
+
+        given(recipeRepository.findById(Mockito.anyLong())).willThrow(new IllegalStateException("Recipe not found"));
+
+        MockHttpServletRequestBuilder getRequest = get("/votes/recipes/1");
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
+    }
+
+
   
   private String asJsonString(final Object object) {
     try {

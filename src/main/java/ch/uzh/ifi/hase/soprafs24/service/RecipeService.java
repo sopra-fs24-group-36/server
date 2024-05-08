@@ -338,7 +338,7 @@ public class RecipeService {
           recipeRepository.save(recipe);
           recipeRepository.flush();
       } else {
-          new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment already ");
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment already ");
       }
 
   }
@@ -355,7 +355,7 @@ public class RecipeService {
           recipeRepository.save(recipe);
           recipeRepository.flush();
       } else {
-          new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment does not belong to recipe");
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment does not belong to recipe");
       }
   }
 

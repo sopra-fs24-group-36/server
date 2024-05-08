@@ -3,14 +3,9 @@ package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
-import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
-import ch.uzh.ifi.hase.soprafs24.entity.Group;
-import ch.uzh.ifi.hase.soprafs24.entity.Recipe;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.repository.CookbookRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.GroupRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.RecipeRepository;
-import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs24.entity.*;
+import ch.uzh.ifi.hase.soprafs24.repository.*;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.VotingDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +40,10 @@ public class RecipeServiceIntegrationTest {
     @Autowired
     private RecipeRepository recipeRepository;
 
+    @Qualifier("commentRepository")
+    @Autowired
+    private CommentRepository commentRepository;
+
     @Autowired
     private RecipeService recipeService;
 
@@ -54,6 +53,7 @@ public class RecipeServiceIntegrationTest {
         userRepository.deleteAll();
         recipeRepository.deleteAll();
         cookbookRepository.deleteAll();
+        commentRepository.deleteAll();
     }
 
 
@@ -550,6 +550,183 @@ public class RecipeServiceIntegrationTest {
 
         //call method
         assertThrows(ResponseStatusException.class, () -> recipeService.removeRecipeFromGroup(100L, recipe.getId()));
+    }
+
+    //  voteOnRecipe    //
+    @Test
+    public void voteOnRecipe_validInputFirstVote_success() {
+
+        //create new recipe
+        Recipe recipe = new Recipe();
+        recipeRepository.save(recipe);
+
+        //create votingDTO
+        VotingDTO votingDTO = new VotingDTO();
+        votingDTO.setVote(3.0);
+
+        recipeService.voteOnRecipe(recipe.getId(), votingDTO);
+
+        Optional<Recipe> votedRecipe = recipeRepository.findById(recipe.getId());
+
+        assertEquals(votedRecipe.get().getVote(), 3.0);
+        assertEquals(votedRecipe.get().getCount(), 1);
+        assertEquals(votedRecipe.get().getSum(), 3);
+    }
+
+    @Test
+    public void voteOnRecipe_validInputMultipleVotes_success() {
+
+        //create new recipe
+        Recipe recipe = new Recipe();
+        recipe.setCount(1);
+        recipe.setVote(4.0);
+        recipe.setSum(4L);
+        recipeRepository.save(recipe);
+
+        //create votingDTO
+        VotingDTO votingDTO = new VotingDTO();
+        votingDTO.setVote(3.0);
+
+        recipeService.voteOnRecipe(recipe.getId(), votingDTO);
+
+        Optional<Recipe> votedRecipe = recipeRepository.findById(recipe.getId());
+
+        assertEquals(votedRecipe.get().getVote(), 3.5);
+        assertEquals(votedRecipe.get().getCount(), 2);
+        assertEquals(votedRecipe.get().getSum(), 7);
+    }
+
+    @Test
+    public void voteOnRecipe_RecipeNotFound_throwsException() {
+
+        //create votingDTO
+        VotingDTO votingDTO = new VotingDTO();
+        votingDTO.setVote(3.0);
+
+        assertThrows(ResponseStatusException.class, () -> recipeService.voteOnRecipe(1L, votingDTO));
+    }
+
+
+    //  deleteComment   //
+    @Test
+    public void deleteComment_validInput_success() {
+
+        Comment testComment1 = new Comment();
+        testComment1 = new Comment();
+        testComment1.setId(1L);
+        testComment1.setUsername("username");
+        testComment1.setText("text");
+        testComment1.setUserID(3L);
+
+        Comment testComment2 = new Comment();
+        testComment2 = new Comment();
+        testComment2.setId(7L);
+        testComment2.setUsername("username");
+        testComment2.setText("text");
+        testComment2.setUserID(3L);
+
+        List<Long> comments = new ArrayList<>();
+        comments.add(testComment1.getId());
+        comments.add(testComment2.getId());
+
+        //create new recipe
+        Recipe recipe = new Recipe();
+        recipe.setComments(comments);
+        recipeRepository.save(recipe);
+
+        recipeService.deleteComment(recipe, testComment1);
+    }
+
+    @Test
+    public void deleteComment_CommentNotInRecipe_throwsException() {
+
+        Comment testComment1 = new Comment();
+        testComment1.setId(1L);
+        testComment1.setUsername("username");
+        testComment1.setText("text");
+        testComment1.setUserID(3L);
+
+        Comment testComment2 = new Comment();
+        testComment2.setId(7L);
+        testComment2.setUsername("username");
+        testComment2.setText("text");
+        testComment2.setUserID(3L);
+
+        commentRepository.save(testComment1);
+        commentRepository.save(testComment2);
+
+        List<Long> comments = new ArrayList<>();
+        comments.add(testComment1.getId());
+
+        //create new recipe
+        Recipe recipe = new Recipe();
+        recipe.setComments(comments);
+        recipeRepository.save(recipe);
+
+        assertThrows(ResponseStatusException.class, () -> recipeService.deleteComment(recipe, testComment2));
+    }
+
+    //  addComment      //
+    @Test
+    public void addComment_validInput_success() {
+
+        //create comment to add to recipe
+        Comment testComment1 = new Comment();
+        testComment1.setId(1L);
+        testComment1.setUsername("username");
+        testComment1.setText("text");
+        testComment1.setUserID(3L);
+
+        List<Long> comments = new ArrayList<>();
+        comments.add(testComment1.getId());
+
+        //create new recipe
+        Recipe recipe = new Recipe();
+        recipe.setComments(comments);
+        recipeRepository.save(recipe);
+
+        //new comment to add to recipe
+        Comment testComment2 = new Comment();
+        testComment2.setId(7L);
+        testComment2.setUsername("username");
+        testComment2.setText("text");
+        testComment2.setUserID(3L);
+
+        recipeService.addComment(recipe.getId(), testComment2);
+    }
+
+    @Test
+    public void addComment_RecipeNotFound_throwsException() {
+
+        //new comment to add to recipe
+        Comment testComment2 = new Comment();
+        testComment2.setId(7L);
+        testComment2.setUsername("username");
+        testComment2.setText("text");
+        testComment2.setUserID(3L);
+
+        assertThrows(ResponseStatusException.class, () ->  recipeService.addComment(2L, testComment2));
+    }
+
+    @Test
+    public void addComment_CommentAlreadyPartOf_throwsException() {
+
+        //create comment to add to recipe
+        Comment testComment1 = new Comment();
+        testComment1.setId(1L);
+        testComment1.setUsername("username");
+        testComment1.setText("text");
+        testComment1.setUserID(3L);
+
+        List<Long> comments = new ArrayList<>();
+        comments.add(testComment1.getId());
+
+        //create new recipe
+        Recipe recipe = new Recipe();
+        recipe.setComments(comments);
+        recipeRepository.save(recipe);
+
+        assertThrows(ResponseStatusException.class, () ->  recipeService.addComment(2L, testComment1));
     }
 
 }
