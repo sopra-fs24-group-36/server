@@ -12,6 +12,11 @@
 ### Jazz 
 
 ### Yujie
+- 07.05, [#62](https://github.com/sopra-fs24-group-36/client/issues/62), connected voting recipe with backend
+- 07.05, [#69](https://github.com/sopra-fs24-group-36/client/issues/69), fixed the userImg reloading issue in group cookbook
+- 09.05, [#87](https://github.com/sopra-fs24-group-36/client/issues/87), edited invite a user modal, added statement
+- 10.05, [#63](https://github.com/sopra-fs24-group-36/client/issues/63), created a page for viewing group members
+- 10.05, [#64](https://github.com/sopra-fs24-group-36/client/issues/64), connected group member page with backend
 
 ### Summer 
 
@@ -26,7 +31,7 @@
 - 06.05, [#128](https://github.com/sopra-fs24-group-36/server/issues/128), created a POST request to vote on a recipe
 - 04.05, [#16](https://github.com/sopra-fs24-group-36/server/issues/16), created a new database table for the comments and set everything up 
 - 04.05, [#124](https://github.com/sopra-fs24-group-36/server/issues/124), added the GET request for comments
-- 04.05,[#126](https://github.com/sopra-fs24-group-36/server/issues/126), added the PUt request to edit a comment
+- 04.05, [#126](https://github.com/sopra-fs24-group-36/server/issues/126), added the PUt request to edit a comment
 - 04.05, [#151](https://github.com/sopra-fs24-group-36/server/issues/151), added the DELETE request to delete a comment
 - 04.05, [#123](https://github.com/sopra-fs24-group-36/server/issues/123), added the POST request to create a comment for a recipe
 
