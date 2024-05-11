@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.Calendar;
 import ch.uzh.ifi.hase.soprafs24.entity.Cookbook;
 import ch.uzh.ifi.hase.soprafs24.entity.Group;
 import ch.uzh.ifi.hase.soprafs24.entity.ShoppingList;
@@ -491,6 +492,7 @@ public class UserServiceIntegrationTest {
 
     }
 
+    //  test saveShoppingList method    //
     @Test
     public void saveShoppingList_validInputs_success() {
 
@@ -514,6 +516,30 @@ public class UserServiceIntegrationTest {
 
     }
 
+    //  test saveCalendar method //
+    @Test
+    public void saveCalendar_validInputs_success() {
+
+        User testUser = new User();
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setEmail("email");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        Calendar calendar = new Calendar();
+        calendar.setDateRecipes(new ArrayList<>());
+        calendar.setId(2L);
+
+        // when
+        userService.saveCalendar(testUser, calendar);
+
+        // then
+        assertEquals(testUser.getCalendar(), calendar);
+
+    }
 
     //  test userDeclinesInvitation method //
     @Test
