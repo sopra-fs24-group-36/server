@@ -20,7 +20,11 @@
 - 10.05, [#64](https://github.com/sopra-fs24-group-36/client/issues/64), connected group member page with backend
 
 ### Summer 
-
+- 08.05, [#85](https://github.com/sopra-fs24-group-36/client/issues/85),Only one recipe at a time should be dropped into a time slot into a calendar, delete current if new one is dropped in same timeslot.
+- 09.05，[#79](https://github.com/sopra-fs24-group-36/client/issues/79),The div of the drag and drop functionality is too big (see pictures of feedback)
+- 09.05，[#68](https://github.com/sopra-fs24-group-36/client/issues/68),A user should be able to edit a recipe even though it has been created with a link.
+- 09.05，[#86](https://github.com/sopra-fs24-group-36/client/issues/86),Invitation doesn’t load while you are in the invitation field
+  
 ### Marko
 - 07.05 - 11.05, [#117](https://github.com/sopra-fs24-group-36/server/issues/117), [#114](https://github.com/sopra-fs24-group-36/server/issues/114), [#119](https://github.com/sopra-fs24-group-36/server/issues/119), [#115](https://github.com/sopra-fs24-group-36/server/issues/115), [#120](https://github.com/sopra-fs24-group-36/server/issues/120), [#143](https://github.com/sopra-fs24-group-36/server/issues/143), [#118](https://github.com/sopra-fs24-group-36/server/issues/118), [#113](https://github.com/sopra-fs24-group-36/server/issues/113) All necessary tests for the calendar function (Controller/Mapper/Service/Integration) and also updated the userservicetests for the addition of a calendar.
 - 13.05, [187](https://github.com/sopra-fs24-group-36/server/issues/187), Bug in shoppinglist fixed, where multiple items were handled incorrectly. 
