@@ -65,7 +65,7 @@ class ShoppingListServiceTest {
     }
 
     @Test
-    public void addItemGroup_ItemInList_NothingAdded() {
+    public void addItemGroup_ItemInList_throwsException() throws Exception {
       // Given
       Group group = new Group();
       ShoppingList shoppingList = new ShoppingList();
@@ -76,10 +76,10 @@ class ShoppingListServiceTest {
       String item = "Apple";
 
       // When
-      shoppingListService.addItemGroup(item, group);
+      ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> shoppingListService.addItemGroup(item, group));
 
       // Then
-      assertTrue(shoppingList.getItems().contains(item));
+      assertEquals(HttpStatus.CONFLICT, exception.getStatus());
     }
 
     @Test
@@ -101,7 +101,7 @@ class ShoppingListServiceTest {
     }
 
     @Test
-    public void addItemUser_ItemInList_NothingAdded() {
+    public void addItemUser_ItemInList_throwsException() throws Exception {
       // Given
       User user = new User();
       ShoppingList shoppingList = new ShoppingList();
@@ -112,10 +112,10 @@ class ShoppingListServiceTest {
       String item = "Banana";
 
       // When
-      shoppingListService.addItemUser(item, user);
+      ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> shoppingListService.addItemUser(item, user));
 
       // Then
-      assertTrue(shoppingList.getItems().contains(item));
+      assertEquals(HttpStatus.CONFLICT, exception.getStatus());
     }
 
     @Test
