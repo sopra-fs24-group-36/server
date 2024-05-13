@@ -56,6 +56,8 @@ public class ShoppingListService {
         items.add(item);
         shoppingListRepository.save(shoppingList);
         shoppingListRepository.flush();
+    } else {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "item is already on group shopping list!");
     }
   }
 
@@ -70,6 +72,8 @@ public class ShoppingListService {
       items.add(item);
       shoppingListRepository.save(shoppingList);
       shoppingListRepository.flush();
+    } else {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "item is already on your shopping list!");
     }
   }
 
