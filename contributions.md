@@ -10,6 +10,7 @@
 
 
 ### Jazz 
+*had joker week*
 
 ### Yujie
 - 07.05, [#62](https://github.com/sopra-fs24-group-36/client/issues/62), connected voting recipe with backend
