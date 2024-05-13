@@ -23,6 +23,7 @@
 
 ### Marko
 - 07.05 - 11.05, [#117](https://github.com/sopra-fs24-group-36/server/issues/117), [#114](https://github.com/sopra-fs24-group-36/server/issues/114), [#119](https://github.com/sopra-fs24-group-36/server/issues/119), [#115](https://github.com/sopra-fs24-group-36/server/issues/115), [#120](https://github.com/sopra-fs24-group-36/server/issues/120), [#143](https://github.com/sopra-fs24-group-36/server/issues/143), [#118](https://github.com/sopra-fs24-group-36/server/issues/118), [#113](https://github.com/sopra-fs24-group-36/server/issues/113) All necessary tests for the calendar function (Controller/Mapper/Service/Integration) and also updated the userservicetests for the addition of a calendar.
+- 13.05, [187](https://github.com/sopra-fs24-group-36/server/issues/187), Bug in shoppinglist fixed, where multiple items were handled incorrectly. 
 
 
 ## Week 5
