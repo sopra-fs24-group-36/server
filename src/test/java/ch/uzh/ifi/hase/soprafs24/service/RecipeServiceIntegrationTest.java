@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.CookbookStatus;
 import ch.uzh.ifi.hase.soprafs24.constant.RecipeTags;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
+import ch.uzh.ifi.hase.soprafs24.entity.Calendar;
 import ch.uzh.ifi.hase.soprafs24.repository.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.VotingDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +44,10 @@ public class RecipeServiceIntegrationTest {
     @Qualifier("commentRepository")
     @Autowired
     private CommentRepository commentRepository;
+
+    @Qualifier("calendarRepository")
+    @Autowired
+    private CalendarRepository calendarRepository;
 
     @Autowired
     private RecipeService recipeService;
@@ -281,6 +286,24 @@ public class RecipeServiceIntegrationTest {
     @Test
     public void deleteRecipe_validInputs_success() {
 
+      User user = new User();
+      user.setPassword("test");
+      user.setUsername("test");
+      user.setEmail("test");
+      user.setCreationDate(new Date());
+      user.setStatus(UserStatus.ONLINE);
+      user.setToken("test");
+      Cookbook cookbook = new Cookbook();
+      cookbook.setStatus(CookbookStatus.PERSONAL);
+      cookbook.setRecipes(new ArrayList<>());
+      user.setCookbook(cookbook);
+      cookbookRepository.save(cookbook);
+      Calendar calendar = new Calendar();
+      calendarRepository.save(calendar);
+      user.setCalendar(calendar);
+
+      userRepository.save(user);
+
       List<String> testlist = new ArrayList<>();
       testlist.add("test");
 
@@ -300,7 +323,7 @@ public class RecipeServiceIntegrationTest {
       testRecipe.setImage("test");
       testRecipe.setTags(testtags);
       testRecipe.setGroups(testgroups);
-      testRecipe.setAuthorID(1L);
+      testRecipe.setAuthorID(user.getId());
 
       recipeRepository.save(testRecipe);
 

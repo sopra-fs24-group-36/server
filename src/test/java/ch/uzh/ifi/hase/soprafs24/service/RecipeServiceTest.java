@@ -456,16 +456,28 @@ public class RecipeServiceTest {
     List<Long> groupIDs = new ArrayList<>();
     groupIDs.add(1L);
     recipe.setGroups(groupIDs);
+    recipe.setAuthorID(1L);
 
     // Mock the necessary repositories
     Group mockGroup = new Group();
     Cookbook mockCookbook = new Cookbook();
+    List<DateRecipe> dateRecipes = new ArrayList<>();
+    Calendar calendar = new Calendar();
+    calendar.setDateRecipes(dateRecipes);
+    mockGroup.setCalendar(calendar);
     List<Long> recipes = new ArrayList<>();
     recipes.add(recipe.getId());
     mockCookbook.setRecipes(recipes);
     mockGroup.setCookbook(mockCookbook);
 
+    User testuser = new User();
+    testuser.setId(1L);
+    Calendar testcalendar = new Calendar();
+    testcalendar.setDateRecipes(new ArrayList<>());
+    testuser.setCalendar(testcalendar);
+
     Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockGroup));
+    Mockito.when(userRepository.findById(recipe.getAuthorID())).thenReturn(Optional.of(testuser));
 
     mockGroup.setCookbook(mockCookbook);
     // Call the method under test

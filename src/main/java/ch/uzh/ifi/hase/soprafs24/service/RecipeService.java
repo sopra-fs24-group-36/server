@@ -39,14 +39,20 @@ public class RecipeService {
 
   private final CommentService commentService;
 
+  private final CalendarRepository calendarRepository;
+
+  private final DateRecipeRepository dateRecipeRepository;
+
   @Autowired
-  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository, CommentService commentService, CookbookRepository cookbookRepository, GroupRepository groupRepository, UserRepository userRepository, CommentRepository commentRepository) {
+  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository, CommentService commentService, CookbookRepository cookbookRepository, GroupRepository groupRepository, UserRepository userRepository, CommentRepository commentRepository, CalendarRepository calendarRepository, DateRecipeRepository dateRecipeRepository) {
     this.recipeRepository = recipeRepository;
     this.cookbookRepository = cookbookRepository;
     this.groupRepository = groupRepository;
     this.userRepository = userRepository;
     this.commentRepository = commentRepository;
     this.commentService = commentService;
+    this.calendarRepository = calendarRepository;
+    this.dateRecipeRepository = dateRecipeRepository;
   }
 
   public Recipe createUserRecipe(Long userID, Recipe newRecipe) {
@@ -252,21 +258,49 @@ public class RecipeService {
 
   public void deleteRecipe(Recipe recipe) {
 
-      //remove recipe from groups it belongs to
-      if (recipe.getGroups() != null) {
-          for (Long id:recipe.getGroups()){
-              Group g = groupRepository.findById(id).orElse(null);
-              if(g == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");}
-              Cookbook c = g.getCookbook();
-              List<Long> recipes = c.getRecipes();
-              if (recipes.contains(recipe.getId())){
-                  recipes.remove(recipe.getId());
-                  c.setRecipes(recipes);
-                  cookbookRepository.save(c);
-                  cookbookRepository.flush();
-              } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe is not part of one of these groups");}
-          }
-      }
+    //remove recipe from groups it belongs to
+    if (recipe.getGroups() != null) {
+        for (Long id:recipe.getGroups()){
+            Group g = groupRepository.findById(id).orElse(null);
+            if(g == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");}
+            Cookbook c = g.getCookbook();
+            List<Long> recipes = c.getRecipes();
+            if (recipes.contains(recipe.getId())){
+                recipes.remove(recipe.getId());
+                c.setRecipes(recipes);
+                cookbookRepository.save(c);
+                cookbookRepository.flush();
+            } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe is not part of one of these groups");}
+            
+            Calendar calendar = g.getCalendar();
+            List<DateRecipe> dateRecipes = calendar.getDateRecipes();
+            for (DateRecipe dateRecipe: dateRecipes){
+                if (dateRecipe.getRecipeID() == recipe.getId()){
+                  dateRecipes.remove(dateRecipe);
+                  calendarRepository.save(calendar);
+                  calendarRepository.flush();
+                  dateRecipeRepository.delete(dateRecipe);
+                }
+            }
+        }
+    }
+
+    Long authorId = recipe.getAuthorID();
+    User author = userRepository.findById(authorId).orElse(null);
+    if (author == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found");
+    }
+
+    Calendar calendar = author.getCalendar();
+    List<DateRecipe> dateRecipes = calendar.getDateRecipes();
+    for (DateRecipe dateRecipe: dateRecipes){
+        if (dateRecipe.getRecipeID() == recipe.getId()){
+          dateRecipes.remove(dateRecipe);
+          calendarRepository.save(calendar);
+          calendarRepository.flush();
+          dateRecipeRepository.delete(dateRecipe);
+        }
+    }
 
     //delete comments that belonged to recipe
     if (recipe.getComments() != null){
