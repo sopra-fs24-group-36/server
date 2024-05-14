@@ -9,6 +9,7 @@
 ### Jazz 
 - 14.04, [#95](https://github.com/sopra-fs24-group-36/client/issues/95) small bug fix: limited length of description for nice display on home page and in cookbooks
 - 14.04, [#82](https://github.com/sopra-fs24-group-36/client/issues/82) bug fix: made sure max length of description when creating a recipe is 100 characters + cool pop up
+- 14.04, [#94](https://github.com/sopra-fs24-group-36/client/issues/94) small bug fix: made sure group member emails display nicely (used ...) 
 
 ### Yujie
 
