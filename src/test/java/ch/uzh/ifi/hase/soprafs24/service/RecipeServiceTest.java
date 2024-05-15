@@ -24,6 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class RecipeServiceTest {
@@ -45,6 +48,12 @@ public class RecipeServiceTest {
 
   @Mock
   private CommentService commentService;
+
+  @Mock
+  private CalendarRepository calendarRepository;
+
+  @Mock
+  private DateRecipeRepository dateRecipeRepository;
 
   @InjectMocks
   private RecipeService recipeService;
@@ -458,10 +467,13 @@ public class RecipeServiceTest {
     recipe.setGroups(groupIDs);
     recipe.setAuthorID(1L);
 
-    // Mock the necessary repositories
+    // Mock the necessary repositories and entities
     Group mockGroup = new Group();
     Cookbook mockCookbook = new Cookbook();
     List<DateRecipe> dateRecipes = new ArrayList<>();
+    DateRecipe mockDateRecipe = new DateRecipe();
+    mockDateRecipe.setRecipeID(recipe.getId());
+    dateRecipes.add(mockDateRecipe);
     Calendar calendar = new Calendar();
     calendar.setDateRecipes(dateRecipes);
     mockGroup.setCalendar(calendar);
@@ -476,16 +488,25 @@ public class RecipeServiceTest {
     testcalendar.setDateRecipes(new ArrayList<>());
     testuser.setCalendar(testcalendar);
 
-    Mockito.when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockGroup));
-    Mockito.when(userRepository.findById(recipe.getAuthorID())).thenReturn(Optional.of(testuser));
+    when(groupRepository.findById(any())).thenReturn(Optional.of(mockGroup));
+    when(userRepository.findById(recipe.getAuthorID())).thenReturn(Optional.of(testuser));
 
-    mockGroup.setCookbook(mockCookbook);
-    // Call the method under test
+    // Execute the deleteRecipe method
     recipeService.deleteRecipe(recipe);
 
     // Verify that the recipe has been removed from the groups' cookbooks
-    Mockito.verify(groupRepository, Mockito.times(groupIDs.size())).findById(Mockito.anyLong());
-    Mockito.verify(cookbookRepository, Mockito.times(groupIDs.size())).save(Mockito.any());
+    verify(groupRepository, times(groupIDs.size())).findById(any());
+    verify(cookbookRepository, times(groupIDs.size())).save(any(Cookbook.class));
+
+   // If deleteAll should be called once for each group and once for the author
+    verify(dateRecipeRepository, times(groupIDs.size() + 1)).deleteAll(any());
+    verify(calendarRepository, times(groupIDs.size() + 1)).save(any(Calendar.class)); // Including the author's calendar
+    verify(dateRecipeRepository, times(groupIDs.size() + 1)).deleteAll(any()); // Adjust according to actual logic
+    verify(recipeRepository).delete(recipe);
+    assertTrue(calendar.getDateRecipes().isEmpty(), "DateRecipes should be removed from the group's calendar");
+    assertTrue(testcalendar.getDateRecipes().isEmpty(), "DateRecipes should be removed from the author's calendar");
+    assertTrue(mockCookbook.getRecipes().isEmpty(), "Recipe ID should be removed from the cookbook");
+    assertTrue(mockCookbook.getRecipes().isEmpty(), "Recipe ID should be removed from the cookbook");
   }
 
   @Test
