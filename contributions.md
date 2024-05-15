@@ -2,6 +2,23 @@
 - manually append the two development tasks they completed during the week
 - entry should consist of the date, your name, links to the github issues you worked on and optionally a short description
 
+## Week 7
+
+### Sarina 
+
+### Jazz 
+- 14.04, [#95](https://github.com/sopra-fs24-group-36/client/issues/95) small bug fix: limited length of description for nice display on home page and in cookbooks
+- 14.04, [#82](https://github.com/sopra-fs24-group-36/client/issues/82) bug fix: made sure max length of description when creating a recipe is 100 characters + cool pop up
+- 14.04, [#94](https://github.com/sopra-fs24-group-36/client/issues/94) small bug fix: made sure group member emails display nicely (used ...)
+- 14.04, [#81](https://github.com/sopra-fs24-group-36/client/issues/81) bug fix: improved display of API searches
+
+### Yujie
+
+### Summer 
+  
+### Marko
+
+
 ## Week 6
 
 ### Sarina 
@@ -20,7 +37,11 @@
 - 10.05, [#64](https://github.com/sopra-fs24-group-36/client/issues/64), connected group member page with backend
 
 ### Summer 
-
+- 08.05, [#85](https://github.com/sopra-fs24-group-36/client/issues/85),Only one recipe at a time should be dropped into a time slot into a calendar, delete current if new one is dropped in same timeslot.
+- 09.05，[#79](https://github.com/sopra-fs24-group-36/client/issues/79),The div of the drag and drop functionality is too big (see pictures of feedback)
+- 09.05，[#68](https://github.com/sopra-fs24-group-36/client/issues/68),A user should be able to edit a recipe even though it has been created with a link.
+- 09.05，[#86](https://github.com/sopra-fs24-group-36/client/issues/86),Invitation doesn’t load while you are in the invitation field
+  
 ### Marko
 - 07.05 - 11.05, [#117](https://github.com/sopra-fs24-group-36/server/issues/117), [#114](https://github.com/sopra-fs24-group-36/server/issues/114), [#119](https://github.com/sopra-fs24-group-36/server/issues/119), [#115](https://github.com/sopra-fs24-group-36/server/issues/115), [#120](https://github.com/sopra-fs24-group-36/server/issues/120), [#143](https://github.com/sopra-fs24-group-36/server/issues/143), [#118](https://github.com/sopra-fs24-group-36/server/issues/118), [#113](https://github.com/sopra-fs24-group-36/server/issues/113) All necessary tests for the calendar function (Controller/Mapper/Service/Integration) and also updated the userservicetests for the addition of a calendar.
 - 13.05, [187](https://github.com/sopra-fs24-group-36/server/issues/187), Bug in shoppinglist fixed, where multiple items were handled incorrectly. 
