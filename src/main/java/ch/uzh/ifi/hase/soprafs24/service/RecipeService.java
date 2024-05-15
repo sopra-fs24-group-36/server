@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -39,14 +40,20 @@ public class RecipeService {
 
   private final CommentService commentService;
 
+  private final CalendarRepository calendarRepository;
+
+  private final DateRecipeRepository dateRecipeRepository;
+
   @Autowired
-  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository, CommentService commentService, CookbookRepository cookbookRepository, GroupRepository groupRepository, UserRepository userRepository, CommentRepository commentRepository) {
+  public RecipeService(@Qualifier("recipeRepository") RecipeRepository recipeRepository, CommentService commentService, CookbookRepository cookbookRepository, GroupRepository groupRepository, UserRepository userRepository, CommentRepository commentRepository, CalendarRepository calendarRepository, DateRecipeRepository dateRecipeRepository) {
     this.recipeRepository = recipeRepository;
     this.cookbookRepository = cookbookRepository;
     this.groupRepository = groupRepository;
     this.userRepository = userRepository;
     this.commentRepository = commentRepository;
     this.commentService = commentService;
+    this.calendarRepository = calendarRepository;
+    this.dateRecipeRepository = dateRecipeRepository;
   }
 
   public Recipe createUserRecipe(Long userID, Recipe newRecipe) {
@@ -252,35 +259,54 @@ public class RecipeService {
 
   public void deleteRecipe(Recipe recipe) {
 
-      //remove recipe from groups it belongs to
-      if (recipe.getGroups() != null) {
-          for (Long id:recipe.getGroups()){
-              Group g = groupRepository.findById(id).orElse(null);
-              if(g == null){throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");}
-              Cookbook c = g.getCookbook();
-              List<Long> recipes = c.getRecipes();
-              if (recipes.contains(recipe.getId())){
-                  recipes.remove(recipe.getId());
-                  c.setRecipes(recipes);
-                  cookbookRepository.save(c);
-                  cookbookRepository.flush();
-              } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe is not part of one of these groups");}
-          }
-      }
+    //remove recipe from groups it belongs to
+    if (recipe.getGroups() != null) {
+      for (Long id : recipe.getGroups()) {
+        Group g = groupRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
+        Cookbook c = g.getCookbook();
+        List<Long> recipes = c.getRecipes();
 
-    //delete comments that belonged to recipe
-    if (recipe.getComments() != null){
-        for (Long commentID: recipe.getComments()) {
-            Comment comment = commentRepository.findById(commentID).orElse(null);
-            if (comment == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found");
-            }
-            commentService.deleteComment(comment);
+        if (recipes.contains(recipe.getId())) {
+          recipes.remove(recipe.getId());
+          cookbookRepository.save(c);
+        } else {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe is not part of one of these groups");
         }
+
+        // Handle calendar and dateRecipes for each group
+        Calendar calendar = g.getCalendar();
+        List<DateRecipe> dateRecipes = new ArrayList<>(calendar.getDateRecipes());
+        dateRecipes.removeIf(dr -> dr.getRecipeID().equals(recipe.getId()));
+        calendar.setDateRecipes(dateRecipes); // update the calendar's list
+        calendarRepository.save(calendar);
+
+        // Delete DateRecipes after removal from list to avoid concurrent modification
+        dateRecipeRepository.deleteAll(dateRecipes.stream().filter(dr -> dr.getRecipeID().equals(recipe.getId())).collect(Collectors.toList()));
+      }
     }
 
+    // Remove recipe from author's calendar
+    Long authorId = recipe.getAuthorID();
+    User author = userRepository.findById(authorId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
+    Calendar authorCalendar = author.getCalendar();
+    List<DateRecipe> authorDateRecipes = new ArrayList<>(authorCalendar.getDateRecipes());
+    authorDateRecipes.removeIf(dr -> dr.getRecipeID().equals(recipe.getId()));
+    authorCalendar.setDateRecipes(authorDateRecipes); // update the author's calendar
+    calendarRepository.save(authorCalendar);
+
+    // Delete Author's DateRecipes
+    dateRecipeRepository.deleteAll(authorDateRecipes.stream().filter(dr -> dr.getRecipeID().equals(recipe.getId())).collect(Collectors.toList()));
+
+    //delete comments that belonged to recipe
+    if (recipe.getComments() != null) {
+      recipe.getComments().forEach(commentID -> {
+        Comment comment = commentRepository.findById(commentID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+        commentService.deleteComment(comment);
+      });
+    }
+
+    // Finally delete the recipe
     recipeRepository.delete(recipe);
-    recipeRepository.flush();
   }
 
 
