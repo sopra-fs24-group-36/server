@@ -26,7 +26,24 @@ The following technologies were used for back-end development:
 - [PostgreSQL](https://cloud.google.com/sql/docs/postgres) from Google Cloud: for data persistance storing recipes, user profiles and more
 
 
-## 🥦 High-level components 
+## 🥦 High-level components
+In general, the REST requests are handled within the Controller classes, while the handling of the application logic is managed by the various Service classes. Data persistence is handled by the Repository classes, and the project includes various Entity classes representing the whole data model. 
+The following sections provide a detailed description of our application's key components.
+
+# 🍳 RecipeService
+The RecipeService is responsible for managing all recipe-related operations. This includes the creation of a new recipe, updating existing recipes, retrieving recipe details, and the deletion of recipes. The RecipeService interacts with the RecipeRepository, which communicates with the database to persist recipe data. The service ensures that users can manage their recipes efficiently. The RecipeService is a central component for users who want to save and share their cooked creations.
+
+# 👫 GroupService
+The GroupService is dedicated to managing all aspects of user groups within the application. This includes functionalities such as creating new groups, adding or removing members, and deleting groups. It works closely with the GroupRepository to ensure group data is accurately stored and retrieved. The GroupService allows users to create collaborative communities dedicated fto cooking and recipe sharing and meal planning. It facilitates shared shopping lists and coordinated meal planning, making it a crucial element for fostering community interaction and enhancing social engagement within the app.
+
+# 🧩 DTO and Mapper
+The DTO (Data Transfer Object) classes are used to transfer all necessary data between the client and server. The DTOMapper class is responsible for mapping between entity classes and their corresponding DTOs. This abstraction layer ensures that the data structures used in API communication are separate from the internal data model, enhancing maintainability and scalability.
+
+# 📅 Calendar
+The Calendar class is responsible for managing calendar entries, specifically linking dates to recipes. It includes an ID and a list of DateRecipe objects, which represent the recipes associated with specific dates and their Status using the enumeration from the CalendarStatus constant. This class ensures that users can organize their cooking schedules by assigning recipes to particular dates. The Calendar class interacts with the persistence layer to store and retrieve necessary calendar data. It is a crucial component for users and groups who want to plan their meals and maintain an organized cooking calendar.
+
+# 📝 ShoppingListController
+The ShoppingListController oversees all client-server interactions related to user- and group shopping lists. This includes handling requests to add, tick-off, and retrieve items from a shopping list. The controller ensures that any changes made to the shopping list are synchronized across all clients, providing a consistent experience. It works in collaboration with the ShoppingListService to execute the necessary business logic and interact with the ShoppingListRepository for data persistence. Through the ShoppingListController, users and groups can efficiently organize their grocery needs, ensuring their shopping lists are always up-to-date and accessible.
 
 ## 🥦 Launch and Deployment 
 ### Building with Gradle
