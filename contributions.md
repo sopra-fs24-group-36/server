@@ -11,6 +11,7 @@
 - 14.05, [#82](https://github.com/sopra-fs24-group-36/client/issues/82) bug fix: made sure max length of description when creating a recipe is 100 characters + cool pop up
 - 14.05, [#94](https://github.com/sopra-fs24-group-36/client/issues/94) small bug fix: made sure group member emails display nicely (used ...)
 - 14.05, [#81](https://github.com/sopra-fs24-group-36/client/issues/81) bug fix: improved display of API searches
+- 16.05, [#97](https://github.com/sopra-fs24-group-36/client/issues/97) small bug fix: commend disappeared when hovering over it to edit
 
 ### Yujie
 
