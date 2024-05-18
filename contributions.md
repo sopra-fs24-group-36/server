@@ -14,6 +14,10 @@
 - 16.05, [#97](https://github.com/sopra-fs24-group-36/client/issues/97) small bug fix: commend disappeared when hovering over it to edit
 
 ### Yujie
+- 17.05, [#80](https://github.com/sopra-fs24-group-36/client/issues/80) had "Are you sure" pop up
+- 17.05, [#88](https://github.com/sopra-fs24-group-36/client/issues/88) closed due to incomprehensible English
+- 18.05, [#91](https://github.com/sopra-fs24-group-36/client/issues/91) group cookbook refresh every 5 seconds
+- 18.05, [#93](https://github.com/sopra-fs24-group-36/client/issues/93) group members refresh every 5 seconds
 
 ### Summer 
   
