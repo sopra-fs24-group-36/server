@@ -20,7 +20,11 @@
 - 18.05, [#93](https://github.com/sopra-fs24-group-36/client/issues/93) group members refresh every 5 seconds
 
 ### Summer 
-  
+- 18.05, [#92](https://github.com/sopra-fs24-group-36/client/issues/92) fix the displaying error in edit button in cookbooks
+- 18.05, [#78](https://github.com/sopra-fs24-group-36/client/issues/78) fix polling in group calendar
+- 19.05, [#83](https://github.com/sopra-fs24-group-36/client/issues/83) limit the email format in x@x.x
+- 19.05, [#84](https://github.com/sopra-fs24-group-36/client/issues/84) Limit size of avatar pictures the user can upload ,200KB
+
 ### Marko
 - 13.05 & 15-05, [#190](https://github.com/sopra-fs24-group-36/server/issues/190) Had to change the whole recipe deletion because an error occurred when recipes are deleted but calendar entries are not, needed to change the necessary tests. Is fixed now.
 
