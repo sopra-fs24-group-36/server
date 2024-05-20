@@ -1,9 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
 import javax.persistence.*;
-
 import ch.uzh.ifi.hase.soprafs24.constant.CalendarStatus;
-
 import java.util.Date;
 
 @Entity

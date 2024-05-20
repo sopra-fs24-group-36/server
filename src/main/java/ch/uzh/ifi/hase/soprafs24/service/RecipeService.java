@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-
+// Service to handle all recipe related functionality
 @Service
 @Transactional
 public class RecipeService {
@@ -56,6 +56,7 @@ public class RecipeService {
     this.dateRecipeRepository = dateRecipeRepository;
   }
 
+  // Create a new recipe for a user
   public Recipe createUserRecipe(Long userID, Recipe newRecipe) {
 
     newRecipe = recipeRepository.save(newRecipe);
@@ -101,6 +102,7 @@ public class RecipeService {
     return newRecipe;
   }
 
+  // Create a new recipe for a group
   public Recipe createGroupRecipe(Long groupID, Recipe newRecipe) {
 
     // Save the new recipe
@@ -141,21 +143,22 @@ public class RecipeService {
     log.debug("Created new Recipe: {}", newRecipe);
 
     return newRecipe;
-}
+  }
 
-
+  // Find a recipe by its ID
   public Recipe findRecipeById(Long recipeID) {
     Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeID);
     return optionalRecipe.orElse(null); // Returns null if recipe is not found
   }
 
+  // Find all recipes of a user
   public List<Recipe> findAllRecipesWithUserID(Long userID) {
     List<Recipe> recipes = recipeRepository.findByAuthorID(userID);
 
     return recipes;
   }
 
-
+  // Update a recipe
   public void updateRecipe(long recipeID, Recipe recipeToUpdate){
     String title = recipeToUpdate.getTitle();
     
@@ -256,7 +259,7 @@ public class RecipeService {
 
   }
 
-
+  // Delete a recipe
   public void deleteRecipe(Recipe recipe) {
 
     //remove recipe from groups it belongs to
@@ -309,9 +312,7 @@ public class RecipeService {
     recipeRepository.delete(recipe);
   }
 
-
-
-  //need to also remove the group from the recipe otherwise remains in database
+  // Remove a recipe from a group
   public Group removeRecipeFromGroup(Long groupID, Long recipeID) {
 
     //make sure group exists and get group
@@ -347,7 +348,7 @@ public class RecipeService {
     return group;
   }
 
-
+  // Add a comment to a recipe
   public void addComment (Long recipeID, Comment comment) {
 
       //check that recipe exists, otherwise exception and delete comment
@@ -369,6 +370,7 @@ public class RecipeService {
 
   }
 
+  // Delete a comment from a recipe
   public void deleteComment (Recipe recipe, Comment comment) {
 
       List<Long> comments = recipe.getComments();
@@ -385,46 +387,47 @@ public class RecipeService {
       }
   }
 
-    public void voteOnRecipe(Long recipeID, VotingDTO votingInput) {
+  // Vote on a recipe
+  public void voteOnRecipe(Long recipeID, VotingDTO votingInput) {
 
-      //check if recipe exists
-      Recipe recipe = recipeRepository.findById(recipeID)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found, Comment could not be created"));
+    //check if recipe exists
+    Recipe recipe = recipeRepository.findById(recipeID)
+          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found, Comment could not be created"));
 
-      //if recipe has no voting yet
-      if (recipe.getCount() == null) {
+    //if recipe has no voting yet
+    if (recipe.getCount() == null) {
 
-          recipe.setCount(1);
+        recipe.setCount(1);
 
-          double doubleValue = votingInput.getVote().doubleValue(); // Extract the primitive double value
-          Long newSum = (long) doubleValue;
+        double doubleValue = votingInput.getVote().doubleValue(); // Extract the primitive double value
+        Long newSum = (long) doubleValue;
 
-          recipe.setSum(newSum);
+        recipe.setSum(newSum);
 
-          recipe.setVote(votingInput.getVote());
-      }
-      //recipe already has voting
-      else {
-
-          Integer newCount = recipe.getCount() + 1;
-          recipe.setCount(newCount);
-
-          double doubleValue = votingInput.getVote().doubleValue();
-          Long summing = (long) doubleValue;
-
-          Long newSum = recipe.getSum() + summing;
-          recipe.setSum(newSum);
-
-          Double sumDouble = recipe.getSum().doubleValue();
-          Double countDouble = recipe.getCount().doubleValue();
-
-          Double newVote = sumDouble / countDouble;
-          Double roundedNum = Math.round(newVote * 2) / 2.0;
-
-          recipe.setVote(roundedNum);
-      }
-
-      recipeRepository.save(recipe);
-      recipeRepository.flush();
+        recipe.setVote(votingInput.getVote());
     }
+    //recipe already has voting
+    else {
+
+        Integer newCount = recipe.getCount() + 1;
+        recipe.setCount(newCount);
+
+        double doubleValue = votingInput.getVote().doubleValue();
+        Long summing = (long) doubleValue;
+
+        Long newSum = recipe.getSum() + summing;
+        recipe.setSum(newSum);
+
+        Double sumDouble = recipe.getSum().doubleValue();
+        Double countDouble = recipe.getCount().doubleValue();
+
+        Double newVote = sumDouble / countDouble;
+        Double roundedNum = Math.round(newVote * 2) / 2.0;
+
+        recipe.setVote(roundedNum);
+    }
+
+    recipeRepository.save(recipe);
+    recipeRepository.flush();
+  }
 }

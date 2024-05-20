@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
-
-
+// Controller to handle all shoppinglist related endpoints
 @RestController
 public class ShoppingListController {
 
@@ -33,7 +31,7 @@ public class ShoppingListController {
 
   ShoppingListController(ShoppingListService shoppingListService, GroupRepository groupRepository, UserRepository userRepository) {this.shoppingListService = shoppingListService; this.groupRepository = groupRepository; this.userRepository = userRepository;}
 
-  //here come the post/get/put mapping
+  // Add an item to the shoppinglist of a group
   @PostMapping("/groups/{groupID}/shoppinglists")
   @ResponseStatus(HttpStatus.OK)
   public void addItemGroup(@RequestBody ItemPostDTO itemPostDTO, @PathVariable("groupID") Long groupID) {
@@ -48,6 +46,7 @@ public class ShoppingListController {
     shoppingListService.addItemGroup(itemName, group);
   }
 
+  // Add an item to the shoppinglist of a user
   @PostMapping("/users/{userID}/shoppinglists")
   @ResponseStatus(HttpStatus.OK)
   public void addItemUser(@RequestBody ItemPostDTO itemPostDTO, @PathVariable("userID") Long userID) {
@@ -63,6 +62,7 @@ public class ShoppingListController {
     shoppingListService.addItemUser(itemName, user);
   }
 
+  // Get the shoppinglist of a group
   @GetMapping("/groups/{groupID}/shoppinglists")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
@@ -79,6 +79,7 @@ public class ShoppingListController {
     return DTOMapper.INSTANCE.convertEntityToShoppingListDTO(shoppingList);
   }
 
+  // Get the shoppinglist of a user
   @GetMapping("/users/{userID}/shoppinglists")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
@@ -94,6 +95,7 @@ public class ShoppingListController {
     return DTOMapper.INSTANCE.convertEntityToShoppingListDTO(shoppingList);
   }
 
+  // Remove an item from the shoppinglist of a group
   @PutMapping("/groups/{groupID}/shoppinglists")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void removeItemGroup(@PathVariable("groupID") Long groupID, @RequestBody ItemPutDTO itemPutDTO) {
@@ -108,6 +110,7 @@ public class ShoppingListController {
     shoppingListService.removeGroupItem(itemName, group);
   }
 
+  // Remove an item from the shoppinglist of a user
   @PutMapping("/users/{userID}/shoppinglists")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void removeItemUsers(@PathVariable("userID") Long userID, @RequestBody ItemPutDTO itemPutDTO) {
@@ -122,6 +125,7 @@ public class ShoppingListController {
     shoppingListService.removeUserItem(itemName, user);
   }
 
+  // Empty the shoppinglist of a group
   @DeleteMapping("/groups/{groupID}/shoppinglists")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void emptyGroupShoppinglist(@PathVariable("groupID") Long groupID){
@@ -133,6 +137,7 @@ public class ShoppingListController {
     shoppingListService.emptyGroupShoppinglist(group);
   }
 
+  // Empty the shoppinglist of a user
   @DeleteMapping("/users/{userID}/shoppinglists")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void emptyUserShoppinglist(@PathVariable("userID") Long userID){

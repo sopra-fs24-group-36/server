@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
 import java.util.Date;
-
 import ch.uzh.ifi.hase.soprafs24.constant.CalendarStatus;
 
 public class CalendarRequest {

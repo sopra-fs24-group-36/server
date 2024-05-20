@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto;
 
 import java.util.Date;
-
 import ch.uzh.ifi.hase.soprafs24.constant.CalendarStatus;
 
 public class DateRecipeDTO {

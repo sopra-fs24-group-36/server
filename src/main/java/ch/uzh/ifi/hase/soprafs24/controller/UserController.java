@@ -30,8 +30,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
-
+// Controller to handle all user related endpoints
 @RestController
 public class UserController {
 
@@ -105,6 +104,7 @@ public class UserController {
         userService.logOut(userId);
     }
 
+    // accept an invitation
     @PostMapping("/users/{userID}/accept/{groupID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void acceptInvitation(@PathVariable("userID") Long userID, @PathVariable("groupID") Long groupID) {
@@ -112,6 +112,7 @@ public class UserController {
         userService.userAcceptsInvitation(userID, groupID);
     }
 
+    // decline an invitation
     @PostMapping("/users/{userID}/deny/{groupID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void declineInvitation(@PathVariable("userID") Long userID, @PathVariable("groupID") Long groupID) {
@@ -120,6 +121,7 @@ public class UserController {
 
     }
 
+    // get all invitations of a user
     @GetMapping("/users/{userID}/invitations")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -152,7 +154,7 @@ public class UserController {
       return returnlistofmaps;
     }
     
-
+    // get all user-infortmation
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -164,7 +166,7 @@ public class UserController {
 
     }
 
-
+    // update user
     @PutMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void updateUser (@PathVariable Long userId, @RequestBody UserPutDTO userPutDTO) {
@@ -175,6 +177,7 @@ public class UserController {
 
     }
 
+    // get all groups a user is in
     @GetMapping("/users/{userID}/groups")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -204,6 +207,7 @@ public class UserController {
       return returnlistofmaps;
     }
 
+    // get a random cooking fact for the front page
     @GetMapping("/randomCookingFact")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

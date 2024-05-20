@@ -18,7 +18,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-
+// Service to handle all shopping list related functionality
 @Service
 @Transactional
 public class ShoppingListService {
@@ -32,7 +32,7 @@ public class ShoppingListService {
     this.shoppingListRepository = shoppingListRepository;
   }
 
-
+  // Create a new shopping list
   public ShoppingList createShoppingList(ShoppingList newShoppingList) {
 
     newShoppingList = shoppingListRepository.save(newShoppingList);
@@ -43,6 +43,7 @@ public class ShoppingListService {
     return newShoppingList;
   }
 
+  // Add an item to a group shopping list
   public void addItemGroup(String item, Group group){
     ShoppingList shoppingList = group.getShoppingList();
 
@@ -61,6 +62,7 @@ public class ShoppingListService {
     }
   }
 
+  // Add an item to a user shopping list
   public void addItemUser(String item, User user){
     ShoppingList shoppingList = user.getShoppingList();
 
@@ -77,6 +79,7 @@ public class ShoppingListService {
     }
   }
 
+  // Remove an item from a group shopping list
   public void removeGroupItem(String item, Group group){
     ShoppingList shoppingList = group.getShoppingList();
 
@@ -90,6 +93,7 @@ public class ShoppingListService {
     }
   }
 
+  // Remove an item from a user shopping list
   public void removeUserItem(String item, User user){
     ShoppingList shoppingList = user.getShoppingList();
 
@@ -103,6 +107,7 @@ public class ShoppingListService {
     }
   }
 
+  // Empty a group shopping list
   public void emptyGroupShoppinglist(Group group){
     ShoppingList shoppinglist = group.getShoppingList();
 
@@ -114,6 +119,7 @@ public class ShoppingListService {
     shoppingListRepository.flush();
   }
 
+  // Empty a user shopping list
   public void emptyUserShoppinglist(User user){
     ShoppingList shoppinglist = user.getShoppingList();
 

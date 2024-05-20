@@ -30,6 +30,7 @@ import java.util.Map;
 import javax.transaction.Transactional;
 
 
+// Service to handle all calendar related functionality
 @Service
 @Transactional
 public class CalendarService {
@@ -49,6 +50,7 @@ public class CalendarService {
     this.dateRecipeRepository = dateRecipeRepository;
   }
 
+  // Create a new calendar
   public Calendar createCalendar(Calendar calendar) {
 
     calendar = calendarRepository.save(calendar);
@@ -59,6 +61,7 @@ public class CalendarService {
     return calendar;
   }
 
+  // Add a recipe to the calendar of a user
   public Calendar addRecipeToUserCalendar(User user, Long recipeID, Date date, CalendarStatus status) {
 
     Calendar calendar = user.getCalendar();
@@ -92,6 +95,7 @@ public class CalendarService {
     return calendar;
   }
 
+  // Add a recipe to the calendar of a group
   public Calendar addRecipeToGroupCalendar(Group group, Long recipeID, Date date, CalendarStatus status) {
 
     Calendar calendar = group.getCalendar();
@@ -125,6 +129,7 @@ public class CalendarService {
     return calendar;
   }
 
+  // Remove a recipe from the calendar of a user
   public Calendar removeRecipeFromUserCalendar(User user, Long eventId) {
 
     Calendar calendar = user.getCalendar();
@@ -151,6 +156,7 @@ public class CalendarService {
     return calendar;
   }
 
+  // Remove a recipe from the calendar of a group
   public Calendar removeRecipeFromGroupCalendar(Group group, Long eventId) {
 
     Calendar calendar = group.getCalendar();
@@ -177,6 +183,7 @@ public class CalendarService {
     return calendar;
   }
 
+  // Get the calendar of a user
   public List<CalendarOutput> getUserCalendar(User user) {
 
     Calendar calendar = user.getCalendar();
@@ -211,6 +218,7 @@ public class CalendarService {
     return calendarOutput;
   }
 
+  // Get the calendar of a group
   public List<CalendarOutput> getGroupCalendar(Group group) {
 
     Calendar calendar = group.getCalendar();

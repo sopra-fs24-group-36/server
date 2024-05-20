@@ -25,7 +25,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-
+// Service to handle all group related functionality
 @Service
 @Transactional
 public class GroupService {
@@ -47,7 +47,7 @@ public class GroupService {
     this.calendarService = calendarService;
   }
 
-
+  // Create a new group
   public Group createGroup(Long creator, Group newGroup) {
 
     User u = userRepository.findById(creator).orElse(null);
@@ -111,19 +111,22 @@ public class GroupService {
     return newGroup;
   }
 
+  // Save cookbook to a group
   public void saveCookbook (Group group, Cookbook cookbook) {
     group.setCookbook(cookbook);
   }
 
-
+  // Save shopping list to a group
   public void saveShoppingList(Group group, ShoppingList shoppingList){
     group.setShoppingList(shoppingList);
   }
 
+  // Save calendar to a group
   public void saveCalendar(Group group, Calendar calendar){
     group.setCalendar(calendar);
   }
 
+  // Add a user to a group
   public Group addUserToGroup(Long userID, Long groupID){
   
     Optional<Group> groupOptional = groupRepository.findById(groupID);
@@ -155,6 +158,7 @@ public class GroupService {
     }
   }
 
+  // Remove a user from a group
   public Group deleteUserFromGroup(Long userId, Long groupId){
     Optional<Group> groupOptional = groupRepository.findById(groupId);
 
@@ -190,6 +194,7 @@ public class GroupService {
     }
   }
 
+  // Invite a user to a group
   public void inviteUserToGroup(Long groupID, UserPostDTO userPostDTO){
 
     Group group = groupRepository.findById(groupID).orElse(null);

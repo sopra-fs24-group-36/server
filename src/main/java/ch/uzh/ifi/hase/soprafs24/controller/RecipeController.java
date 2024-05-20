@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
+// Controller to handle all recipe related endpoints
 @RestController
 public class RecipeController {
 
@@ -36,6 +36,7 @@ public class RecipeController {
       this.commentRepository = commentRepository;
   }
 
+  // Create a recipe for a user
   @PostMapping("/users/{userID}/cookbooks")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
@@ -54,6 +55,7 @@ public class RecipeController {
     }
   }
 
+  // Create a recipe for a group
   @PostMapping("/groups/{groupID}/cookbooks")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
@@ -72,6 +74,7 @@ public class RecipeController {
     }
   }
 
+  // Get a recipe for a user
   @GetMapping("/users/{userID}/cookbooks/{recipeID}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
@@ -86,6 +89,7 @@ public class RecipeController {
     return DTOMapper.INSTANCE.convertEntityToRecipeDTO(recipe);
   }
   
+  // Get a recipe for a group
   @GetMapping("/groups/{groupID}/cookbooks/{recipeID}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
@@ -100,6 +104,7 @@ public class RecipeController {
     return DTOMapper.INSTANCE.convertEntityToRecipeDTO(recipe);
   }
 
+  // Edit a recipe
   @PutMapping("/users/{userID}/cookbooks/{recipeID}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void editUserRecipe(@PathVariable("recipeID") long recipeID, @RequestBody RecipePutDTO recipePutDTO) {
@@ -116,6 +121,7 @@ public class RecipeController {
 
   }
 
+  // Get all recipes of a user
   @GetMapping("/users/{userID}/cookbooks")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
@@ -132,6 +138,7 @@ public class RecipeController {
     return mapped_recipes;
   }
 
+  // Get all recipes of a group
   @GetMapping("/groups/{groupID}/cookbooks")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
@@ -164,7 +171,7 @@ public class RecipeController {
     return returnRecipes;
   }
   
-
+  // Delete a recipe
   @DeleteMapping("/users/{userID}/cookbooks/{recipeID}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteRecipe(@PathVariable("recipeID") long recipeID) {
@@ -179,6 +186,7 @@ public class RecipeController {
       }
   }
 
+  // Remove a recipe of a group
   @PutMapping("groups/{groupID}/cookbooks/{recipeID}")
   @ResponseStatus(HttpStatus.OK)
   public void removeRecipeFromGroup(@PathVariable("groupID") Long groupID, @PathVariable("recipeID") Long recipeID) {
@@ -189,6 +197,7 @@ public class RecipeController {
     }
   }
 
+  // Get all comments of a recipe
   @GetMapping("comments/recipes/{recipeID}")
   @ResponseStatus(HttpStatus.OK)
   public List<CommentDTO> getRecipeComments (@PathVariable Long recipeID) {
@@ -223,7 +232,7 @@ public class RecipeController {
 
   }
 
-
+  // Vote on a recipe
   @PostMapping("/votes/recipes/{recipeID}")
   @ResponseStatus(HttpStatus.CREATED)
   public void voteOnRecipe (@PathVariable Long recipeID, @RequestBody VotingDTO votingDTO) {
@@ -231,7 +240,7 @@ public class RecipeController {
       recipeService.voteOnRecipe(recipeID, votingDTO);
   }
 
-
+  // Get the votes of a recipe
   @GetMapping("/votes/recipes/{recipeID}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody

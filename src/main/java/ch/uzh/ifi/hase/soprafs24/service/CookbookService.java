@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-
+// Service to handle all cookbook related functionality
 @Service
 @Transactional
 public class CookbookService {
@@ -25,7 +25,7 @@ public class CookbookService {
         this.cookbookRepository = cookbookRepository;
     }
 
-
+    // Create a new cookbook
     public Cookbook createCookbook(Cookbook newCookbook) {
 
         newCookbook = cookbookRepository.save(newCookbook);

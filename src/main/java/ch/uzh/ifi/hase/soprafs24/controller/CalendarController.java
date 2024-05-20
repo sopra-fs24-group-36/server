@@ -32,11 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
-
-
-
+// Controller to handle all calendar related endpoints
 @RestController
 public class CalendarController {
 
@@ -46,6 +42,7 @@ public class CalendarController {
 
   CalendarController(CalendarService calendarService, UserRepository userRepository, GroupRepository groupRepository) {this.calendarService = calendarService; this.userRepository = userRepository; this.groupRepository = groupRepository;}
 
+  // Add a recipe to the calendar of a user
   @PostMapping("/users/{userId}/calendars")
   @ResponseStatus(HttpStatus.OK)
   public void addRecipeToCalendar(@RequestBody DateRecipeDTO dateRecipePostDTO, @PathVariable("userId") Long userId) {
@@ -67,6 +64,7 @@ public class CalendarController {
     calendarService.addRecipeToUserCalendar(user, recipeID, date, status);
   }
 
+  // Add a recipe to the calendar of a group
   @PostMapping("/groups/{groupId}/calendars")
   @ResponseStatus(HttpStatus.OK)
   public void addRecipeToGroupCalendar(@RequestBody DateRecipeDTO dateRecipePostDTO, @PathVariable("groupId") Long groupId) {
@@ -88,6 +86,7 @@ public class CalendarController {
     calendarService.addRecipeToGroupCalendar(group, recipeID, date, status);
   }
 
+  // Remove a recipe from the calendar of a user
   @DeleteMapping("/users/{userId}/calendars/{eventId}")
   @ResponseStatus(HttpStatus.OK)
   public void removeRecipeFromUserCalendar(@PathVariable("eventId") Long eventId, @PathVariable("userId") Long userId) {
@@ -101,6 +100,7 @@ public class CalendarController {
     calendarService.removeRecipeFromUserCalendar(user, eventId);
   }
 
+  // Remove a recipe from the calendar of a group
   @DeleteMapping("/groups/{groupId}/calendars/{eventId}")
   @ResponseStatus(HttpStatus.OK)
   public void removeRecipeFromGroupCalendar(@PathVariable("eventId") Long eventId, @PathVariable("groupId") Long groupId) {
@@ -114,6 +114,7 @@ public class CalendarController {
     calendarService.removeRecipeFromGroupCalendar(group, eventId);
   }
 
+  // Get the calendar of a user
   @GetMapping("/users/{userId}/calendars")
   @ResponseStatus(HttpStatus.OK)
   public List<CalendarOutput> getUserCalendar(@PathVariable("userId") Long userId) {
@@ -129,6 +130,7 @@ public class CalendarController {
     return calendarOutputs;
   }
 
+  // Get the calendar of a group
   @GetMapping("/groups/{groupId}/calendars")
   @ResponseStatus(HttpStatus.OK)
   public List<CalendarOutput> getGroupCalendar(@PathVariable("groupId") Long groupId) {

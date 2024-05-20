@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto;
 
-
 public class VoteRequestDTO {
 
   private Double vote;
