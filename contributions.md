@@ -27,6 +27,8 @@
 
 ### Marko
 - 13.05 & 15-05, [#190](https://github.com/sopra-fs24-group-36/server/issues/190) Had to change the whole recipe deletion because an error occurred when recipes are deleted but calendar entries are not, needed to change the necessary tests. Is fixed now.
+- 16.05, Worked on the README (Only the server description).
+- 20.05, Deleted unnecessary code imports and added a lot of comments, which describe parts of the code.
 
 ## Week 6
 
