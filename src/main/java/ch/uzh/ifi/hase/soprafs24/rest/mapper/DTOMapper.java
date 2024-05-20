@@ -5,7 +5,6 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-
 @Mapper
 public interface DTOMapper {
 

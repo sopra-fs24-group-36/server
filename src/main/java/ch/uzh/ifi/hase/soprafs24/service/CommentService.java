@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 
-
+// Service to handle all comment related functionality
 @Service
 @Transactional
 public class CommentService {
@@ -32,7 +32,7 @@ public class CommentService {
         this.userRepository = userRepository;
     }
 
-
+    // Create a new comment
     public Comment createComment (Comment newComment) {
 
         Long userID = newComment.getUserID();
@@ -50,6 +50,7 @@ public class CommentService {
         return newComment;
     }
 
+    // Update a comment
     public void updateComment(Long commentID, Comment commentUpdate) {
 
         //check if comment with this ID exists
@@ -68,6 +69,7 @@ public class CommentService {
         }
     }
 
+    // Delete a comment
     public void deleteComment(Comment comment) {
 
         commentRepository.delete(comment);

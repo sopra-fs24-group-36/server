@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.constant;
 
+// Enum for random cooking facts for the front page
 public enum RandomCookingFact {
   FACT_1("Breakfast is NOT the most important meal of the day. In 1944, General Foods coined the phrase to sell more cereal Grape Nuts."),
   FACT_2("Pound cake got its name from its recipe which called for one pound of butter, one pound of eggs, and one pound of sugar."),

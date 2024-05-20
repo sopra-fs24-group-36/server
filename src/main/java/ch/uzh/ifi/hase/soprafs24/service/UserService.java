@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-
+// Service to handle all user related functionality
 @Service
 @Transactional
 public class UserService {
@@ -73,7 +73,7 @@ public class UserService {
         return user;
     }
 
-
+    //log out the user, hence set the Status to OFFLINE
     public void logOut (Long userId) {
 
       User user = userRepository.findById(userId).orElse(null);
@@ -88,19 +88,22 @@ public class UserService {
       log.debug("Logged out User: {}", user);
     }
 
-
+    // Save a cookbook to the user
     public void saveCookbook (User user, Cookbook cookbook) {
         user.setCookbook(cookbook);
     }
 
+    // Save a shopping list to the user
     public void saveShoppingList(User user, ShoppingList shoppingList){
         user.setShoppingList(shoppingList);
     }
 
+    // Save a calendar to the user
     public void saveCalendar(User user, Calendar calendar){
         user.setCalendar(calendar);
     }
 
+    // Get a user by their ID
     public User getTheUser (Long userId) {
 
         User user = userRepository.findById(userId).orElse(null);
@@ -114,6 +117,7 @@ public class UserService {
         return user;
     }
 
+    // Update a user
     public void updateTheUser (Long userId, User userUpdate) {
 
       //get user by id and check if they exist
@@ -179,7 +183,7 @@ public class UserService {
 
     }
 
-
+    // User declines an invitation
     public User userDeclinesInvitation (Long userId, Long groupId) {
 
         //get the invitations from user, throw error if null
@@ -207,7 +211,7 @@ public class UserService {
 
     }
 
-
+    // User accepts an invitation
     public User userAcceptsInvitation (Long userId, Long groupId) {
 
         //get the user which accepted the invitation
@@ -257,9 +261,6 @@ public class UserService {
         return user;
     }
 
-
-
-
     //throw an error if the user does not already exist (if username or password or both provided is wrong)
     private void checkIfUserNotExists(User userToBeLoggedIn) {
         User userByUsernameAndPassword = userRepository.findByUsernameAndPassword(userToBeLoggedIn.getUsername(), userToBeLoggedIn.getPassword());
@@ -269,8 +270,6 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "username or the password", "is"));
         }
     }
-
-
 
     //throw an error if the user already exists, a user already exists if the email or username provided or both is not unique
   private void checkIfUserExists(User userToBeCreated) {
@@ -286,6 +285,4 @@ public class UserService {
           throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "email", "is"));
       }
     }
-
-
 }

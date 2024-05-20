@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+// Controller to handle all comment related endpoints
 @RestController
 public class CommentController {
 
@@ -36,7 +36,7 @@ public class CommentController {
       this.commentRepository = commentRepository;
   }
 
-
+    // Create a comments of a single recipe
     @PostMapping("/comments/recipes/{recipeID}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -64,6 +64,7 @@ public class CommentController {
 
   }
 
+    // Update comment of a single recipe
     @PutMapping("/comments/{commentID}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -76,6 +77,7 @@ public class CommentController {
     }
 
 
+    // Delete comment of a single recipe
     @DeleteMapping("/comments/{commentID}/recipes/{recipeID}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

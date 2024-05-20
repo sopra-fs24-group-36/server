@@ -27,8 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
-
+// Controller to handle all group related endpoints
 @RestController
 public class GroupController {
 
@@ -42,8 +41,7 @@ public class GroupController {
     this.groupRepository = groupRepository;
   }
 
-  //here come the post/get/put mappings
-  // add group
+  // create group
   @PostMapping("/groups")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
@@ -95,6 +93,7 @@ public class GroupController {
   
   }
 
+  // invite a user
   @PostMapping("/groups/{groupID}/invitations")
   @ResponseStatus(HttpStatus.OK)
   public void inviteUserToGroup(@PathVariable("groupID") Long groupID, @RequestBody UserPostDTO userPostDTO) {
@@ -103,6 +102,7 @@ public class GroupController {
 
   }
 
+  // get all group-information
   @GetMapping("/groups/{groupID}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
@@ -114,6 +114,7 @@ public class GroupController {
     return DTOMapper.INSTANCE.convertEntityToGroupDTO(group);
   }
 
+  // get rick rolled :)
   @GetMapping("/RR")
   public void getRickRolled() {
     throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "Never gonna give you up, never gonna let you down!");

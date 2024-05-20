@@ -1,9 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
 import java.util.Date;
-
 import javax.persistence.Lob;
-
 import ch.uzh.ifi.hase.soprafs24.constant.CalendarStatus;
 
 public class CalendarOutput {
