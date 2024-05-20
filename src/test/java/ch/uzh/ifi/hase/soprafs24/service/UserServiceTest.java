@@ -30,6 +30,9 @@ public class UserServiceTest {
   @InjectMocks
   private UserService userService;
 
+  @Mock
+  private CommentService commentService;
+
   private User testUser;
 
   @BeforeEach

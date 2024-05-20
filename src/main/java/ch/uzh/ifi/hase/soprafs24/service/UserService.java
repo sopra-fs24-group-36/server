@@ -32,10 +32,13 @@ public class UserService {
 
   private final GroupRepository groupRepository;
 
+  private final CommentService commentService;
+
   @Autowired
-  public UserService(@Qualifier("userRepository") UserRepository userRepository, GroupRepository groupRepository) {
+  public UserService(@Qualifier("userRepository") UserRepository userRepository, GroupRepository groupRepository, CommentService commentService) {
     this.userRepository = userRepository;
     this.groupRepository = groupRepository;
+    this.commentService = commentService;
   }
 
   //create a new user and save it to the database
@@ -157,6 +160,10 @@ public class UserService {
                 user.setUsername(userUpdate.getUsername());
                 userRepository.flush();
                 log.debug("Username changed for User: {}", user);
+
+                //change username of comments too
+                commentService.changeUsername(userId);
+
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "new username not unique, profile could not be updated");
             }
