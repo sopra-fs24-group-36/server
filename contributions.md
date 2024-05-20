@@ -5,6 +5,9 @@
 ## Week 7
 
 ### Sarina 
+- 18.05 - 19.05, gone through system to check for potential bugs, found two and solved them (see below)
+- 20.05, [#198](https://github.com/sopra-fs24-group-36/server/issues/198), needed to change some logic and added some tests and changed some as well
+- 20.05, [#197](https://github.com/sopra-fs24-group-36/server/issues/197), enforced some rules on the backend to resolve this
 
 ### Jazz 
 - 14.05, [#95](https://github.com/sopra-fs24-group-36/client/issues/95) small bug fix: limited length of description for nice display on home page and in cookbooks
