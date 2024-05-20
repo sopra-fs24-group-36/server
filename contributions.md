@@ -12,6 +12,7 @@
 - 14.05, [#94](https://github.com/sopra-fs24-group-36/client/issues/94) small bug fix: made sure group member emails display nicely (used ...)
 - 14.05, [#81](https://github.com/sopra-fs24-group-36/client/issues/81) bug fix: improved display of API searches
 - 16.05, [#97](https://github.com/sopra-fs24-group-36/client/issues/97) small bug fix: commend disappeared when hovering over it to edit
+- whole week, [#89](https://github.com/sopra-fs24-group-36/client/issues/89) writing the README for server and client (Thanks to Marko for help with high-level components on server side). Need to ask Marion some things and will insert illustrations next week. 
 
 ### Yujie
 - 17.05, [#80](https://github.com/sopra-fs24-group-36/client/issues/80) had "Are you sure" pop up
