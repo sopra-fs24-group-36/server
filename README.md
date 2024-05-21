@@ -31,19 +31,19 @@ In general, the REST requests are handled within the Controller classes, while t
 The following sections provide a detailed description of our application's key components.
 
 ### 🍳 RecipeService
-The RecipeService is responsible for managing all recipe-related operations. This includes the creation of a new recipe, updating existing recipes, retrieving recipe details, and the deletion of recipes. The RecipeService interacts with the RecipeRepository, which communicates with the database to persist recipe data. The service ensures that users can manage their recipes efficiently. The RecipeService is a central component for users who want to save and share their cooked creations.
+The [RecipeService](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/service/RecipeService.java) is responsible for managing all recipe-related operations. This includes the creation of a new recipe, updating existing recipes, retrieving recipe details, and the deletion of recipes. The RecipeService interacts with the [RecipeRepository](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/repository/RecipeRepository.java), which communicates with the database to persist recipe data. The service ensures that users can manage their recipes efficiently. The RecipeService is a central component for users who want to save and share their cooked creations.
 
 ### 👫 GroupService
-The GroupService is dedicated to managing all aspects of user groups within the application. This includes functionalities such as creating new groups, adding or removing members, and deleting groups. It works closely with the GroupRepository to ensure group data is accurately stored and retrieved. The GroupService allows users to create collaborative communities dedicated to cooking and recipe sharing and meal planning. It facilitates shared shopping lists and coordinated meal planning, making it a crucial element for fostering community interaction and enhancing social engagement within the app.
+The [GroupService](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/service/GroupService.java) is dedicated to managing all aspects of user groups within the application. This includes functionalities such as creating new groups, adding or removing members, and deleting groups. It works closely with the [GroupRepository](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/repository/GroupRepository.java) to ensure group data is accurately stored and retrieved. The GroupService allows users to create collaborative communities dedicated to cooking and recipe sharing and meal planning. It facilitates shared shopping lists and coordinated meal planning, making it a crucial element for fostering community interaction and enhancing social engagement within the app.
 
 ### 🧩 DTO and Mapper
 The DTO (Data Transfer Object) classes are used to transfer all necessary data between the client and server. The DTOMapper class is responsible for mapping between entity classes and their corresponding DTOs. This abstraction layer ensures that the data structures used in API communication are separate from the internal data model, enhancing maintainability and scalability.
 
 ### 📅 Calendar
-The Calendar class is responsible for managing calendar entries, specifically linking dates to recipes. It includes an ID and a list of DateRecipe objects, which represent the recipes associated with specific dates and their Status using the enumeration from the CalendarStatus constant. This class ensures that users can organise their cooking plans by assigning recipes to particular dates. The Calendar class interacts with the persistence layer to store and retrieve the necessary calendar data. It is a crucial component for users and groups who want to plan their meals and maintain an organised cooking calendar.
+The [Calendar class](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/entity/Calendar.java) is responsible for managing calendar entries, specifically linking dates to recipes. It includes an ID and a list of DateRecipe objects, which represent the recipes associated with specific dates and their Status using the enumeration from the [CalendarStatus](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/constant/CalendarStatus.java) constant. This class ensures that users can organise their cooking plans by assigning recipes to particular dates. The Calendar class interacts with the persistence layer to store and retrieve the necessary calendar data. It is a crucial component for users and groups who want to plan their meals and maintain an organised cooking calendar.
 
 ### 📝 ShoppingListController
-The ShoppingListController oversees all client-server interactions related to user- and group shopping lists. This includes handling requests to add, tick, and retrieve items from a shopping list. The controller ensures that any changes made to the shopping list are synchronised across all clients, providing a consistent experience. The controller works in collaboration with the ShoppingListService to execute the necessary business logic and interact with the ShoppingListRepository for data persistence. Through the ShoppingListController, users and groups can efficiently organise their grocery needs, ensuring their shopping lists are always up-to-date and accessible.
+The [ShoppingListController](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/controller/ShoppingListController.java) oversees all client-server interactions related to user- and group shopping lists. This includes handling requests to add, tick, and retrieve items from a shopping list. The controller ensures that any changes made to the shopping list are synchronised across all clients, providing a consistent experience. The controller works in collaboration with the [ShoppingListService](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/service/ShoppingListService.java) to execute the necessary business logic and interact with the ShoppingListRepository for data persistence. Through the [ShoppingListController](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/repository/ShoppingListRepository.java), users and groups can efficiently organise their grocery needs, ensuring their shopping lists are always up-to-date and accessible.
 
 ## 🥦 Launch and Deployment 
 ### Building with Gradle
@@ -91,14 +91,12 @@ Use the following command if you want to avoid running the tests with every chan
 `./gradlew build --continuous -xtest`
 
 ### Dependencies 
-Please ensure both client and server are running for the application to work. Also note that the persistant server... 
-
-### Releases 
-???
+Please ensure both client and server are running for the application to work. Note that a Google Cloud account must be set up for the persistant server to work. Please create an account [here](https://cloud.google.com/sql/docs/postgres) and then add your credentials to the [application properties](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/resources/application.properties) file as *spring.datasource.username* and *spring.datasource.password*. 
 
 ## 🥦 Roadmap 
 - *AI extension*: add an AI feature which allows recipe images to optionally be created by AI
 - *Recipe Filter*: allow recipes to be filtered by rating in the group cookbooks. 
+- *Group Chat*: create a group chat feature for the group cookbooks.
 
 ## 🥦 Authors
 - [Marko Cerkez](https://github.com/markocerkez) - server
@@ -111,6 +109,7 @@ Please ensure both client and server are running for the application to work. Al
 Many thanks to our teaching assistant [Marion Andermatt](https://github.com/marion-an) for her help, support and guidance during this project. :)
 
 ## 🥦 License
+This project is licensed under the Apache License, Version 2.0, January 2004
 
 
 
