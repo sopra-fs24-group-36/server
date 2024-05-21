@@ -178,4 +178,39 @@ public class CommentServiceIntegrationTest {
 
         assertEquals(Optional.empty(), commentRepository.findById(testId));
     }
+
+    @Test
+    public void changeUsername_validInputs_success() {
+
+        //create user
+        User testUser = new User();
+        testUser.setName("name");
+        testUser.setEmail("email.email@email.com");
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+        testUser.setToken(UUID.randomUUID().toString());
+        testUser.setStatus(UserStatus.ONLINE);
+        Date creationDate = new Date();
+        testUser.setCreationDate(creationDate);
+
+        userRepository.save(testUser);
+        userRepository.flush();
+
+        Long testId = testUser.getId();
+
+        Comment testComment = new Comment();
+        testComment.setUserID(testId);
+        testComment.setUsername("andrea");
+        testComment.setText("testText");
+
+        commentRepository.save(testComment);
+        commentRepository.flush();
+
+        commentService.changeUsername(testId);
+
+        Optional<Comment> c = commentRepository.findById(testComment.getId());
+
+        assertEquals("username", c.get().getUsername());
+
+    }
 }

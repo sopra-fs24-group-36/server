@@ -59,6 +59,10 @@ public class RecipeService {
   // Create a new recipe for a user
   public Recipe createUserRecipe(Long userID, Recipe newRecipe) {
 
+      if (newRecipe.getLink() != null && newRecipe.getLink().trim().isEmpty()) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Link needs to have at least length 1");
+      }
+
     newRecipe = recipeRepository.save(newRecipe);
 
     //something like checkifrecipeexists? probably not because it is in the users responsibility to not save multiple same recipes 
@@ -104,6 +108,11 @@ public class RecipeService {
 
   // Create a new recipe for a group
   public Recipe createGroupRecipe(Long groupID, Recipe newRecipe) {
+
+      if (newRecipe.getLink() != null && newRecipe.getLink().trim().isEmpty()) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Link needs to have at least length 1");
+      }
+
 
     // Save the new recipe
     newRecipe = recipeRepository.save(newRecipe);
@@ -183,16 +192,16 @@ public class RecipeService {
     try {
       Recipe recipe = recipeRepository.findById(recipeID);
       
-      if (title != null){
+      if (title != null && !title.trim().isEmpty()){
         recipe.setTitle(title);
       }
-      if (shortDescription != null){
+      if (shortDescription != null && !shortDescription.trim().isEmpty()){
         recipe.setShortDescription(shortDescription);
       }
-      if (link != null){
+      if (link != null && !link.trim().isEmpty()){
         recipe.setLink(link);
       }
-      if (cookingTime != null){
+      if (cookingTime != null && !cookingTime.trim().isEmpty()){
         recipe.setCookingTime(cookingTime);
       }
       if (amounts != null){

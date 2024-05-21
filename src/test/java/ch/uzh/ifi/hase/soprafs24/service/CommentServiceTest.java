@@ -13,6 +13,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -119,5 +121,28 @@ public class CommentServiceTest {
         commentService.deleteComment(testComment);
 
         Mockito.verify(commentRepository, Mockito.times(1)).delete(Mockito.any());
+    }
+
+
+    //  changeUsername   //
+    @Test
+    public void changeUsername_validInput_success() {
+
+        User testUser = new User();
+        testUser = new User();
+        testUser.setId(3L);
+        testUser.setName("name");
+        testUser.setEmail("email.email@email.com");
+        testUser.setPassword("password");
+        testUser.setUsername("username");
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(testUser));
+        List<Comment> comments = new ArrayList<>();
+        comments.add(testComment);
+        Mockito.when(commentRepository.findByUserID(Mockito.any())).thenReturn(comments);
+
+        commentService.changeUsername(testComment.getUserID());
+
+        Mockito.verify(commentRepository, Mockito.times(1)).save(Mockito.any());
     }
 }
