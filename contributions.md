@@ -19,6 +19,7 @@
 ### Summer 
 
 ### Marko
+- 22.05, [#200](https://github.com/sopra-fs24-group-36/server/issues/200), fixed the update recipe bug where recipes are not taken out of the calendar when removed from a group but not deleted.
 
 ## Week 7
 
