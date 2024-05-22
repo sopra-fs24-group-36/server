@@ -257,9 +257,21 @@ public class RecipeService {
 
           // Handle calendar and dateRecipes for each group to remove calendar stuff which causes problems
           Calendar calendar = g.getCalendar();
-          List<DateRecipe> dateRecipes = new ArrayList<>(calendar.getDateRecipes());
-          dateRecipes.removeIf(dr -> dr.getRecipeID().equals(recipe.getId()));
-          calendar.setDateRecipes(dateRecipes); // update the calendar's list
+          // Retrieve the current dateRecipes associated with the calendar
+          List<DateRecipe> allDateRecipes = new ArrayList<>(calendar.getDateRecipes());
+          List<DateRecipe> toDelete = allDateRecipes.stream()
+              .filter(dr -> dr.getRecipeID().equals(recipe.getId()))
+              .collect(Collectors.toList());
+
+          // Remove the dateRecipes to delete from the original list
+          allDateRecipes.removeAll(toDelete);
+
+          // Perform the deletion from the repository
+          dateRecipeRepository.deleteAll(toDelete);
+          dateRecipeRepository.flush();
+
+          // Update the calendar's dateRecipes list
+          calendar.setDateRecipes(allDateRecipes);
           calendarRepository.save(calendar);
         }
         
