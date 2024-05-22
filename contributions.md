@@ -5,6 +5,20 @@
 ## Week 7
 
 ### Sarina 
+
+### Jazz 
+- 22.05, [#105](https://github.com/sopra-fs24-group-36/client/issues/105) guard for group cookbook recipes editing so you cannot edit a recipe you are not the author of.
+- 22.05, [#100](https://github.com/sopra-fs24-group-36/client/issues/100), stopped failed recipes from breaking. Realised it was due to invalid links so added a check for valid URL 
+
+### Yujie
+
+### Summer 
+
+### Marko
+
+## Week 7
+
+### Sarina 
 - 18.05 - 19.05, gone through system to check for potential bugs, found two and solved them (see below)
 - 20.05, [#198](https://github.com/sopra-fs24-group-36/server/issues/198), needed to change some logic and added some tests and changed some as well
 - 20.05, [#197](https://github.com/sopra-fs24-group-36/server/issues/197), enforced some rules on the backend to resolve this
