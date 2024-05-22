@@ -2,7 +2,7 @@
 - manually append the two development tasks they completed during the week
 - entry should consist of the date, your name, links to the github issues you worked on and optionally a short description
 
-## Week 7
+## Week 8
 
 ### Sarina 
 
@@ -11,6 +11,10 @@
 - 22.05, [#100](https://github.com/sopra-fs24-group-36/client/issues/100), stopped failed recipes from breaking. Realised it was due to invalid links so added a check for valid URL 
 
 ### Yujie
+- 21.05, [#107](https://github.com/sopra-fs24-group-36/client/issues/107), fixed css of back and save buttons on edit user profile
+- 21.05, [#108](https://github.com/sopra-fs24-group-36/client/issues/108), fixed editing and deleting comments after changing username
+- 21.05, [#109](https://github.com/sopra-fs24-group-36/client/issues/109), edited leave a comment to leave a review
+- 21.05, [#110](https://github.com/sopra-fs24-group-36/client/issues/110), added polling in recipe view to fetch comments every 5s
 
 ### Summer 
 
