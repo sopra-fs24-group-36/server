@@ -245,6 +245,13 @@ public class RecipeService {
           c.setRecipes(recipes);
           cookbookRepository.save(c);
           cookbookRepository.flush();
+
+          // Handle calendar and dateRecipes for each group to remove calendar stuff which causes problems
+          Calendar calendar = g.getCalendar();
+          List<DateRecipe> dateRecipes = new ArrayList<>(calendar.getDateRecipes());
+          dateRecipes.removeIf(dr -> dr.getRecipeID().equals(recipe.getId()));
+          calendar.setDateRecipes(dateRecipes); // update the calendar's list
+          calendarRepository.save(calendar);
         }
         
 

@@ -337,7 +337,6 @@ public class RecipeServiceTest {
   
       // Assert that the existing recipe has been updated correctly
       assertEquals(updatedRecipe.getShortDescription(), existingRecipe.getShortDescription());
-      // Add more assertions for other fields if needed
   }
 
   @Test
@@ -397,7 +396,6 @@ public class RecipeServiceTest {
   
       // Assert that the existing recipe has been updated correctly
       assertThrows(ResponseStatusException.class, () -> recipeService.updateRecipe(recipeId, updatedRecipe));
-      // Add more assertions for other fields if needed
   }
 
   @Test
@@ -424,6 +422,9 @@ public class RecipeServiceTest {
       recipes.add(1L);
       cookbook.setRecipes(recipes);
       group.setCookbook(cookbook);
+      Calendar calendar = new Calendar();
+      calendar.setDateRecipes(new ArrayList<>());
+      group.setCalendar(calendar);
   
       // Mock behavior of recipeRepository.findById
       when(recipeRepository.findById(Mockito.anyLong())).thenReturn(existingRecipe);
@@ -434,7 +435,6 @@ public class RecipeServiceTest {
   
       // Assert that the existing recipe has been updated correctly
       assertEquals(updatedRecipe.getShortDescription(), existingRecipe.getShortDescription());
-      // Add more assertions for other fields if needed
   }
 
   @Test
