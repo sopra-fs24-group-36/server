@@ -2,9 +2,30 @@
 - manually append the two development tasks they completed during the week
 - entry should consist of the date, your name, links to the github issues you worked on and optionally a short description
 
+## Week 8
+
+### Sarina 
+
+### Jazz 
+- 22.05, [#105](https://github.com/sopra-fs24-group-36/client/issues/105) guard for group cookbook recipes editing so you cannot edit a recipe you are not the author of.
+- 22.05, [#100](https://github.com/sopra-fs24-group-36/client/issues/100), stopped failed recipes from breaking. Realised it was due to invalid links so added a check for valid URL 
+
+### Yujie
+- 21.05, [#107](https://github.com/sopra-fs24-group-36/client/issues/107), fixed css of back and save buttons on edit user profile
+- 21.05, [#108](https://github.com/sopra-fs24-group-36/client/issues/108), fixed editing and deleting comments after changing username
+- 21.05, [#109](https://github.com/sopra-fs24-group-36/client/issues/109), edited leave a comment to leave a review
+- 21.05, [#110](https://github.com/sopra-fs24-group-36/client/issues/110), added polling in recipe view to fetch comments every 5s
+
+### Summer 
+
+### Marko
+
 ## Week 7
 
 ### Sarina 
+- 18.05 - 19.05, gone through system to check for potential bugs, found two and solved them (see below)
+- 20.05, [#198](https://github.com/sopra-fs24-group-36/server/issues/198), needed to change some logic and added some tests and changed some as well
+- 20.05, [#197](https://github.com/sopra-fs24-group-36/server/issues/197), enforced some rules on the backend to resolve this
 
 ### Jazz 
 - 14.05, [#95](https://github.com/sopra-fs24-group-36/client/issues/95) small bug fix: limited length of description for nice display on home page and in cookbooks
@@ -12,6 +33,7 @@
 - 14.05, [#94](https://github.com/sopra-fs24-group-36/client/issues/94) small bug fix: made sure group member emails display nicely (used ...)
 - 14.05, [#81](https://github.com/sopra-fs24-group-36/client/issues/81) bug fix: improved display of API searches
 - 16.05, [#97](https://github.com/sopra-fs24-group-36/client/issues/97) small bug fix: commend disappeared when hovering over it to edit
+- whole week, [#89](https://github.com/sopra-fs24-group-36/client/issues/89) writing the README for server and client (Thanks to Marko for help with high-level components on server side). Need to ask Marion some things and will insert illustrations next week. 
 
 ### Yujie
 - 17.05, [#80](https://github.com/sopra-fs24-group-36/client/issues/80) had "Are you sure" pop up

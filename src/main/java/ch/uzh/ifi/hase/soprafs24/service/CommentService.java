@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 // Service to handle all comment related functionality
 @Service
@@ -74,6 +75,21 @@ public class CommentService {
 
         commentRepository.delete(comment);
         commentRepository.flush();
+    }
+
+    //change the username of the comment, when the username gets changed
+    public void changeUsername(Long userID) {
+
+        User user = userRepository.findById(userID).orElse(null);
+
+        List<Comment> comments = commentRepository.findByUserID(userID);
+        if (!comments.isEmpty()) {
+            for (Comment comment : comments) {
+                comment.setUsername(user.getUsername());
+                commentRepository.save(comment);
+            }
+            commentRepository.flush();
+        }
     }
 }
 
