@@ -13,7 +13,7 @@ Click [here](https://github.com/sopra-fs24-group-36/client) to find the frontend
 8. [License](#license)
 
 ## 🥦 Introduction
-Every day we are confronted with one of life's most difficult decisions, what to eat? Living alone we quickly run out of ideas. Living with friends or family leads to discussions and disagreements on what to eat. We receive recipe recommendations, but they get lost or forgotten. Often we turn to the internet for inspiration, but how do we navigate the endless information?
+Every day we are confronted with one of life's most difficult decisions, what to eat? Living alone we quickly run out of ideas. If we live with friends or family cooking always leads to discussions and disagreements on what to eat. We receive recipe recommendations, but they get lost or forgotten. Often we turn to the internet for inspiration, but how do we navigate the endless information? 
 
 With the virtual cookbook these problems are solved. Save your personal recipes to a personal cookbook. Create groups with your household and add recipes to your group cookbook. Use the calendar for meal planning and the shopping list to keep track of items you need. And if you ever run out of inspiration, the built in search-function helps you find new recipes which can directly be saved.
 
@@ -91,7 +91,7 @@ Use the following command if you want to avoid running the tests with every chan
 `./gradlew build --continuous -xtest`
 
 ### Dependencies 
-Please ensure both client and server are running for the application to work. Note that a Google Cloud account must be set up for the persistant server to work. Please create an account [here](https://cloud.google.com/sql/docs/postgres) and then add your credentials to the [application properties](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/resources/application.properties) file as *spring.datasource.username* and *spring.datasource.password*. 
+Please ensure both client and server are running for the application to work. Note that a Google Cloud account must be set up for the persistant server to function. Please create an account [here](https://cloud.google.com/sql/docs/postgres) and then your credentials to the [application properties](https://github.com/sopra-fs24-group-36/server/blob/main/src/main/resources/application.properties) file as *spring.datasource.username* and *spring.datasource.password*. 
 
 ## 🥦 Roadmap 
 - *AI extension*: add an AI feature which allows recipe images to optionally be created by AI
@@ -109,7 +109,7 @@ Please ensure both client and server are running for the application to work. No
 Many thanks to our teaching assistant [Marion Andermatt](https://github.com/marion-an) for her help, support and guidance during this project. :)
 
 ## 🥦 License
-This project is licensed under the Apache License, Version 2.0, January 2004
+This project is licensed under the Apache License, Version 2.0, January 2004.
 
 
 
