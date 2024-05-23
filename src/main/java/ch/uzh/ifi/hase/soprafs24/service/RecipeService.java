@@ -389,6 +389,24 @@ public class RecipeService {
     recipeRepository.save(recipe);
     recipeRepository.flush();
 
+    Calendar calendar = group.getCalendar();
+    // Retrieve the current dateRecipes associated with the calendar
+    List<DateRecipe> allDateRecipes = new ArrayList<>(calendar.getDateRecipes());
+    List<DateRecipe> toDelete = allDateRecipes.stream()
+        .filter(dr -> dr.getRecipeID().equals(recipe.getId()))
+        .collect(Collectors.toList());
+
+    // Remove the dateRecipes to delete from the original list
+    allDateRecipes.removeAll(toDelete);
+
+    // Perform the deletion from the repository
+    dateRecipeRepository.deleteAll(toDelete);
+    dateRecipeRepository.flush();
+
+    // Update the calendar's dateRecipes list
+    calendar.setDateRecipes(allDateRecipes);
+    calendarRepository.save(calendar);
+    
     return group;
   }
 

@@ -346,6 +346,10 @@ public class RecipeServiceIntegrationTest {
       Cookbook cookbook = new Cookbook();
       cookbook.setStatus(CookbookStatus.GROUP);
 
+      Calendar calendar = new Calendar();
+      calendar.setDateRecipes(new ArrayList<>());
+      calendarRepository.save(calendar);
+
         //add recipe to cookbook
       List<Long> recipes = new ArrayList<>();
       recipes.add(recipe.getId());
@@ -356,6 +360,7 @@ public class RecipeServiceIntegrationTest {
       Group group = new Group();
       group.setName("name");
       group.setCookbook(cookbook);
+      group.setCalendar(calendar);
       groupRepository.save(group);
 
         //add groupId to recipe
