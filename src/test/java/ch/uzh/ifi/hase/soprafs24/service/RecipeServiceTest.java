@@ -560,6 +560,8 @@ public class RecipeServiceTest {
     mockGroup.setId(1L);
     mockGroup.setName("Name");
     Cookbook mockCookbook = new Cookbook();
+    Calendar mockCalendar = new Calendar();
+    mockCalendar.setDateRecipes(new ArrayList<>());
 
     //add groupId to recipe
     List<Long> groupIDs = new ArrayList<>();
@@ -572,6 +574,7 @@ public class RecipeServiceTest {
     mockCookbook.setRecipes(recipes);
 
     mockGroup.setCookbook(mockCookbook); //recipe is part of this cookbook
+    mockGroup.setCalendar(mockCalendar);
 
     // Mock the group repository to return the mock group
     when(groupRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(mockGroup));
