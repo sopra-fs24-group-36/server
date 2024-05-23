@@ -62,10 +62,18 @@ public class RecipeService {
       if (newRecipe.getLink() != null && newRecipe.getLink().trim().isEmpty()) {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Link needs to have at least length 1");
       }
+      if (newRecipe.getTitle() != null && newRecipe.getTitle().trim().isEmpty()) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title needs to have at least length 1");
+      }
+      if (newRecipe.getShortDescription() != null && newRecipe.getShortDescription().trim().isEmpty()) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description needs to have at least length 1");
+      }
+      if (newRecipe.getCookingTime() != null && newRecipe.getCookingTime().trim().isEmpty()) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cooking time needs to have at least length 1");
+      }
 
     newRecipe = recipeRepository.save(newRecipe);
 
-    //something like checkifrecipeexists? probably not because it is in the users responsibility to not save multiple same recipes 
     newRecipe.setAuthorID(userID);
 
     User author = userRepository.findById(userID).orElse(null);
@@ -112,7 +120,15 @@ public class RecipeService {
       if (newRecipe.getLink() != null && newRecipe.getLink().trim().isEmpty()) {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Link needs to have at least length 1");
       }
-
+      if (newRecipe.getTitle() != null && newRecipe.getTitle().trim().isEmpty()) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title needs to have at least length 1");
+      }
+      if (newRecipe.getShortDescription() != null && newRecipe.getShortDescription().trim().isEmpty()) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description needs to have at least length 1");
+      }
+      if (newRecipe.getCookingTime() != null && newRecipe.getCookingTime().trim().isEmpty()) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cooking time needs to have at least length 1");
+      }
 
     // Save the new recipe
     newRecipe = recipeRepository.save(newRecipe);
