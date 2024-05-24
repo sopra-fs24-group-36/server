@@ -17,6 +17,10 @@
 - 21.05, [#110](https://github.com/sopra-fs24-group-36/client/issues/110), added polling in recipe view to fetch comments every 5s
 
 ### Summer 
+- 22.05, [#101](https://github.com/sopra-fs24-group-36/client/issues/101) , group name in group calendar
+- 22.05, [#102](https://github.com/sopra-fs24-group-36/client/issues/102) , edit button on cookbook
+- 22.05, [#103](https://github.com/sopra-fs24-group-36/client/issues/103) , clear searches in cookbook
+- 22.05, [#104](https://github.com/sopra-fs24-group-36/client/issues/104), fix email bug in edit profile page
 
 ### Marko
 - 22.05, [#200](https://github.com/sopra-fs24-group-36/server/issues/200), fixed the update recipe bug where recipes are not taken out of the calendar when removed from a group but not deleted.
