@@ -5,6 +5,7 @@
 ## Week 8
 
 ### Sarina 
+- 29.05, [#197](https://github.com/sopra-fs24-group-36/server/issues/197), changed small thing after discussing what should be enforced
 
 ### Jazz 
 - 22.05, [#105](https://github.com/sopra-fs24-group-36/client/issues/105) guard for group cookbook recipes editing so you cannot edit a recipe you are not the author of.
