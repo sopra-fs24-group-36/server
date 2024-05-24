@@ -9,7 +9,8 @@
 
 ### Jazz 
 - 22.05, [#105](https://github.com/sopra-fs24-group-36/client/issues/105) guard for group cookbook recipes editing so you cannot edit a recipe you are not the author of.
-- 22.05, [#100](https://github.com/sopra-fs24-group-36/client/issues/100), stopped failed recipes from breaking. Realised it was due to invalid links so added a check for valid URL 
+- 22.05, [#100](https://github.com/sopra-fs24-group-36/client/issues/100), stopped failed recipes from breaking. Realised it was due to invalid links so added a check for valid URL
+- finished README for client and server
 
 ### Yujie
 - 21.05, [#107](https://github.com/sopra-fs24-group-36/client/issues/107), fixed css of back and save buttons on edit user profile
